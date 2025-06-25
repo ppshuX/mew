@@ -1,0 +1,73 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Mew · 喵喵聊天室</title>
+    <link rel="stylesheet" href="{% static 'chat/css/bootstrap.min.css' %}">
+    <style>
+        body {
+            background-color: #fdfdfd;
+            font-family: 'Helvetica Neue', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+        }
+
+        .chat-box {
+            height: 500px;
+            overflow-y: auto;
+            background-color: #f8f9fa;
+            border-radius: 12px;
+            padding: 15px;
+        }
+
+        .message.me {
+            text-align: right;
+        }
+
+        .message .bubble {
+            display: inline-block;
+            padding: 10px 15px;
+            border-radius: 18px;
+            margin: 5px 0;
+            max-width: 75%;
+        }
+
+        .message.you .bubble {
+            background-color: #e0f7fa;
+            color: #333;
+        }
+
+        .message.me .bubble {
+            background-color: #c8e6c9;
+            color: #333;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container mt-4">
+        <h2 class="mb-3 text-center">🐱 Mew · 喵喵聊天室</h2>
+        <div class="chat-box mb-3 shadow-sm">
+            <div class="message you">
+                <div class="bubble">你好呀，最近在忙什么？</div>
+            </div>
+            <div class="message me">
+                <div class="bubble">在搞一个叫 Mew 的项目哈哈。</div>
+            </div>
+            <div class="message you">
+                <div class="bubble">听起来好可爱，像是猫猫说话的声音。</div>
+            </div>
+            <div class="message me">
+                <div class="bubble">对！就叫“喵喵”，以后发动态就说“发在猫上了”！</div>
+            </div>
+        </div>
+
+        <form class="input-group">
+            <input type="text" class="form-control" placeholder="喵喵一声说点什么吧..." aria-label="输入消息">
+            <br><br>
+            <button class="btn btn-primary" type="submit">发送</button>
+        </form>
+    </div>
+</body>
+
+</html>
