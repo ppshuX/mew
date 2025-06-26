@@ -12,7 +12,7 @@ def moments_list(request):
         image = request.FILES.get('image')
         if content or image:
             Post.objects.create(author=request.user, content=content, image=image)
-            return redirect('moments')
+            return redirect('moments_list')
         
     posts = Post.objects.all().order_by('-created_at')
     return render(request, 'moments/moments.html',{'posts': posts})
@@ -37,7 +37,7 @@ def add_comment(request, post_id):
         post = get_object_or_404(Post, id=post_id)
         if content:
             Comment.objects.create(post=post, author=request.user, content=content)
-    return redirect('moments')
+    return redirect('moments_list')
 
 @login_required
 def delete_comment(request, comment_id):
@@ -45,3 +45,17 @@ def delete_comment(request, comment_id):
     if request.user == comment.author or request.user.is_superuser:
         comment.delete()
     return redirect('moments_list')
+
+
+@login_required
+def post_detail(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+
+    # 处理评论提交
+    if request.method == 'POST' and 'comment' in request.POST:
+        content = request.POST['comment']
+        if content:
+            Comment.objects.create(post=post, author=request.user, content=content)
+        return redirect('moments/post_detail', post_id=post.id)
+    
+    return render(request, 'moments/post_detail.html', {'post': post})

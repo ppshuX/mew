@@ -13,19 +13,34 @@
             font-family: 'Helvetica Neue', 'PingFang SC', 'Microsoft YaHei', sans-serif;
         }
 
-        .moment {
-            background: white;
-            border-radius: 12px;
-            padding: 16px;
-            margin-bottom: 24px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        .container {
+            max-width: 1200px;
         }
 
-        .moment img {
-            max-width: 100%;
-            max-height: 400px;
-            border-radius: 8px;
-            margin-top: 12px;
+        .moments-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
+        }
+
+        .moment-card {
+            background: white;
+            border-radius: 16px;
+            padding: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+            transition: transform 0.2s;
+        }
+
+        .moment-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .moment-card img {
+            width: 100%;
+            max-height: 300px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-top: 10px;
         }
 
         .author {
@@ -76,6 +91,17 @@
         textarea.form-control {
             resize: none;
         }
+
+        .view-more {
+            font-size: 0.85rem;
+            color: #555;
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+        .view-more:hover {
+            color: #007bff;
+        }
     </style>
 </head>
 
@@ -84,68 +110,66 @@
         <h3 class="mb-4">👋 朋友圈 Moments</h3>
 
         <!-- 发说说 -->
-        <form method="post" enctype="multipart/form-data" class="mb-4">
+        <form method="post" enctype="multipart/form-data" class="mb-5">
             {% csrf_token %}
             <textarea name="content" class="form-control" rows="3" placeholder="想说点什么..." required></textarea>
             <input type="file" name="image" class="form-control mt-2">
             <button type="submit" class="btn btn-primary mt-2">发布</button>
         </form>
 
-        <!-- 动态内容 -->
-        {% for post in posts %}
-        <div class="moment">
-            <div class="author">{{ post.author.username }}</div>
-            <div class="timestamp">{{ post.created_at|naturaltime }}</div>
-            <div class="content">{{ post.content|linebreaks }}</div>
+        <div class="moments-grid">
+            {% for post in posts %}
+            {% if post.id %}
+            <a href="{% url 'post_detail' post.id %}" style="text-decoration: none; color: inherit;">
+                <div class="moment-card">
+                    <div class="author">{{ post.author.username }}</div>
+                    <div class="timestamp">{{ post.created_at|naturaltime }}</div>
+                    <div class="content">{{ post.content|linebreaks }}</div>
 
-            {% if post.image %}
-            <img src="{{ post.image.url }}" alt="动态图片">
-            {% endif %}
-
-            <!-- 点赞 -->
-            <div class="mt-2">
-                <button class="btn btn-sm btn-outline-primary like-btn" data-post-id="{{ post.id }}" type="button">
-                    👍 点赞 (<span id="like-count-{{ post.id }}">{{ post.like_count }}</span>)
-                </button>
-            </div>
-
-            <!-- 评论 -->
-            <div class="comments">
-                {% for comment in post.comments.all %}
-                <div class="comment d-flex justify-content-between align-items-center">
-                    <div>
-                        <strong>{{ comment.author.username }}</strong>: {{ comment.content }}
-                    </div>
-                    {% if comment.author == request.user or request.user.is_superuser %}
-                    <form method="post" action="{% url 'delete_comment' comment.id %}" style="margin-left: 10px;">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-sm btn-link text-danger"
-                            onclick="return confirm('确定删除这条评论吗？')">删除</button>
-                    </form>
+                    {% if post.image %}
+                    <img src="{{ post.image.url }}" alt="动态图片">
                     {% endif %}
-                </div>
-                {% empty %}
-                <div class="no-comments">还没有评论</div>
-                {% endfor %}
 
-                <!-- 写评论 -->
-                <form method="post" action="{% url 'add_comment' post.id %}" class="mt-2">
-                    {% csrf_token %}
-                    <div class="d-flex">
-                        <input type="text" name="comment" class="form-control me-2" placeholder="写评论..." required>
-                        <div style="display: flex; justify-content: flex-end; margin: 5px 2px;">
-                            <button class="btn btn-outline-secondary" type="submit" style="width: 20%;">发 表 评 论</button>
-                        </div>
+                    <!-- 点赞 -->
+                    <div class="mt-2">
+                        <button class="btn btn-sm btn-outline-primary like-btn" data-post-id="{{ post.id }}"
+                            type="button">
+                            👍 点赞 (<span id="like-count-{{ post.id }}">{{ post.like_count }}</span>)
+                        </button>
                     </div>
-                </form>
-            </div>
+
+                    <!-- 评论 -->
+                    <div class="comments mt-2">
+                        {% with post.comments.all|slice:":2" as comment_preview %}
+                        {% for comment in comment_preview %}
+                        <div class="comment">
+                            <strong>{{ comment.author.username }}</strong>: {{ comment.content }}
+                        </div>
+                        {% endfor %}
+
+                        {% if post.comments.count > 2 %}
+                        <div>
+                            <span class="view-more">查看更多评论...</span>
+                        </div>
+                        {% endif %}
+
+                        {% if comment_preview|length == 0 %}
+                        <div class="no-comments">还没有评论</div>
+                        {% endif %}
+                        {% endwith %}
+                    </div>
+                </div>
+            </a>
+            {% endif %}
+            {% endfor %}
         </div>
-        {% empty %}
-        <div class="alert alert-info">还没有任何动态，快来发布第一条吧！</div>
-        {% endfor %}
+
+        <!-- 动态卡片 -->
+
+        {% if posts|length == 0 %}
+        <div class="alert alert-info mt-4">还没有任何动态，快来发布第一条吧！</div>
+        {% endif %}
     </div>
-
-
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
@@ -154,7 +178,6 @@
             buttons.forEach(button => {
                 button.addEventListener('click', function (e) {
                     e.preventDefault();
-
                     const postId = this.getAttribute('data-post-id');
                     const csrfToken = '{{ csrf_token }}';
 
@@ -170,11 +193,9 @@
                             const likeCount = document.getElementById(`like-count-${postId}`);
                             likeCount.textContent = data.like_count;
 
-                            if (data.liked) {
-                                this.innerHTML = `👍 已点赞 (<span id="like-count-${postId}">${data.like_count}</span>)`;
-                            } else {
-                                this.innerHTML = `👍 点赞 (<span id="like-count-${postId}">${data.like_count}</span>)`;
-                            }
+                            this.innerHTML = data.liked
+                                ? `👍 已点赞 (<span id="like-count-${postId}">${data.like_count}</span>)`
+                                : `👍 点赞 (<span id="like-count-${postId}">${data.like_count}</span>)`;
                         })
                         .catch(error => {
                             console.error('点赞失败:', error);

@@ -1,0 +1,112 @@
+{% load static %}
+{% load humanize %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <title>动态详情页</title>
+    <link rel="stylesheet" href="{% static 'chat/css/bootstrap.min.css' %}">
+    <style>
+        body {
+            background: #f0f2f5;
+            font-family: 'Helvetica Neue', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+        }
+
+        .card {
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+        }
+
+        .card-text {
+            font-size: 1rem;
+        }
+
+        .img-fluid {
+            border-radius: 12px;
+        }
+
+        .comment-box {
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding: 8px 12px;
+        }
+
+        .comment-box strong {
+            color: #333;
+        }
+
+        .comment-box form {
+            display: inline;
+        }
+
+        .btn-outline-primary {
+            font-size: 0.95rem;
+        }
+
+        .input-group input {
+            font-size: 0.95rem;
+        }
+
+        .back-link {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container mt-4">
+        <a href="{% url 'moments' %}" class="back-link mb-3 d-inline-block">← 返回朋友圈</a>
+
+        <div class="card p-4">
+            <h5 class="mb-1">{{ post.author.username }}</h5>
+            <div class="text-muted mb-2">{{ post.created_at|naturaltime }}</div>
+            <div class="card-text mb-3">{{ post.content|linebreaks }}</div>
+            {% if post.image %}
+            <img src="{{ post.image.url }}" alt="动态图片" class="img-fluid mt-2 mb-3">
+            {% endif %}
+
+            <!-- 点赞 -->
+            <form method="post" action="{% url 'like_post' post.id %}">
+                {% csrf_token %}
+                <button class="btn btn-outline-primary" type="submit">
+                    👍 点赞 ({{ post.like_count }})
+                </button>
+            </form>
+
+            <!-- 评论列表 -->
+            <hr>
+            <h6>全部评论：</h6>
+            {% for comment in post.comments.all %}
+            <div class="comment-box mb-2">
+                <strong>{{ comment.author.username }}</strong>: {{ comment.content }}
+                {% if comment.author == request.user or request.user.is_superuser %}
+                <form method="post" action="{% url 'delete_comment' comment.id %}" class="d-inline ms-2">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-sm btn-link text-danger p-0"
+                        onclick="return confirm('确定删除这条评论吗？')">删除</button>
+                </form>
+                {% endif %}
+            </div>
+            {% empty %}
+            <p class="text-muted">暂无评论。</p>
+            {% endfor %}
+
+            <!-- 写评论 -->
+            <form method="post" action="{% url 'add_comment' post.id %}">
+                {% csrf_token %}
+                <div class="input-group mt-3">
+                    <input type="text" name="comment" class="form-control" placeholder="写评论..." required>
+                    <button class="btn btn-outline-secondary" type="submit">发表评论</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>
