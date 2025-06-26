@@ -61,7 +61,7 @@
 
 <body>
     <div class="container mt-4">
-        <a href="{% url 'moments' %}" class="back-link mb-3 d-inline-block">← 返回朋友圈</a>
+        <a href="{% url 'moments_list' %}" class="back-link mb-3 d-inline-block">← 返回朋友圈</a>
 
         <div class="card p-4">
             <h5 class="mb-1">{{ post.author.username }}</h5>
@@ -74,8 +74,17 @@
             <!-- 点赞 -->
             <form method="post" action="{% url 'like_post' post.id %}">
                 {% csrf_token %}
-                <button class="btn btn-outline-primary" type="submit">
-                    👍 点赞 ({{ post.like_count }})
+                <!-- 点赞按钮 -->
+                <button class="btn border-0 p-0 like-btn" style="background: none;" data-post-id="{{ post.id }}"
+                    data-liked="{{ liked_by_user|yesno:'true,false' }}">
+                    <span class="like-icon" style="font-size: 1.5rem;">
+                        {% if liked_by_user %}
+                        ❤️
+                        {% else %}
+                        🤍
+                        {% endif %}
+                    </span>
+                    <span class="like-count text-muted ms-1" style="font-size: 1rem;">{{ post.like_count }}</span>
                 </button>
             </form>
 
@@ -107,6 +116,48 @@
             </form>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const likeBtn = document.querySelector('.like-btn');
+            if (!likeBtn) return;
+
+            likeBtn.addEventListener('click', function (e) {
+                e.preventDefault();
+
+                const postId = this.dataset.postId;
+                const isLiked = this.dataset.liked === 'true';
+                const csrfToken = '{{ csrf_token }}';
+                const likeCountSpan = this.querySelector('.like-count');
+                const likeIcon = this.querySelector('.like-icon');
+
+                fetch(`/moments/${postId}/like/`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': csrfToken,
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        this.dataset.liked = data.liked ? 'true' : 'false';
+                        likeCountSpan.textContent = data.like_count;
+
+                        if (data.liked) {
+                            likeIcon.textContent = '❤️';
+                            likeCountSpan.classList.remove('text-muted');
+                            likeCountSpan.classList.add('text-danger');
+                        } else {
+                            likeIcon.textContent = '🤍';
+                            likeCountSpan.classList.remove('text-danger');
+                            likeCountSpan.classList.add('text-muted');
+                        }
+                    })
+                    .catch(error => console.error('点赞失败:', error));
+            });
+        });
+    </script>
+
 </body>
 
 </html>

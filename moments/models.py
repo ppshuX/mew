@@ -8,6 +8,8 @@ class Post(models.Model):
     image = models.ImageField(upload_to='moments_posts/', blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    likes = models.ManyToManyField(User, related_name='liked_posts', blank=True)
+
     def like_count(self):
         return self.likes.count()
     
@@ -19,10 +21,3 @@ class Comment(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     content = models.TextField(max_length=300)
     created_at = models.DateTimeField(auto_now_add=True)
-
-class Like(models.Model):
-    post = models.ForeignKey(Post, related_name='likes', on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-
-    class Meta:
-        unique_together = ('post', 'user')

@@ -7,180 +7,91 @@
     <meta charset="UTF-8">
     <title>朋友圈 · Moments</title>
     <link rel="stylesheet" href="{% static 'chat/css/bootstrap.min.css' %}">
-    <style>
-        body {
-            background: #f5f6f7;
-            font-family: 'Helvetica Neue', 'PingFang SC', 'Microsoft YaHei', sans-serif;
-        }
-
-        .container {
-            max-width: 1200px;
-        }
-
-        .moments-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 24px;
-        }
-
-        .moment-card {
-            background: white;
-            border-radius: 16px;
-            padding: 16px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
-            transition: transform 0.2s;
-        }
-
-        .moment-card:hover {
-            transform: translateY(-4px);
-        }
-
-        .moment-card img {
-            width: 100%;
-            max-height: 300px;
-            object-fit: cover;
-            border-radius: 10px;
-            margin-top: 10px;
-        }
-
-        .author {
-            font-weight: bold;
-            font-size: 1.1rem;
-        }
-
-        .timestamp {
-            color: #888;
-            font-size: 0.85rem;
-        }
-
-        .content {
-            margin-top: 10px;
-            font-size: 1rem;
-        }
-
-        .like-btn {
-            color: #007bff;
-            cursor: pointer;
-            font-size: 0.95rem;
-        }
-
-        .comments {
-            border-top: 1px solid #eee;
-            margin-top: 12px;
-            padding-top: 8px;
-        }
-
-        .comment {
-            margin-bottom: 4px;
-            font-size: 0.95rem;
-        }
-
-        .comment strong {
-            color: #333;
-        }
-
-        .no-comments {
-            color: #aaa;
-            font-size: 0.9rem;
-        }
-
-        .form-control {
-            font-size: 0.95rem;
-        }
-
-        textarea.form-control {
-            resize: none;
-        }
-
-        .view-more {
-            font-size: 0.85rem;
-            color: #555;
-            text-decoration: underline;
-            cursor: pointer;
-        }
-
-        .view-more:hover {
-            color: #007bff;
-        }
-    </style>
+    <link rel="stylesheet" href="{% static 'moments/css/moments.css' %}">
 </head>
 
 <body>
     <div class="container mt-4">
         <h3 class="mb-4">👋 朋友圈 Moments</h3>
 
-        <!-- 发说说 -->
+        <!-- 发布说说 -->
         <form method="post" enctype="multipart/form-data" class="mb-5">
             {% csrf_token %}
             <textarea name="content" class="form-control" rows="3" placeholder="想说点什么..." required></textarea>
-            <input type="file" name="image" class="form-control mt-2">
+            <input type="file" name="image" multiple accept="image/*" class="form-control mt-2">
             <button type="submit" class="btn btn-primary mt-2">发布</button>
         </form>
 
+        <!-- 动态卡片 -->
         <div class="moments-grid">
             {% for post in posts %}
-            {% if post.id %}
-            <a href="{% url 'post_detail' post.id %}" style="text-decoration: none; color: inherit;">
-                <div class="moment-card">
+            <div class="moment-card" onclick="window.location.href='{% url 'post_detail' post.id %}'">
+
+                <!-- 图片区域（最多4张） -->
+                {% if post.images.all %}
+                <div class="image-grid">
+                    {% with post.images.all|slice:":4" as limited_images %}
+                    {% for image in limited_images %}
+                    <div class="image-card">
+                        <img src="{{ image.image.url }}" alt="图片{{ forloop.counter }}">
+                        {% if forloop.last and post.images.count > 4 %}
+                        <div class="image-overlay">+{{ post.images.count|add:"-4" }}</div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                    {% endwith %}
+                </div>
+                {% endif %}
+
+                <!-- 内容区域 -->
+                <div class="text-content">
                     <div class="author">{{ post.author.username }}</div>
                     <div class="timestamp">{{ post.created_at|naturaltime }}</div>
-                    <div class="content">{{ post.content|linebreaks }}</div>
-
-                    {% if post.image %}
-                    <img src="{{ post.image.url }}" alt="动态图片">
-                    {% endif %}
+                    <div class="content">{{ post.content }}</div>
 
                     <!-- 点赞 -->
-                    <div class="mt-2">
-                        <button class="btn btn-sm btn-outline-primary like-btn" data-post-id="{{ post.id }}"
-                            type="button">
-                            👍 点赞 (<span id="like-count-{{ post.id }}">{{ post.like_count }}</span>)
+                    <div class="bottom-bar">
+                        <button class="like-btn" data-post-id="{{ post.id }}" onclick="event.stopPropagation();">
+                            <span class="like-icon" id="like-icon-{{ post.id }}">
+                                {% if post.is_liked %}❤️{% else %}🤍{% endif %}
+                            </span>
+                            <span class="like-count" id="like-count-{{ post.id }}">{{ post.like_count }}</span>
                         </button>
                     </div>
 
-                    <!-- 评论 -->
+                    <!-- 评论预览 -->
                     <div class="comments mt-2">
                         {% with post.comments.all|slice:":2" as comment_preview %}
                         {% for comment in comment_preview %}
-                        <div class="comment">
-                            <strong>{{ comment.author.username }}</strong>: {{ comment.content }}
-                        </div>
+                        <div class="comment"><strong>{{ comment.author.username }}</strong>: {{ comment.content }}</div>
                         {% endfor %}
-
                         {% if post.comments.count > 2 %}
-                        <div>
-                            <span class="view-more">查看更多评论...</span>
-                        </div>
+                        <div class="view-more">查看更多评论...</div>
                         {% endif %}
-
                         {% if comment_preview|length == 0 %}
                         <div class="no-comments">还没有评论</div>
                         {% endif %}
                         {% endwith %}
                     </div>
                 </div>
-            </a>
-            {% endif %}
+
+            </div>
             {% endfor %}
         </div>
-
-        <!-- 动态卡片 -->
 
         {% if posts|length == 0 %}
         <div class="alert alert-info mt-4">还没有任何动态，快来发布第一条吧！</div>
         {% endif %}
     </div>
 
+    <!-- 点赞功能 JS -->
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const buttons = document.querySelectorAll('.like-btn');
-
             buttons.forEach(button => {
                 button.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    const postId = this.getAttribute('data-post-id');
+                    const postId = this.dataset.postId;
                     const csrfToken = '{{ csrf_token }}';
-
                     fetch(`/moments/${postId}/like/`, {
                         method: 'POST',
                         headers: {
@@ -190,12 +101,10 @@
                     })
                         .then(response => response.json())
                         .then(data => {
-                            const likeCount = document.getElementById(`like-count-${postId}`);
-                            likeCount.textContent = data.like_count;
-
-                            this.innerHTML = data.liked
-                                ? `👍 已点赞 (<span id="like-count-${postId}">${data.like_count}</span>)`
-                                : `👍 点赞 (<span id="like-count-${postId}">${data.like_count}</span>)`;
+                            const icon = document.getElementById(`like-icon-${postId}`);
+                            const count = document.getElementById(`like-count-${postId}`);
+                            icon.textContent = data.liked ? '❤️' : '🤍';
+                            count.textContent = data.like_count;
                         })
                         .catch(error => {
                             console.error('点赞失败:', error);
@@ -204,6 +113,7 @@
             });
         });
     </script>
+
 </body>
 
 </html>
