@@ -1,41 +1,183 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}Mew · 喵喵聊天室{% endblock %}
+{% block title %}Mew · 聊天室{% endblock %}
 {% block content %}
 <link rel="stylesheet" href="{% static 'chat/css/bootstrap.min.css' %}">
 <style>
-    .chat-big-card {
-        background: rgba(255, 255, 255, 0.92);
-        border-radius: 22px;
-        box-shadow: 0 4px 24px rgba(168, 106, 227, 0.10), 0 1.5px 8px rgba(252, 176, 196, 0.10);
-        padding: 38px 32px 32px 32px;
-        margin: 2.5% auto 2.5% auto;
-        width: 90%;
-        max-width: 1100px;
-        min-height: 95vh;
+    .chat-outer {
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        width: 100vw;
+        min-height: 80vh;
+        box-sizing: border-box;
+        background: none;
+    }
+
+    .chat-container {
+        display: flex;
+        max-width: 1200px;
+        width: 96vw;
+        min-width: 320px;
+        margin: 40px auto;
+        min-height: 80vh;
+        background: none;
+        border-radius: 0;
+        box-shadow: none;
+        overflow: hidden;
+        box-sizing: border-box;
+        border: 1.5px solid #e5e6eb;
+    }
+
+    .chat-sidebar {
+        width: 260px;
+        background: #f0f1f3;
+        border-right: 1.5px solid #e5e6eb;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+        box-sizing: border-box;
+    }
+
+    .chat-main {
+        flex: 1;
+        background: #fff;
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+        box-sizing: border-box;
+    }
+
+    /* 移动端响应式 */
+    @media (max-width: 700px) {
+        .chat-container {
+            flex-direction: column;
+            max-width: 100vw;
+            width: 100vw;
+            min-width: 0;
+            border-radius: 0;
+        }
+
+        .chat-sidebar {
+            width: 100vw;
+            min-width: 0;
+            border-right: none;
+            border-bottom: 1.5px solid #e5e6eb;
+        }
+
+        .chat-main {
+            display: none;
+        }
+
+        .chat-container.mobile-chat-active .chat-sidebar {
+            display: none;
+        }
+
+        .chat-container.mobile-chat-active .chat-main {
+            display: flex;
+            width: 100vw;
+            min-width: 0;
+        }
+
+        .chat-main-header {
+            display: flex;
+            align-items: center;
+        }
+
+        .mobile-back-btn {
+            display: inline-block;
+            margin-right: 12px;
+            font-size: 1.3rem;
+            color: #a86ae3;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+    }
+
+    .mobile-back-btn {
+        display: none;
+    }
+
+    .chat-sidebar-header {
+        padding: 18px 16px 10px 16px;
+        font-size: 1.1rem;
+        font-weight: bold;
+        color: #888;
+    }
+
+    .chat-search {
+        margin: 0 16px 12px 16px;
+        padding: 6px 12px;
+        border-radius: 8px;
+        border: 1.5px solid #e5e6eb;
+        width: 100%;
+        font-size: 1rem;
+        background: #fff;
+    }
+
+    .chat-user-list {
+        flex: 1;
+        overflow-y: auto;
+        padding: 0 0 8px 0;
+    }
+
+    .chat-user-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 18px;
+        cursor: pointer;
+        border-left: 4px solid transparent;
+        transition: background 0.2s, border 0.2s;
+    }
+
+    .chat-user-item.active {
+        background: #e6e0f7;
+        border-left: 4px solid #a86ae3;
+    }
+
+    .chat-user-avatar {
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        object-fit: cover;
+        background: #eee;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+        color: #a86ae3;
+        font-weight: bold;
+    }
+
+    .chat-main-header {
+        padding: 18px 24px 12px 24px;
+        font-size: 1.2rem;
+        font-weight: bold;
+        border-bottom: 1.5px solid #f0f1f3;
+        color: #a86ae3;
     }
 
     .chat-box {
-        height: 500px;
+        flex: 1;
         overflow-y: auto;
-        background-color: #f8f9fa;
-        border-radius: 12px;
-        padding: 15px;
-        scroll-behavior: smooth;
+        padding: 24px 24px 12px 24px;
+        background: #fff;
+        min-height: 400px;
     }
 
-    /* 用户气泡区域整体 */
     .chat-msg {
         display: flex;
-        align-items: flex-start;
-        margin-bottom: 16px;
+        align-items: flex-end;
+        margin-bottom: 18px;
         max-width: 100%;
     }
 
     .chat-msg.me {
         justify-content: flex-end;
         text-align: right;
-        flex-direction: row;
     }
 
     .chat-msg.you {
@@ -43,107 +185,170 @@
         text-align: left;
     }
 
-    /* 头像样式 */
-    .avatar {
+    .chat-avatar {
         width: 34px;
         height: 34px;
         border-radius: 50%;
         object-fit: cover;
-        margin: 0 6px;
-        margin-top: 2px;
+        margin: 0 8px;
+        background: #eee;
     }
 
-    /* 气泡+时间 */
     .bubble-container {
         display: flex;
         flex-direction: column;
-        max-width: 55%;
+        max-width: 60%;
     }
 
     .bubble {
-        padding: 10px 14px;
+        padding: 10px 16px;
         border-radius: 16px;
         word-break: break-word;
-        font-size: 15px;
+        font-size: 1rem;
         line-height: 1.6;
         white-space: pre-wrap;
-        display: line-block;
+        margin-bottom: 4px;
+        display: inline-block;
     }
 
     .chat-msg.me .bubble {
         background-color: #a0e4ff;
+        color: #222;
         border-top-right-radius: 0;
     }
 
     .chat-msg.you .bubble {
-        background-color: #e0f7fa;
+        background-color: #f0f1f3;
+        color: #222;
         border-top-left-radius: 0;
     }
 
     .timestamp {
-        font-size: 0.75rem;
-        color: #999;
-        margin-top: 4px;
+        font-size: 0.82rem;
+        color: #aaa;
+        margin-top: 2px;
+        margin-bottom: 2px;
+    }
+
+    .chat-input-area {
+        border-top: 1.5px solid #f0f1f3;
+        padding: 16px 24px 16px 24px;
+        background: #fff;
+        display: flex;
+        gap: 12px;
+    }
+
+    .chat-input {
+        flex: 1;
+        border-radius: 8px;
+        border: 1.5px solid #e5e6eb;
+        padding: 8px 14px;
+        font-size: 1rem;
+        outline: none;
+    }
+
+    .chat-send-btn {
+        background: linear-gradient(90deg, #a86ae3 0%, #fcb0c4 100%);
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        padding: 8px 24px;
+        font-size: 1.08rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+
+    .chat-send-btn:hover {
+        background: linear-gradient(90deg, #fcb0c4 0%, #a86ae3 100%);
     }
 </style>
-<div class="chat-big-card mt-4">
-    <h3 class="mb-4">Hi, {{ request.user.username }} 👋</h3>
-    <div class="row">
-        <!-- 用户列表 -->
-        <div class="col-md-3">
-            <h5>可聊天的用户</h5>
-            <ul class="list-group">
+<div class="chat-outer mt-4">
+    <div class="chat-container" id="chat-container">
+        <div class="chat-sidebar">
+            <div class="chat-sidebar-header">聊天列表</div>
+            <input class="chat-search" placeholder="搜索" disabled />
+            <div class="chat-user-list">
                 {% for user in users %}
-                <li class="list-group-item {% if user == selected_user %}active{% endif %}">
-                    <a href="?user={{ user.id }}"
-                        style="text-decoration: none; {% if user == selected_user %}color:white;{% endif %}">
-                        {{ user.username }}
-                    </a>
-                </li>
+                <div class="chat-user-item {% if user == selected_user %}active{% endif %}"
+                    data-user-id="{{ user.id }}">
+                    <div class="chat-user-avatar">
+                        {% if user.profile.avatar and user.profile.avatar.url != '/media/avatars/default.jpg' %}
+                        <img src="{{ user.profile.avatar.url }}"
+                            style="width:100%;height:100%;border-radius:50%;object-fit:cover;">
+                        {% else %}
+                        {{ user.username|first|upper }}
+                        {% endif %}
+                    </div>
+                    <div>
+                        <div style="font-weight:600;">{{ user.username }}</div>
+                    </div>
+                </div>
                 {% empty %}
-                <li class="list-group-item">暂无其他用户</li>
+                <div class="chat-user-item">暂无其他用户</div>
                 {% endfor %}
-            </ul>
+            </div>
         </div>
-        <!-- 聊天框 -->
-        <div class="col-md-9">
-            {% if selected_user %}
-            <h5>与 {{ selected_user.username }} 的聊天</h5>
-            <div id="chat-box" class="chat-box mb-3">
+        <div class="chat-main">
+            <div class="chat-main-header">
+                <button class="mobile-back-btn" onclick="mobileBackToList()">←</button>
+                {% if selected_user %}{{ selected_user.username }}{% else %}请选择聊天对象{% endif %}
+            </div>
+            <div id="chat-box" class="chat-box">
+                {% if selected_user %}
                 {% for msg in messages %}
                 <div class="chat-msg {% if msg.sender == request.user %}me{% else %}you{% endif %}">
                     {% if msg.sender != request.user %}
-                    <img src="{{ msg.sender.profile.avatar.url }}" class="avatar">
+                    <img src="{{ msg.sender.profile.avatar.url }}" class="chat-avatar">
                     {% endif %}
                     <div class="bubble-container">
                         <div class="bubble">{{ msg.content }}</div>
                         <div class="timestamp">{{ msg.timestamp|date:"H:i" }}</div>
                     </div>
                     {% if msg.sender == request.user %}
-                    <img src="{{ msg.sender.profile.avatar.url }}" class="avatar">
+                    <img src="{{ msg.sender.profile.avatar.url }}" class="chat-avatar">
                     {% endif %}
                 </div>
                 {% endfor %}
+                {% else %}
+                <p class="text-muted">请从左侧选择一位用户开始聊天。</p>
+                {% endif %}
             </div>
-            <!-- 发送表单 -->
-            <form method="post">
+            {% if selected_user %}
+            <form method="post" class="chat-input-area">
                 {% csrf_token %}
-                <div class="input-group">
-                    <input type="hidden" name="receiver_id" value="{{ selected_user.id }}">
-                    <input type="text" name="content" class="form-control" placeholder="说点什么..." required>
-                    <button type="submit" class="btn btn-primary">发送</button>
-                </div>
+                <input type="hidden" name="receiver_id" value="{{ selected_user.id }}">
+                <input type="text" name="content" class="chat-input" placeholder="说点什么..." required>
+                <button type="submit" class="chat-send-btn">发送</button>
             </form>
-            {% else %}
-            <p class="text-muted">请从左侧选择一位用户开始聊天。</p>
             {% endif %}
         </div>
     </div>
 </div>
 <script>
+    // 聊天自动滚动到底部
     const chatBox = document.getElementById('chat-box');
     if (chatBox) {
         chatBox.scrollTop = chatBox.scrollHeight;
     }
+    // 移动端切换逻辑
+    function isMobile() {
+        return window.innerWidth <= 700;
+    }
+    function mobileBackToList() {
+        document.getElementById('chat-container').classList.remove('mobile-chat-active');
+    }
+    document.querySelectorAll('.chat-user-item').forEach(function (item) {
+        item.addEventListener('click', function () {
+            if (isMobile()) {
+                document.getElementById('chat-container').classList.add('mobile-chat-active');
+            }
+            // 跳转到对应聊天（原有逻辑）
+            const userId = this.getAttribute('data-user-id');
+            if (userId) {
+                window.location.href = '?user=' + userId;
+            }
+        });
+    });
 </script>
 {% endblock %}
