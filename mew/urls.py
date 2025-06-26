@@ -23,5 +23,6 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('', lambda request: redirect('chat/', permanent=False)),
     path('chat/', include('chat.urls')),
+    path('moments/', include('moments.urls')),
     path('admin/', admin.site.urls),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
