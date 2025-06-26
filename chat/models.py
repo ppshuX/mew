@@ -2,6 +2,11 @@ from django.db import models
 from django.contrib.auth.models import User
 
 # Create your models here.
+
+# 上传头像的路径函数
+def user_directory_path(instance, filename):
+    return f'avatars/user_{instance.user.id}/{filename}'
+
 class Message(models.Model):
     sender = models.ForeignKey(User, related_name='sent_messages', on_delete=models.CASCADE)
     receiver = models.ForeignKey(User, related_name='received_messages', on_delete=models.CASCADE)
@@ -11,3 +16,10 @@ class Message(models.Model):
 
     def __str__(self):
         return f'{self.sender.username} → {self.receiver.username}: {self.content[:20]}'
+
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
+    avatar = models.ImageField(upload_to=user_directory_path, default='avatars/default.jpg')
+
+    def __str__(self):
+        return f'{self.user.username} 的资料'
