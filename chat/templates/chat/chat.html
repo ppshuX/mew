@@ -1,155 +1,149 @@
+{% extends 'base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="zh-CN">
+{% block title %}Mew · 喵喵聊天室{% endblock %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'chat/css/bootstrap.min.css' %}">
+<style>
+    .chat-big-card {
+        background: rgba(255, 255, 255, 0.92);
+        border-radius: 22px;
+        box-shadow: 0 4px 24px rgba(168, 106, 227, 0.10), 0 1.5px 8px rgba(252, 176, 196, 0.10);
+        padding: 38px 32px 32px 32px;
+        margin: 2.5% auto 2.5% auto;
+        width: 90%;
+        max-width: 1100px;
+        min-height: 95vh;
+    }
 
-<head>
-    <meta charset="UTF-8">
-    <title>Mew · 喵喵聊天室</title>
-    <link rel="stylesheet" href="{% static 'chat/css/bootstrap.min.css' %}">
-    <style>
-        body {
-            background-color: #fdfdfd;
-            font-family: 'Helvetica Neue', 'PingFang SC', 'Microsoft YaHei', sans-serif;
-        }
+    .chat-box {
+        height: 500px;
+        overflow-y: auto;
+        background-color: #f8f9fa;
+        border-radius: 12px;
+        padding: 15px;
+        scroll-behavior: smooth;
+    }
 
-        .chat-box {
-            height: 500px;
-            overflow-y: auto;
-            background-color: #f8f9fa;
-            border-radius: 12px;
-            padding: 15px;
-            scroll-behavior: smooth;
-        }
+    /* 用户气泡区域整体 */
+    .chat-msg {
+        display: flex;
+        align-items: flex-start;
+        margin-bottom: 16px;
+        max-width: 100%;
+    }
 
-        /* 用户气泡区域整体 */
-        .chat-msg {
-            display: flex;
-            align-items: flex-start;
-            margin-bottom: 16px;
-            max-width: 100%;
-        }
+    .chat-msg.me {
+        justify-content: flex-end;
+        text-align: right;
+        flex-direction: row;
+    }
 
-        .chat-msg.me {
-            justify-content: flex-end;
-            text-align: right;
-            flex-direction: row;
-        }
+    .chat-msg.you {
+        justify-content: flex-start;
+        text-align: left;
+    }
 
-        .chat-msg.you {
-            justify-content: flex-start;
-            text-align: left;
-        }
+    /* 头像样式 */
+    .avatar {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin: 0 6px;
+        margin-top: 2px;
+    }
 
-        /* 头像样式 */
-        .avatar {
-            width: 34px;
-            height: 34px;
-            border-radius: 50%;
-            object-fit: cover;
-            margin: 0 6px;
-            margin-top: 2px;
-        }
+    /* 气泡+时间 */
+    .bubble-container {
+        display: flex;
+        flex-direction: column;
+        max-width: 55%;
+    }
 
-        /* 气泡+时间 */
-        .bubble-container {
-            display: flex;
-            flex-direction: column;
-            max-width: 55%;
-        }
+    .bubble {
+        padding: 10px 14px;
+        border-radius: 16px;
+        word-break: break-word;
+        font-size: 15px;
+        line-height: 1.6;
+        white-space: pre-wrap;
+        display: line-block;
+    }
 
-        .bubble {
-            padding: 10px 14px;
-            border-radius: 16px;
-            word-break: break-word;
-            font-size: 15px;
-            line-height: 1.6;
-            white-space: pre-wrap;
-            display: line-block;
-        }
+    .chat-msg.me .bubble {
+        background-color: #a0e4ff;
+        border-top-right-radius: 0;
+    }
 
-        .chat-msg.me .bubble {
-            background-color: #a0e4ff;
-            border-top-right-radius: 0;
-        }
+    .chat-msg.you .bubble {
+        background-color: #e0f7fa;
+        border-top-left-radius: 0;
+    }
 
-        .chat-msg.you .bubble {
-            background-color: #e0f7fa;
-            border-top-left-radius: 0;
-        }
-
-        .timestamp {
-            font-size: 0.75rem;
-            color: #999;
-            margin-top: 4px;
-        }
-    </style>
-</head>
-
-<body>
-    <div class="container mt-4">
-        <h3 class="mb-4">Hi, {{ request.user.username }} 👋</h3>
-        <div class="row">
-            <!-- 用户列表 -->
-            <div class="col-md-3">
-                <h5>可聊天的用户</h5>
-                <ul class="list-group">
-                    {% for user in users %}
-                    <li class="list-group-item {% if user == selected_user %}active{% endif %}">
-                        <a href="?user={{ user.id }}"
-                            style="text-decoration: none; {% if user == selected_user %}color:white;{% endif %}">
-                            {{ user.username }}
-                        </a>
-                    </li>
-                    {% empty %}
-                    <li class="list-group-item">暂无其他用户</li>
-                    {% endfor %}
-                </ul>
-            </div>
-
-            <!-- 聊天框 -->
-            <div class="col-md-9">
-                {% if selected_user %}
-                <h5>与 {{ selected_user.username }} 的聊天</h5>
-                <div id="chat-box" class="chat-box mb-3">
-                    {% for msg in messages %}
-                    <div class="chat-msg {% if msg.sender == request.user %}me{% else %}you{% endif %}">
-                        {% if msg.sender != request.user %}
-                        <img src="{{ msg.sender.profile.avatar.url }}" class="avatar">
-                        {% endif %}
-                        <div class="bubble-container">
-                            <div class="bubble">{{ msg.content }}</div>
-                            <div class="timestamp">{{ msg.timestamp|date:"H:i" }}</div>
-                        </div>
-                        {% if msg.sender == request.user %}
-                        <img src="{{ msg.sender.profile.avatar.url }}" class="avatar">
-                        {% endif %}
+    .timestamp {
+        font-size: 0.75rem;
+        color: #999;
+        margin-top: 4px;
+    }
+</style>
+<div class="chat-big-card mt-4">
+    <h3 class="mb-4">Hi, {{ request.user.username }} 👋</h3>
+    <div class="row">
+        <!-- 用户列表 -->
+        <div class="col-md-3">
+            <h5>可聊天的用户</h5>
+            <ul class="list-group">
+                {% for user in users %}
+                <li class="list-group-item {% if user == selected_user %}active{% endif %}">
+                    <a href="?user={{ user.id }}"
+                        style="text-decoration: none; {% if user == selected_user %}color:white;{% endif %}">
+                        {{ user.username }}
+                    </a>
+                </li>
+                {% empty %}
+                <li class="list-group-item">暂无其他用户</li>
+                {% endfor %}
+            </ul>
+        </div>
+        <!-- 聊天框 -->
+        <div class="col-md-9">
+            {% if selected_user %}
+            <h5>与 {{ selected_user.username }} 的聊天</h5>
+            <div id="chat-box" class="chat-box mb-3">
+                {% for msg in messages %}
+                <div class="chat-msg {% if msg.sender == request.user %}me{% else %}you{% endif %}">
+                    {% if msg.sender != request.user %}
+                    <img src="{{ msg.sender.profile.avatar.url }}" class="avatar">
+                    {% endif %}
+                    <div class="bubble-container">
+                        <div class="bubble">{{ msg.content }}</div>
+                        <div class="timestamp">{{ msg.timestamp|date:"H:i" }}</div>
                     </div>
-                    {% endfor %}
+                    {% if msg.sender == request.user %}
+                    <img src="{{ msg.sender.profile.avatar.url }}" class="avatar">
+                    {% endif %}
                 </div>
-
-                <!-- 发送表单 -->
-                <form method="post">
-                    {% csrf_token %}
-                    <div class="input-group">
-                        <input type="hidden" name="receiver_id" value="{{ selected_user.id }}">
-                        <input type="text" name="content" class="form-control" placeholder="说点什么..." required>
-                        <button type="submit" class="btn btn-primary">发送</button>
-                    </div>
-                </form>
-                {% else %}
-                <p class="text-muted">请从左侧选择一位用户开始聊天。</p>
-                {% endif %}
+                {% endfor %}
             </div>
+            <!-- 发送表单 -->
+            <form method="post">
+                {% csrf_token %}
+                <div class="input-group">
+                    <input type="hidden" name="receiver_id" value="{{ selected_user.id }}">
+                    <input type="text" name="content" class="form-control" placeholder="说点什么..." required>
+                    <button type="submit" class="btn btn-primary">发送</button>
+                </div>
+            </form>
+            {% else %}
+            <p class="text-muted">请从左侧选择一位用户开始聊天。</p>
+            {% endif %}
         </div>
     </div>
-
-    <!-- 自动滚动到底部 -->
-    <script>
-        const chatBox = document.getElementById('chat-box');
-        if (chatBox) {
-            chatBox.scrollTop = chatBox.scrollHeight;
-        }
-    </script>
-</body>
-
-</html>
+</div>
+<script>
+    const chatBox = document.getElementById('chat-box');
+    if (chatBox) {
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+</script>
+{% endblock %}
