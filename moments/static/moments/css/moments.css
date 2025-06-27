@@ -337,3 +337,36 @@ body {
         max-width: 100%;
     }
 }
+
+.author-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+}
+
+.avatar-circle {
+    width: 32px;
+    height: 32px;
+    background: linear-gradient(135deg, #a86ae3 60%, #ffb6d5 100%);
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.1rem;
+    box-shadow: 0 2px 8px rgba(168, 106, 227, 0.10);
+}
+
+.author-divider {
+    color: #d1b3f7;
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.author-name {
+    font-weight: bold;
+    font-size: 1.05rem;
+    color: #7a3ee5;
+}
