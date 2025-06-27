@@ -222,7 +222,7 @@
                     <ul class="navbar-nav">
                         {% if user.is_authenticated %}
                         <li class="nav-item">
-                            <span class="nav-link">你好，<b>{{ user.username }}</b></span>
+                            <span class="nav-link"><b>{{ user.username }}</b></span>
                         </li>
                         <li class="nav-item">
                             <a href="{% url 'profile_detail' username=user.username %}" title="个人资料"

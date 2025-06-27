@@ -1,0 +1,395 @@
+/* 聊天室页面独立CSS */
+.chat-outer {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    width: 100vw;
+    min-height: 80vh;
+    box-sizing: border-box;
+    background: none;
+}
+
+.chat-container {
+    display: flex;
+    max-width: 1200px;
+    width: 96vw;
+    min-width: 320px;
+    margin: 40px auto;
+    min-height: 80vh;
+    background: none;
+    border-radius: 0;
+    box-shadow: none;
+    overflow: hidden;
+    box-sizing: border-box;
+    border: 1.5px solid #e5e6eb;
+}
+
+.chat-sidebar {
+    width: 260px;
+    background: #f0f1f3;
+    border-right: 1.5px solid #e5e6eb;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    box-sizing: border-box;
+}
+
+.chat-main {
+    flex: 1;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    box-sizing: border-box;
+}
+
+/* 移动端响应式 */
+@media (max-width: 700px) {
+    .chat-container {
+        flex-direction: column;
+        max-width: 100vw;
+        width: 100vw;
+        min-width: 0;
+        border-radius: 0;
+    }
+
+    .chat-sidebar {
+        width: 100vw;
+        min-width: 0;
+        border-right: none;
+        border-bottom: 1.5px solid #e5e6eb;
+    }
+
+    .chat-main {
+        display: none;
+    }
+
+    .chat-container.mobile-chat-active .chat-sidebar {
+        display: none;
+    }
+
+    .chat-container.mobile-chat-active .chat-main {
+        display: flex;
+        width: 100vw;
+        min-width: 0;
+    }
+
+    .chat-main-header {
+        display: flex;
+        align-items: center;
+    }
+
+    .mobile-back-btn {
+        display: inline-block;
+        margin-right: 12px;
+        font-size: 1.3rem;
+        color: #a86ae3;
+        background: none;
+        border: none;
+        cursor: pointer;
+    }
+}
+
+.mobile-back-btn {
+    display: none;
+}
+
+.chat-sidebar-header {
+    padding: 18px 16px 10px 16px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #888;
+}
+
+.chat-search {
+    margin: 0 16px 12px 16px;
+    padding: 6px 12px;
+    border-radius: 16px !important;
+    border: 1.5px solid #e5e6eb;
+    width: 100%;
+    font-size: 1rem;
+    background: #fff;
+    margin-bottom: 24px !important;
+}
+
+.chat-search::after {
+    content: "";
+    display: block;
+    height: 1px;
+    background: #ececec;
+    margin-top: 20px;
+    margin-left: -12px;
+    margin-right: -12px;
+}
+
+.chat-user-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0 0 8px 0;
+}
+
+.chat-user-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 18px;
+    cursor: pointer;
+    border-left: 4px solid transparent;
+    transition: background 0.2s, border 0.2s;
+}
+
+.chat-user-item.active {
+    background: #e6e0f7;
+    border-left: 4px solid #a86ae3;
+}
+
+.chat-user-avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    object-fit: cover;
+    background: #eee;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    color: #a86ae3;
+    font-weight: bold;
+}
+
+.chat-main-header {
+    padding: 18px 24px 12px 24px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    border-bottom: 1.5px solid #f0f1f3;
+    color: #a86ae3;
+}
+
+.chat-box {
+    flex: 1;
+    overflow-y: auto;
+    padding: 24px 24px 12px 24px;
+    background: #fff;
+    min-height: 400px;
+}
+
+.chat-msg {
+    display: flex;
+    align-items: flex-end;
+    margin-bottom: 18px;
+    max-width: 100%;
+}
+
+.chat-msg.me {
+    justify-content: flex-end;
+    text-align: right;
+}
+
+.chat-msg.you {
+    justify-content: flex-start;
+    text-align: left;
+}
+
+.chat-avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin: 0 8px;
+    background: #eee;
+    align-self: flex-end !important;
+    margin-bottom: 0 !important;
+}
+
+.bubble-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.bubble {
+    padding: 10px 16px;
+    border-radius: 16px;
+    word-break: break-word;
+    font-size: 1rem;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    margin-bottom: 4px;
+    display: inline-block;
+}
+
+/* 聊天列表搜索框分隔与留白（微信风格） */
+.chat-search {
+    margin-bottom: 0 !important;
+    border-radius: 16px !important;
+    position: relative;
+    z-index: 1;
+}
+
+.chat-search::after {
+    content: "";
+    display: block;
+    height: 1px;
+    background: #ececec;
+    margin-top: 16px;
+    margin-left: -12px;
+    margin-right: -12px;
+}
+
+/* 聊天气泡完全对称，三角形在中线，微信风格 */
+.chat-msg .bubble {
+    border-radius: 16px !important;
+    position: relative;
+    padding: 10px 22px !important;
+    /* 预留三角形空间 */
+    min-width: 48px;
+    display: inline-block;
+    max-width: 70vw;
+}
+
+.chat-msg.me .bubble {
+    background-color: #a0e4ff !important;
+    color: #222 !important;
+}
+
+.chat-msg.you .bubble {
+    background-color: #f0f1f3 !important;
+    color: #222 !important;
+    border-radius: 16px !important;
+}
+
+.chat-msg.you .bubble::after {
+    content: "";
+    position: absolute;
+    left: -6px !important;
+    bottom: 10px !important;
+    width: 0;
+    height: 0;
+    border-top: 6px solid transparent !important;
+    border-bottom: 6px solid transparent !important;
+    border-right: 7px solid #f0f1f3 !important;
+    border-left: none !important;
+    border-radius: 0 !important;
+    display: block !important;
+}
+
+/* 搜索框四角圆角闭环，防止被父容器裁切 */
+.chat-search {
+    border-radius: 16px !important;
+    background: #fff !important;
+    box-shadow: none !important;
+    border: 1.5px solid #e5e6eb !important;
+    width: calc(100% - 8px) !important;
+    margin: 0 4px !important;
+    outline: none !important;
+}
+
+.timestamp {
+    font-size: 0.82rem;
+    color: #aaa;
+    margin-top: 2px;
+    margin-bottom: 2px;
+}
+
+.chat-input-area {
+    border-top: 1.5px solid #f0f1f3;
+    padding: 16px 24px 16px 24px;
+    background: #fff;
+    display: flex;
+    gap: 12px;
+}
+
+.chat-input {
+    flex: 1;
+    border-radius: 8px;
+    border: 1.5px solid #e5e6eb;
+    padding: 8px 14px;
+    font-size: 1rem;
+    outline: none;
+}
+
+.chat-send-btn {
+    background: linear-gradient(90deg, #a86ae3 0%, #fcb0c4 100%);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 24px;
+    font-size: 1.08rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.chat-send-btn:hover {
+    background: linear-gradient(90deg, #fcb0c4 0%, #a86ae3 100%);
+}
+
+/* 聊天气泡和头像底部对齐修正 */
+.chat-msg {
+    align-items: flex-end !important;
+}
+
+.chat-avatar {
+    align-self: flex-end !important;
+    margin-bottom: 0 !important;
+}
+
+/* 聊天气泡和头像底部精确对齐 */
+.chat-msg {
+    display: flex;
+    align-items: flex-end;
+}
+
+.bubble-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.chat-avatar {
+    align-self: flex-end;
+    margin-bottom: -12px;
+}
+
+/* 头像往上移动，margin-top微调 */
+.chat-msg .chat-avatar {
+    align-self: flex-end !important;
+    margin-bottom: 0 !important;
+    margin-top: -20px !important;
+}
+
+/* 强制高优先级修正 */
+.chat-search {
+    border-radius: 16px !important;
+}
+
+.chat-msg.you .bubble {
+    border-radius: 16px !important;
+}
+
+.chat-msg.me .bubble::after {
+    content: "";
+    position: absolute;
+    right: -6px !important;
+    bottom: 10px !important;
+    width: 0;
+    height: 0;
+    border-top: 6px solid transparent !important;
+    border-bottom: 6px solid transparent !important;
+    border-left: 7px solid #a0e4ff !important;
+    border-right: none !important;
+    border-radius: 0 !important;
+    display: block !important;
+}
+
+.chat-search-divider {
+    height: 1px;
+    background: #ececec;
+    margin: 18px 0 18px 0;
+    width: 100%;
+    border-radius: 1px;
+}
+
+.chat-msg.me .bubble-container .timestamp {
+    text-align: right;
+    margin-right: 12px;
+}
