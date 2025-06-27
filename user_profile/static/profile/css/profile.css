@@ -1,5 +1,5 @@
-/* profile 详情和编辑页通用美化 */
-.profile-card {
+/* user_profile 详情和编辑页通用美化 */
+.user-profile-card {
     border-radius: 18px;
     box-shadow: 0 4px 18px rgba(168, 106, 227, 0.10);
     background: #fff;
@@ -10,11 +10,11 @@
     transition: box-shadow 0.2s;
 }
 
-.profile-card:hover {
+.user-profile-card:hover {
     box-shadow: 0 8px 32px rgba(168, 106, 227, 0.18);
 }
 
-.profile-avatar {
+.user-profile-avatar {
     width: 120px;
     height: 120px;
     border-radius: 50%;
@@ -24,27 +24,27 @@
     margin-bottom: 18px;
 }
 
-.profile-nickname {
+.user-profile-nickname {
     font-size: 1.5rem;
     font-weight: 700;
     color: #a86ae3;
     margin-bottom: 2px;
 }
 
-.profile-username {
+.user-profile-username {
     color: #aaa;
     font-size: 1.05rem;
     margin-bottom: 10px;
 }
 
-.profile-info-list {
+.user-profile-info-list {
     margin: 0 auto 18px auto;
     padding: 0;
     list-style: none;
     max-width: 320px;
 }
 
-.profile-info-list li {
+.user-profile-info-list li {
     background: #f9f9f9;
     border-radius: 8px;
     margin-bottom: 10px;
@@ -55,19 +55,19 @@
     gap: 10px;
 }
 
-.profile-info-icon {
+.user-profile-info-icon {
     font-size: 1.18rem;
     color: #a86ae3;
 }
 
-.profile-bio {
+.user-profile-bio {
     color: #888;
     font-size: 1.08rem;
     margin: 10px 0 0 0;
     text-align: center;
 }
 
-.profile-edit-btn {
+.user-profile-edit-btn {
     margin-top: 24px;
     border-radius: 8px;
     font-weight: 600;
@@ -76,7 +76,7 @@
 }
 
 /* 编辑页表单美化 */
-.profile-edit-form {
+.user-profile-edit-form {
     border-radius: 18px;
     box-shadow: 0 4px 18px rgba(168, 106, 227, 0.10);
     background: #fff;
@@ -85,14 +85,14 @@
     margin: 36px auto 0 auto;
 }
 
-.profile-edit-form label {
+.user-profile-edit-form label {
     font-weight: 600;
     color: #a86ae3;
 }
 
-.profile-edit-form input,
-.profile-edit-form select,
-.profile-edit-form textarea {
+.user-profile-edit-form input,
+.user-profile-edit-form select,
+.user-profile-edit-form textarea {
     border-radius: 8px;
     border: 1.5px solid #e0e0e0;
     font-size: 1.08rem;
@@ -100,18 +100,18 @@
     margin-bottom: 10px;
 }
 
-.profile-edit-form .form-label {
+.user-profile-edit-form .form-label {
     margin-bottom: 4px;
 }
 
-.profile-edit-form .btn-success {
+.user-profile-edit-form .btn-success {
     border-radius: 8px;
     font-weight: 600;
     font-size: 1.1rem;
     padding: 8px 32px;
 }
 
-.profile-avatar-upload {
+.user-profile-avatar-upload {
     display: flex;
     align-items: center;
     gap: 32px;
@@ -119,7 +119,7 @@
     padding: 18px 0 18px 0;
 }
 
-.profile-avatar-upload input[type="file"] {
+.user-profile-avatar-upload input[type="file"] {
     width: 100%;
     min-width: 220px;
     max-width: 340px;
@@ -136,13 +136,13 @@
     cursor: pointer;
 }
 
-.profile-avatar-upload input[type="file"]:focus {
+.user-profile-avatar-upload input[type="file"]:focus {
     border: 2px solid #a86ae3;
     background: #fff;
     box-shadow: 0 4px 16px rgba(168, 106, 227, 0.13);
 }
 
-.profile-avatar-preview {
+.user-profile-avatar-preview {
     width: 80px;
     height: 80px;
     border-radius: 50%;
@@ -151,7 +151,7 @@
     box-shadow: 0 1px 6px rgba(168, 106, 227, 0.10);
 }
 
-.profile-edit-form textarea[name$="bio"] {
+.user-profile-edit-form textarea[name$="bio"] {
     min-height: 70px;
     max-height: 180px;
     resize: vertical;
@@ -164,14 +164,14 @@
     transition: border 0.2s, box-shadow 0.2s;
 }
 
-.profile-edit-form textarea[name$="bio"]:focus {
+.user-profile-edit-form textarea[name$="bio"]:focus {
     border: 2px solid #a86ae3;
     background: #fff;
     box-shadow: 0 4px 16px rgba(168, 106, 227, 0.13);
     outline: none;
 }
 
-.profile-edit-form .btn-outline-secondary {
+.user-profile-edit-form .btn-outline-secondary {
     background: #fff;
     color: #a86ae3;
     border: 1.5px solid #e0e0e0;
@@ -184,7 +184,7 @@
     transition: background 0.2s, color 0.2s, border 0.2s;
 }
 
-.profile-edit-form .btn-outline-secondary:hover {
+.user-profile-edit-form .btn-outline-secondary:hover {
     background: #f3eaff;
     color: #a86ae3;
     border: 1.5px solid #a86ae3;
@@ -192,29 +192,29 @@
 
 @media (max-width: 600px) {
 
-    .profile-card,
-    .profile-edit-form {
+    .user-profile-card,
+    .user-profile-edit-form {
         padding: 18px 4vw 18px 4vw;
         max-width: 98vw;
     }
 
-    .profile-avatar {
+    .user-profile-avatar {
         width: 80px;
         height: 80px;
     }
 
-    .profile-info-list li {
+    .user-profile-info-list li {
         font-size: 0.98rem;
         padding: 8px 8px;
     }
 
-    .profile-avatar-upload {
+    .user-profile-avatar-upload {
         flex-direction: column;
         gap: 12px;
         padding: 8px 0 8px 0;
     }
 
-    .profile-avatar-upload input[type="file"] {
+    .user-profile-avatar-upload input[type="file"] {
         min-width: 0;
         width: 100%;
         font-size: 0.98rem;
@@ -222,7 +222,7 @@
         padding: 8px 10px;
     }
 
-    .profile-edit-form .btn-outline-secondary {
+    .user-profile-edit-form .btn-outline-secondary {
         margin-left: 0;
         margin-top: 12px;
         width: 100%;

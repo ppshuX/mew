@@ -104,20 +104,17 @@
         <div class="detail-card detail-main" id="detail-main">
             <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 2px;">
                 <div class="avatar-border">
-                    {% if post.author.profile.avatar %}
-                    {% if post.author.profile.avatar.url != '/media/avatars/default.jpg' %}
-                    <img src="{{ post.author.profile.avatar.url }}"
+                    {% if post.author.user_profile.avatar and post.author.user_profile.avatar.url !=
+                    '/media/avatars/default.jpg' %}
+                    <img src="{{ post.author.user_profile.avatar.url }}"
                         style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;">
-                    {% else %}
-                    {{ post.author.username|first|upper }}
-                    {% endif %}
                     {% else %}
                     {{ post.author.username|first|upper }}
                     {% endif %}
                 </div>
                 <div class="vertical-divider"></div>
                 <div>
-                    <div class="detail-title">{{ post.author.profile.nickname|default:post.author.username }}</div>
+                    <div class="detail-title">{{ post.author.user_profile.nickname|default:post.author.username }}</div>
                     <div class="detail-time">{{ post.created_at|naturaltime }}</div>
                 </div>
             </div>
@@ -155,26 +152,26 @@
                 {% for c in comments %}
                 <div class="detail-comment-box">
                     <div class="detail-comment-content">
-                        <strong>{{ c.obj.author.profile.nickname|default:c.obj.author.username }}</strong>:
-                        <span>{{ c.obj.content|linebreaksbr }}</span>
-                        <span class="detail-comment-time">{{ c.obj.created_at|naturaltime }}</span>
+                        <strong>{{ c.author.user_profile.nickname|default:c.author.username }}</strong>:
+                        <span>{{ c.content|linebreaksbr }}</span>
+                        <span class="detail-comment-time">{{ c.created_at|naturaltime }}</span>
                     </div>
                     <div class="comment-actions">
                         <button class="comment-like-btn {% if c.liked_by_user %}liked{% endif %}"
-                            data-comment-id="{{ c.obj.id }}" data-liked="{{ c.liked_by_user|yesno:'true,false' }}"
+                            data-comment-id="{{ c.id }}" data-liked="{{ c.liked_by_user|yesno:'true,false' }}"
                             title="{{ c.liked_by_user|yesno:'取消点赞,点赞' }}">
-                            <span id="comment-like-icon-{{ c.obj.id }}">
+                            <span id="comment-like-icon-{{ c.id }}">
                                 {% if c.liked_by_user %}👍{% else %}👍🏻{% endif %}
                             </span>
-                            <span id="comment-like-text-{{ c.obj.id }}">
+                            <span id="comment-like-text-{{ c.id }}">
                                 {% if c.liked_by_user %}取消点赞{% else %}点赞{% endif %}
                             </span>
-                            <span id="comment-like-count-{{ c.obj.id }}">
-                                {{ c.obj.like_count }}
+                            <span id="comment-like-count-{{ c.id }}">
+                                {{ c.like_count }}
                             </span>
                         </button>
-                        {% if c.obj.author == request.user or request.user.is_superuser %}
-                        <form method="post" action="{% url 'delete_comment' c.obj.id %}" style="display:inline;">
+                        {% if c.author == request.user or request.user.is_superuser %}
+                        <form method="post" action="{% url 'delete_comment' c.id %}" style="display:inline;">
                             {% csrf_token %}
                             <button type="submit" class="detail-comment-delete-btn trash-btn" title="删除"><span
                                     class="trash-icon">🗑️</span></button>
