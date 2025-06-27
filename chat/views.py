@@ -2,7 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from .models import Message
 from django.contrib.auth.models import User
-from profile.models import Profile
+from user_profile.models import UserProfile
 
 # Create your views here.
 @login_required
