@@ -13,7 +13,11 @@
             <label class="form-label" for="id_username">用户名</label>
             <input type="text" name="username" class="form-control" id="id_username" placeholder="请输入用户名" required>
             {% if form.username.errors %}
+            {% if 'A user with that username already exists.' in form.username.errors %}
+            <div class="text-danger small mt-1">该用户名已被注册，请更换</div>
+            {% else %}
             <div class="text-danger small mt-1">{{ form.username.errors|striptags }}</div>
+            {% endif %}
             {% endif %}
         </div>
         <div class="form-group mb-3">

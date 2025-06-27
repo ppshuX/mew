@@ -8,9 +8,9 @@ def user_directory_path(instance, filename):
 
 class Profile(models.Model):
     GENDER_CHOICES = [
-        ('M', '男'),
         ('F', '女'),
-        ('O', '其他'),
+        ('M', '男'),
+        ('S', '保密'),
     ]
 
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')

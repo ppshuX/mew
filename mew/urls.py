@@ -15,12 +15,13 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, reverse_lazy
 from django.shortcuts import redirect
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth import views as auth_views
 from moments import views as custom_views
+from django.contrib.auth.views import LogoutView
 
 urlpatterns = [
     path('', lambda request: redirect('chat/', permanent=False)),
@@ -30,6 +31,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
 
     path('accounts/login/', auth_views.LoginView.as_view(template_name='accounts/login.html'), name='login'),
-    path('accounts/logout/', auth_views.LogoutView.as_view(next_page='accounts/login/'), name='logout'),
+    path('accounts/logout/', LogoutView.as_view(next_page=reverse_lazy('login')), name='logout'),
     path('accounts/register/', custom_views.register, name='register'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

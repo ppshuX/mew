@@ -10,12 +10,14 @@
         <div class="profile-nickname">{{ profile.nickname|default:profile.user.username }}</div>
         <div class="profile-username">@{{ profile.user.username }}</div>
         {% if profile.bio %}
-        <div class="profile-bio">{{ profile.bio }}</div>
+        <div class="profile-bio" style="margin-bottom: 32px;">{{ profile.bio }}</div>
         {% endif %}
     </div>
-    <ul class="profile-info-list mt-4">
+    <ul class="profile-info-list mt-4" style="margin-top: 32px;">
         {% if profile.gender %}
-        <li><span class="profile-info-icon">🚻</span> 性别：{{ profile.gender }}</li>
+        <li><span class="profile-info-icon">🚻</span> 性别：
+            {% if profile.gender == 'F' %}女{% elif profile.gender == 'M' %}男{% else %}保密{% endif %}
+        </li>
         {% endif %}
         {% if profile.birthday %}
         <li><span class="profile-info-icon">🎂</span> 生日：{{ profile.birthday }}</li>

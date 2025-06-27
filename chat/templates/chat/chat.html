@@ -8,12 +8,12 @@
     <div class="chat-container" id="chat-container">
         <div class="chat-sidebar">
             <div class="chat-sidebar-header">聊天列表</div>
-            <input class="chat-search" placeholder="搜索" />
+            <input id="chat-user-search" class="chat-search" placeholder="搜索" />
             <div class="chat-search-divider"></div>
-            <div class="chat-user-list">
+            <div class="chat-user-list" id="chat-user-list">
                 {% for user in users %}
-                <div class="chat-user-item {% if user == selected_user %}active{% endif %}"
-                    data-user-id="{{ user.id }}">
+                <div class="chat-user-item {% if user == selected_user %}active{% endif %}" data-user-id="{{ user.id }}"
+                    data-username="{{ user.username }}">
                     <div class="chat-user-avatar">
                         {% if user.profile.avatar and user.profile.avatar.url != '/media/avatars/default.jpg' %}
                         <img src="{{ user.profile.avatar.url }}"
@@ -71,5 +71,22 @@
         </div>
     </div>
 </div>
+
 <script src="{% static 'chat/js/chat.js' %}"></script>
+<script>
+    // 聊天用户实时搜索
+    $(function () {
+        $('#chat-user-search').on('input', function () {
+            var kw = $(this).val().toLowerCase();
+            $('#chat-user-list .chat-user-item').each(function () {
+                var username = $(this).data('username').toLowerCase();
+                if (username.indexOf(kw) !== -1) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        });
+    });
+</script>
 {% endblock %}

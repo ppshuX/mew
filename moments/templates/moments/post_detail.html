@@ -57,6 +57,42 @@
         .back-link:hover {
             text-decoration: underline;
         }
+
+        .vertical-divider {
+            width: 1.5px;
+            height: 38px;
+            background: #e0d7f7;
+            border-radius: 2px;
+            margin: 0 8px;
+            box-shadow: 0 0 2px #e0d7f7;
+        }
+
+        .avatar-border {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            border: 2px solid #c9a4f7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #eee;
+            font-size: 1.3rem;
+            color: #a86ae3;
+            box-shadow: 0 2px 8px #f3eaff;
+        }
+
+        .horizontal-divider {
+            width: 100%;
+            height: 1.5px;
+            background: #f3eaff;
+            border-radius: 1px;
+            margin: 10px 0 10px 0;
+        }
+
+        .detail-content {
+            font-size: 1.25rem;
+            line-height: 1.8;
+        }
     </style>
 </head>
 
@@ -67,15 +103,25 @@
         </a>
         <div class="detail-card detail-main" id="detail-main">
             <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 2px;">
-                <div
-                    style="width:38px;height:38px;border-radius:50%;background:#eee;display:flex;align-items:center;justify-content:center;font-size:1.3rem;color:#a86ae3;">
+                <div class="avatar-border">
+                    {% if post.author.profile.avatar %}
+                    {% if post.author.profile.avatar.url != '/media/avatars/default.jpg' %}
+                    <img src="{{ post.author.profile.avatar.url }}"
+                        style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;">
+                    {% else %}
                     {{ post.author.username|first|upper }}
+                    {% endif %}
+                    {% else %}
+                    {{ post.author.username|first|upper }}
+                    {% endif %}
                 </div>
+                <div class="vertical-divider"></div>
                 <div>
-                    <div class="detail-title">{{ post.author.username }}</div>
+                    <div class="detail-title">{{ post.author.profile.nickname|default:post.author.username }}</div>
                     <div class="detail-time">{{ post.created_at|naturaltime }}</div>
                 </div>
             </div>
+            <div class="horizontal-divider"></div>
             {% if post.image %}
             <div class="detail-image-card">
                 <img src="{{ post.image.url }}" alt="动态图片" class="detail-image">
@@ -107,29 +153,28 @@
                 style="position:static;max-height:none;height:auto;overflow:visible;padding:0;">
                 <div class="detail-comments-title">全部评论：</div>
                 {% for c in comments %}
-                {% with comment=c.obj liked_by_user=c.liked_by_user %}
                 <div class="detail-comment-box">
                     <div class="detail-comment-content">
-                        <strong>{{ comment.author.username }}</strong>:
-                        <span>{{ comment.content|linebreaksbr }}</span>
-                        <span class="detail-comment-time">{{ comment.created_at|naturaltime }}</span>
+                        <strong>{{ c.obj.author.profile.nickname|default:c.obj.author.username }}</strong>:
+                        <span>{{ c.obj.content|linebreaksbr }}</span>
+                        <span class="detail-comment-time">{{ c.obj.created_at|naturaltime }}</span>
                     </div>
                     <div class="comment-actions">
-                        <button class="comment-like-btn {% if liked_by_user %}liked{% endif %}"
-                            data-comment-id="{{ comment.id }}" data-liked="{{ liked_by_user|yesno:'true,false' }}"
-                            title="{{ liked_by_user|yesno:'取消点赞,点赞' }}">
-                            <span id="comment-like-icon-{{ comment.id }}">
-                                {% if liked_by_user %}👍{% else %}👍🏻{% endif %}
+                        <button class="comment-like-btn {% if c.liked_by_user %}liked{% endif %}"
+                            data-comment-id="{{ c.obj.id }}" data-liked="{{ c.liked_by_user|yesno:'true,false' }}"
+                            title="{{ c.liked_by_user|yesno:'取消点赞,点赞' }}">
+                            <span id="comment-like-icon-{{ c.obj.id }}">
+                                {% if c.liked_by_user %}👍{% else %}👍🏻{% endif %}
                             </span>
-                            <span id="comment-like-text-{{ comment.id }}">
-                                {% if liked_by_user %}取消点赞{% else %}点赞{% endif %}
+                            <span id="comment-like-text-{{ c.obj.id }}">
+                                {% if c.liked_by_user %}取消点赞{% else %}点赞{% endif %}
                             </span>
-                            <span id="comment-like-count-{{ comment.id }}">
-                                {{ comment.like_count }}
+                            <span id="comment-like-count-{{ c.obj.id }}">
+                                {{ c.obj.like_count }}
                             </span>
                         </button>
-                        {% if comment.author == request.user or request.user.is_superuser %}
-                        <form method="post" action="{% url 'delete_comment' comment.id %}" style="display:inline;">
+                        {% if c.obj.author == request.user or request.user.is_superuser %}
+                        <form method="post" action="{% url 'delete_comment' c.obj.id %}" style="display:inline;">
                             {% csrf_token %}
                             <button type="submit" class="detail-comment-delete-btn trash-btn" title="删除"><span
                                     class="trash-icon">🗑️</span></button>
@@ -137,7 +182,8 @@
                         {% endif %}
                     </div>
                 </div>
-                {% endwith %}
+                {% empty %}
+                <p class="text-muted">暂无评论</p>
                 {% endfor %}
                 {% if post.comments.count > 2 %}
                 <button id="show-more-comments-btn" class="show-more-comments-btn">展示剩余评论</button>
