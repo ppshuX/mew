@@ -7,7 +7,7 @@ from user_profile.models import UserProfile
 # Create your views here.
 @login_required
 def chat_view(request):
-    users = User.objects.exclude(id=request.user.id).select_related('profile')
+    users = User.objects.exclude(id=request.user.id).select_related('user_profile')
     selected_user = None
     messages = []
 
