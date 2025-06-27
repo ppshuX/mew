@@ -48,7 +48,7 @@
                         <div class="bubble">{{ msg.content }}</div>
                     </div>
                     {% if msg.sender == request.user %}
-                    <a href="{% url 'profile_detail' username=request.user.username %}" title="个人资料"
+                    <a href="{% url 'user_profile_detail' username=request.user.username %}" title="个人资料"
                         style="display:inline-block;">
                         <img src="{{ msg.sender.profile.avatar.url }}" class="chat-avatar"
                             style="cursor:pointer;vertical-align:bottom;">
