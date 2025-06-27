@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
     'chat',
     'moments',
+    'profile',
 ]
 
 MIDDLEWARE = [

@@ -225,8 +225,10 @@
                             <span class="nav-link">你好，<b>{{ user.username }}</b></span>
                         </li>
                         <li class="nav-item">
-                            <span
-                                style="display:inline-flex;width:32px;height:32px;border-radius:50%;background:#efefef;align-items:center;justify-content:center;font-size:1.25rem;color:#a86ae3;font-weight:600;margin-left:2px;vertical-align:middle;">P</span>
+                            <a href="{% url 'profile_detail' username=user.username %}" title="个人资料"
+                                style="display:inline-flex;width:32px;height:32px;border-radius:50%;background:#efefef;align-items:center;justify-content:center;font-size:1.25rem;color:#a86ae3;font-weight:600;margin-left:2px;vertical-align:middle;text-decoration:none;transition:box-shadow 0.2s;box-shadow:0 1px 4px rgba(168,106,227,0.10);">
+                                P
+                            </a>
                         </li>
                         <li class="nav-item">
                             <form method="post" action="{% url 'logout' %}" style="display:inline;">

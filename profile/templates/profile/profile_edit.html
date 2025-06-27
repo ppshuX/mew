@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'chat/css/bootstrap.min.css' %}">
+<link rel="stylesheet" href="{% static 'profile/css/profile.css' %}">
+<div class="profile-edit-form">
+    <h3 class="mb-4 text-center">编辑个人资料</h3>
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label class="form-label">昵称</label>
+            {{ form.nickname }}
+        </div>
+        <div class="mb-3">
+            <label class="form-label">性别</label>
+            {{ form.gender }}
+        </div>
+        <div class="mb-3">
+            <label class="form-label">生日</label>
+            {{ form.birthday }}
+        </div>
+        <div class="mb-3">
+            <label class="form-label">地区</label>
+            {{ form.location }}
+        </div>
+        <div class="mb-3">
+            <label class="form-label">签名</label>
+            {{ form.bio }}
+        </div>
+        <div class="mb-3 profile-avatar-upload">
+            <div>
+                <label class="form-label">头像</label><br>
+                <img src="{{ request.user.profile.avatar.url }}" class="profile-avatar-preview mb-2" alt="头像">
+            </div>
+            <div style="flex:1;align-self:center;">
+                <input type="file" name="avatar" accept="image/*" class="form-control">
+            </div>
+        </div>
+        <div class="text-center">
+            <button type="submit" class="btn btn-success">保存修改</button>
+            <a href="{% url 'profile_detail' username=request.user.username %}"
+                class="btn btn-outline-secondary ms-3">取消</a>
+        </div>
+    </form>
+</div>
+<script src="{% static 'profile/js/profile.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,230 @@
+/* profile 详情和编辑页通用美化 */
+.profile-card {
+    border-radius: 18px;
+    box-shadow: 0 4px 18px rgba(168, 106, 227, 0.10);
+    background: #fff;
+    padding: 40px 32px 32px 32px;
+    max-width: 480px;
+    margin: 36px auto 0 auto;
+    position: relative;
+    transition: box-shadow 0.2s;
+}
+
+.profile-card:hover {
+    box-shadow: 0 8px 32px rgba(168, 106, 227, 0.18);
+}
+
+.profile-avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    box-shadow: 0 2px 12px rgba(168, 106, 227, 0.13);
+    border: 4px solid #f3eaff;
+    margin-bottom: 18px;
+}
+
+.profile-nickname {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #a86ae3;
+    margin-bottom: 2px;
+}
+
+.profile-username {
+    color: #aaa;
+    font-size: 1.05rem;
+    margin-bottom: 10px;
+}
+
+.profile-info-list {
+    margin: 0 auto 18px auto;
+    padding: 0;
+    list-style: none;
+    max-width: 320px;
+}
+
+.profile-info-list li {
+    background: #f9f9f9;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    padding: 10px 16px;
+    font-size: 1.08rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.profile-info-icon {
+    font-size: 1.18rem;
+    color: #a86ae3;
+}
+
+.profile-bio {
+    color: #888;
+    font-size: 1.08rem;
+    margin: 10px 0 0 0;
+    text-align: center;
+}
+
+.profile-edit-btn {
+    margin-top: 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    padding: 8px 32px;
+    font-size: 1.1rem;
+}
+
+/* 编辑页表单美化 */
+.profile-edit-form {
+    border-radius: 18px;
+    box-shadow: 0 4px 18px rgba(168, 106, 227, 0.10);
+    background: #fff;
+    padding: 36px 28px 28px 28px;
+    max-width: 520px;
+    margin: 36px auto 0 auto;
+}
+
+.profile-edit-form label {
+    font-weight: 600;
+    color: #a86ae3;
+}
+
+.profile-edit-form input,
+.profile-edit-form select,
+.profile-edit-form textarea {
+    border-radius: 8px;
+    border: 1.5px solid #e0e0e0;
+    font-size: 1.08rem;
+    padding: 8px 12px;
+    margin-bottom: 10px;
+}
+
+.profile-edit-form .form-label {
+    margin-bottom: 4px;
+}
+
+.profile-edit-form .btn-success {
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    padding: 8px 32px;
+}
+
+.profile-avatar-upload {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    margin-bottom: 18px;
+    padding: 18px 0 18px 0;
+}
+
+.profile-avatar-upload input[type="file"] {
+    width: 100%;
+    min-width: 220px;
+    max-width: 340px;
+    height: 48px;
+    border-radius: 16px;
+    border: 1.5px solid #e0e0e0;
+    background: #fafbff;
+    font-size: 1.08rem;
+    color: #a86ae3;
+    padding: 10px 18px;
+    box-shadow: 0 2px 8px rgba(168, 106, 227, 0.07);
+    transition: border 0.2s, box-shadow 0.2s;
+    outline: none;
+    cursor: pointer;
+}
+
+.profile-avatar-upload input[type="file"]:focus {
+    border: 2px solid #a86ae3;
+    background: #fff;
+    box-shadow: 0 4px 16px rgba(168, 106, 227, 0.13);
+}
+
+.profile-avatar-preview {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #f3eaff;
+    box-shadow: 0 1px 6px rgba(168, 106, 227, 0.10);
+}
+
+.profile-edit-form textarea[name$="bio"] {
+    min-height: 70px;
+    max-height: 180px;
+    resize: vertical;
+    background: linear-gradient(135deg, #f3eaff 60%, #fff 100%);
+    border: 1.5px solid #a86ae3;
+    color: #a86ae3;
+    font-size: 1.08rem;
+    font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    box-shadow: 0 2px 8px rgba(168, 106, 227, 0.07);
+    transition: border 0.2s, box-shadow 0.2s;
+}
+
+.profile-edit-form textarea[name$="bio"]:focus {
+    border: 2px solid #a86ae3;
+    background: #fff;
+    box-shadow: 0 4px 16px rgba(168, 106, 227, 0.13);
+    outline: none;
+}
+
+.profile-edit-form .btn-outline-secondary {
+    background: #fff;
+    color: #a86ae3;
+    border: 1.5px solid #e0e0e0;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1.1rem;
+    padding: 8px 32px;
+    margin-left: 32px;
+    box-shadow: 0 1px 4px rgba(168, 106, 227, 0.06);
+    transition: background 0.2s, color 0.2s, border 0.2s;
+}
+
+.profile-edit-form .btn-outline-secondary:hover {
+    background: #f3eaff;
+    color: #a86ae3;
+    border: 1.5px solid #a86ae3;
+}
+
+@media (max-width: 600px) {
+
+    .profile-card,
+    .profile-edit-form {
+        padding: 18px 4vw 18px 4vw;
+        max-width: 98vw;
+    }
+
+    .profile-avatar {
+        width: 80px;
+        height: 80px;
+    }
+
+    .profile-info-list li {
+        font-size: 0.98rem;
+        padding: 8px 8px;
+    }
+
+    .profile-avatar-upload {
+        flex-direction: column;
+        gap: 12px;
+        padding: 8px 0 8px 0;
+    }
+
+    .profile-avatar-upload input[type="file"] {
+        min-width: 0;
+        width: 100%;
+        font-size: 0.98rem;
+        height: 40px;
+        padding: 8px 10px;
+    }
+
+    .profile-edit-form .btn-outline-secondary {
+        margin-left: 0;
+        margin-top: 12px;
+        width: 100%;
+    }
+}

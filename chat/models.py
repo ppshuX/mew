@@ -16,10 +16,3 @@ class Message(models.Model):
 
     def __str__(self):
         return f'{self.sender.username} → {self.receiver.username}: {self.content[:20]}'
-
-class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
-    avatar = models.ImageField(upload_to=user_directory_path, default='avatars/default.jpg')
-
-    def __str__(self):
-        return f'{self.user.username} 的资料'
