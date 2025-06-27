@@ -1,9 +1,9 @@
 from django import forms
-from .models import Profile
+from .models import UserProfile
 
-class ProfileForm(forms.ModelForm):
+class UserProfileForm(forms.ModelForm):
     class Meta:
-        model = Profile
+        model = UserProfile
         fields = ['nickname', 'avatar', 'gender', 'birthday', 'location', 'bio']
         widgets = {
             'nickname': forms.TextInput(attrs={

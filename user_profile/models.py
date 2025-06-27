@@ -6,14 +6,14 @@ from django.contrib.auth.models import User
 def user_directory_path(instance, filename):
     return f'avatars/user_{instance.user.id}/{filename}'
 
-class Profile(models.Model):
+class UserProfile(models.Model):
     GENDER_CHOICES = [
         ('F', '女'),
         ('M', '男'),
         ('S', '保密'),
     ]
 
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='user_profile')
     avatar = models.ImageField(upload_to=user_directory_path, default='avatars/default.jpg', verbose_name='头像')
     nickname = models.CharField(max_length=30, blank=True, verbose_name='昵称')
     bio = models.TextField(max_length=500, blank=True, verbose_name='签名')
