@@ -446,6 +446,17 @@ span.detail-like-count {
     color: #fcb0c4;
 }
 
+.comment-like-btn.liked {
+    background: #f3eaff;
+    color: #fcb0c4;
+    box-shadow: 0 2px 8px rgba(168, 106, 227, 0.15);
+}
+
+.comment-like-btn.liked:hover {
+    background: #e8d5ff;
+    color: #a86ae3;
+}
+
 .comment-like-icon {
     font-size: 1.18rem;
     margin-right: 2px;

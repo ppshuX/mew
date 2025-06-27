@@ -62,19 +62,19 @@ def delete_comment(request, comment_id):
 @login_required
 def post_detail(request, post_id):
     post = get_object_or_404(Post, id=post_id)
-
-    # 判断当前用户是否已点赞
     liked_by_user = request.user in post.likes.all()
+    comments = []
+    for comment in post.comments.all():
+        comments.append({
+            'obj': comment,
+            'liked_by_user': request.user in comment.likes.all(),
+        })
+    return render(request, 'moments/post_detail.html', {
+        'post': post,
+        'liked_by_user': liked_by_user,
+        'comments': comments,
+    })
 
-    # 处理评论提交
-    if request.method == 'POST' and 'comment' in request.POST:
-        content = request.POST['comment']
-        if content:
-            Comment.objects.create(post=post, author=request.user, content=content)
-        return redirect('moments/post_detail', post_id=post.id)
-    
-    
-    return render(request, 'moments/post_detail.html', {'post': post, 'liked_by_user':liked_by_user})
 
 def register(request):
     if request.method == 'POST':
@@ -85,3 +85,34 @@ def register(request):
     else:
         form = CustomRegisterForm()
     return render(request, 'accounts/register.html', {'form': form})
+
+
+#评论点赞视图
+@require_POST
+@login_required
+def like_comment(request, comment_id):
+    comment = get_object_or_404(Comment, id=comment_id)
+    user = request.user
+    
+    print(f"评论点赞请求: 评论ID={comment_id}, 用户={user.username}")
+    print(f"当前点赞状态: {user in comment.likes.all()}")
+
+    if user in comment.likes.all():
+        comment.likes.remove(user)
+        liked = False
+        print(f"取消点赞: 用户={user.username}, 评论ID={comment_id}")
+    else:
+        comment.likes.add(user)
+        liked = True
+        print(f"添加点赞: 用户={user.username}, 评论ID={comment_id}")
+
+    # 确保数据保存到数据库
+    comment.save()
+    
+    like_count = comment.like_count()
+    print(f"点赞后状态: liked={liked}, like_count={like_count}")
+
+    return JsonResponse({
+        'liked': liked,
+        'like_count': like_count
+    })

@@ -11,8 +11,8 @@ class CustomRegisterForm(UserCreationForm):
     # 自定义密码要求
     def clean_password1(self):
         pwd = self.cleaned_data.get('password1')
-        if len(pwd) < 6:
-            raise ValidationError("密码至少6位")
+        if len(pwd) < 5:
+            raise ValidationError("密码至少5位")
         return pwd
 
     def clean(self):

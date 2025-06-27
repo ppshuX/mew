@@ -182,27 +182,42 @@ window.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('.comment-like-btn').forEach(function (btn) {
         btn.addEventListener('click', function (e) {
             e.preventDefault();
-            var commentId = this.dataset.commentId;
-            var liked = this.dataset.liked === 'true';
-            var textSpan = document.getElementById('comment-like-text-' + commentId);
-            var countSpan = document.getElementById('comment-like-count-' + commentId);
-            var iconSpan = document.getElementById('comment-like-icon-' + commentId);
-            // 假设后端有接口 /moments/comment/<id>/like/，返回 {liked:bool, like_count:int}
+            const commentId = this.dataset.commentId;
+            const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
+            const textSpan = document.getElementById('comment-like-text-' + commentId);
+            const countSpan = document.getElementById('comment-like-count-' + commentId);
+            const iconSpan = document.getElementById('comment-like-icon-' + commentId);
+
+            console.log('评论点赞请求:', commentId, '当前状态:', this.dataset.liked);
+
             fetch(`/moments/comment/${commentId}/like/`, {
                 method: 'POST',
                 headers: {
-                    'X-CSRFToken': document.querySelector('input[name="csrfmiddlewaretoken"]').value,
+                    'X-CSRFToken': csrfToken,
                     'X-Requested-With': 'XMLHttpRequest'
                 }
             })
-                .then(response => response.json())
+                .then(response => {
+                    console.log('响应状态:', response.status);
+                    return response.json();
+                })
                 .then(data => {
+                    console.log('点赞响应:', data);
                     this.dataset.liked = data.liked ? 'true' : 'false';
-                    textSpan.textContent = data.liked ? '取消点赞' : '点赞';
                     countSpan.textContent = data.like_count;
-                    // 动画效果
-                    this.classList.add('like-anim');
-                    setTimeout(() => this.classList.remove('like-anim'), 300);
+
+                    if (data.liked) {
+                        iconSpan.textContent = '👍';
+                        textSpan.textContent = '取消点赞';
+                        this.classList.add('liked');
+                    } else {
+                        iconSpan.textContent = '👍🏻';
+                        textSpan.textContent = '点赞';
+                        this.classList.remove('liked');
+                    }
+                })
+                .catch(error => {
+                    console.error('评论点赞失败:', error);
                 });
         });
     });
@@ -227,4 +242,4 @@ window.addEventListener('DOMContentLoaded', function () {
             });
         });
     });
-}); 
+});

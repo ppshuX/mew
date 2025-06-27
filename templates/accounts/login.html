@@ -4,30 +4,33 @@
 {% block title %}登录 Login{% endblock %}
 
 {% block content %}
-<h3 class="text-center mb-4">🔐 登录 Mew</h3>
+<div class="container"
+    style="max-width: 420px; margin-top: 80px; background: white; padding: 40px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);">
+    <h3 class="text-center mb-4">🔐 登录 Mew</h3>
 
-<form method="post">
-    {% csrf_token %}
-    <div class="form-group mb-3">
-        <label for="id_username">用户名</label>
-        <input type="text" name="username" class="form-control" id="id_username" placeholder="请输入用户名" required>
-        {% if form.username.errors %}
-        <div class="text-danger small mt-1">{{ form.username.errors|striptags }}</div>
-        {% endif %}
-    </div>
-    <div class="form-group mb-3">
-        <label for="id_password">密码</label>
-        <input type="password" name="password" class="form-control" id="id_password" placeholder="请输入密码" required>
-        {% if form.password.errors %}
-        <div class="text-danger small mt-1">{{ form.password.errors|striptags }}</div>
-        {% endif %}
-    </div>
-    <div style="text-align: center; margin: 5px 5px;">
-        <button style="width: 250px;" type="submit" class="btn btn-success">登录</button>
-    </div>
-</form>
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group mb-3">
+            <label for="id_username">用户名</label>
+            <input type="text" name="username" class="form-control" id="id_username" placeholder="请输入用户名" required>
+            {% if form.username.errors %}
+            <div class="text-danger small mt-1">{{ form.username.errors|striptags }}</div>
+            {% endif %}
+        </div>
+        <div class="form-group mb-3">
+            <label for="id_password">密码</label>
+            <input type="password" name="password" class="form-control" id="id_password" placeholder="请输入密码" required>
+            {% if form.password.errors %}
+            <div class="text-danger small mt-1">{{ form.password.errors|striptags }}</div>
+            {% endif %}
+        </div>
+        <div style="text-align: center; margin: 5px 5px;">
+            <button style="width: 250px;" type="submit" class="btn btn-success">登录</button>
+        </div>
+    </form>
 
-<div class="mt-3 text-center">
-    没有账号？<a href="{% url 'register' %}">点击注册</a>
+    <div class="mt-3 text-center">
+        没有账号？<a href="{% url 'register' %}">点击注册</a>
+    </div>
 </div>
 {% endblock %}
