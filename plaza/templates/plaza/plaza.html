@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}广场 · Plaza{% endblock %}
+{% block body_bg %}background-color: #f5f6f7;{% endblock %}
+
+{% block content %}
+<div class="moments-content-outer">
+    <h3 class="publish-title mb-4">🌟 广 场 Plaza</h3>
+    <form method="post" enctype="multipart/form-data" class="publish-form mb-5"
+        style="background:none;box-shadow:none;border-radius:0;padding:0;">
+        {% csrf_token %}
+        <textarea name="content" class="form-control publish-textarea mb-3" rows="3" placeholder="想说点什么..."
+            required></textarea>
+        <div class="publish-row">
+            <input type="file" name="image" multiple accept="image/*" class="form-control publish-file">
+        </div>
+        <button type="submit" class="btn btn-primary publish-btn">分享新鲜事</button>
+        <hr class="publish-divider">
+    </form>
+
+    <div class="moments-list">
+        {% for post in posts %}
+        <div class="moment-card" onclick="window.location.href='{% url 'plaza:detail' post.id %}'">
+            <div class="author-row">
+                <span class="avatar-circle">{{ post.author.username|first|upper }}</span>
+                <span class="author-divider">|</span>
+                <span class="author-name">{{ post.author.username }}</span>
+                <span class="timestamp">{{ post.created_at|naturaltime }}</span>
+            </div>
+
+            {% if post.image %}
+            <div class="image-grid">
+                <div class="image-card">
+                    <img src="{{ post.image.url }}" alt="图片">
+                </div>
+            </div>
+            {% endif %}
+
+            <div class="text-content">
+                {% if post.image %}
+                <div class="content">{{ post.content }}</div>
+                {% else %}
+                <div class="content-long">{{ post.content }}</div>
+                {% endif %}
+
+                <div class="bottom-bar">
+                    <button class="like-btn" data-post-id="{{ post.id }}" onclick="event.stopPropagation();">
+                        <span class="like-icon" id="like-icon-{{ post.id }}">
+                            {% if post.is_liked %}❤️{% else %}🤍{% endif %}
+                        </span>
+                        <span class="like-count" id="like-count-{{ post.id }}">{{ post.like_count }}</span>
+                    </button>
+                </div>
+
+                <div class="comments mt-2">
+                    {% with post.comments.all|slice:':2' as comment_preview %}
+                    {% if comment_preview %}
+                    {% for comment in comment_preview %}
+                    <div class="comment">
+                        <strong>{{ comment.author.username }}</strong>: {{ comment.content }}
+                    </div>
+                    {% endfor %}
+                    {% else %}
+                    <div class="no-comments">还没有评论</div>
+                    {% endif %}
+                    {% if post.comments.count > 2 %}
+                    <div class="view-more">查看更多评论...</div>
+                    {% endif %}
+                    {% endwith %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    {% if posts|length == 0 %}
+    <div class="alert alert-info mt-4">还没有任何动态，快来发布第一条吧！</div>
+    {% endif %}
+</div>
+
+<link rel="stylesheet" href="{% static 'plaza/css/plaza.css' %}">
+<script src="{% static 'plaza/js/plaza.js' %}"></script>
+{% endblock %}

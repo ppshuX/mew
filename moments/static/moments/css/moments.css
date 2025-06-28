@@ -28,12 +28,12 @@ body {
     width: 90%;
     max-width: 1100px;
     min-height: 95vh;
-    border-radius: 0;
+    border-radius: 0%;
 }
 
 /* 卡片样式 */
 .moment-card {
-    background: #ffffff;
+    background: white;
     border-radius: 16px;
     overflow: hidden;
     box-shadow: 0 2px 12px rgba(0, 0, 0, 0.09);
@@ -307,7 +307,7 @@ body {
     min-height: 100vh;
     box-sizing: border-box;
     overflow-x: hidden;
-    background: #fff;
+    background: #fff8fc;
     /* 可根据需要添加阴影和圆角 */
     /* box-shadow: 0 4px 24px rgba(0,0,0,0.06); */
     /* border-radius: 16px; */

@@ -2,6 +2,7 @@
 {% load static %}
 {% load humanize %}
 {% block title %}朋友圈 · Moments{% endblock %}
+{% block body_bg %}background-color: #f5f6f7;{% endblock %}
 
 {% block content %}
 <div class="moments-content-outer">
@@ -21,7 +22,7 @@
     <!-- 动态卡片 -->
     <div class="moments-list">
         {% for post in posts %}
-        <div class="moment-card" onclick="window.location.href='{% url 'post_detail' post.id %}'">
+        <div class="moment-card" onclick="window.location.href='{% url 'moments:post_detail' post.id %}'">
             <div class="author-row">
                 <span class="avatar-circle">{{ post.author.username|first|upper }}</span>
                 <span class="author-divider">|</span>

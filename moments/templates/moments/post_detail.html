@@ -98,7 +98,7 @@
 
 <body>
     <div class="container">
-        <a href="{% url 'moments_list' %}" class="back-float" title="返回朋友圈">
+        <a href="{% url 'moments:list' %}" class="back-float" title="返回朋友圈">
             <span style="font-size:1.5rem;">🏠</span>
         </a>
         <div class="detail-card detail-main" id="detail-main">
@@ -131,7 +131,7 @@
                 <div class="detail-like-bar">
                     <span style="font-size:1.05rem;color:#a86ae3;font-weight:600;margin-right:4px;">喜爱数：</span>
                     <span class="detail-like-count">{{ post.like_count }}</span>
-                    <form method="post" action="{% url 'like_post' post.id %}" style="display:inline;">
+                    <form method="post" action="{% url 'moments:like_post' post.id %}" style="display:inline;">
                         {% csrf_token %}
                         <button class="detail-like-btn" data-post-id="{{ post.id }}"
                             data-liked="{{ liked_by_user|yesno:'true,false' }}">
@@ -174,7 +174,7 @@
                         </span>
                     </button>
                     {% if c.obj.author == request.user or request.user.is_superuser %}
-                    <form method="post" action="{% url 'delete_comment' c.obj.id %}" style="display:inline;">
+                    <form method="post" action="{% url 'moments:delete_comment' c.obj.id %}" style="display:inline;">
                         {% csrf_token %}
                         <button type="submit" class="detail-comment-delete-btn trash-btn" title="删除">
                             <span class="trash-icon">🗑️</span>
@@ -191,7 +191,7 @@
             <button id="show-more-comments-btn" class="show-more-comments-btn">展示剩余评论</button>
             <button id="hide-more-comments-btn" class="show-more-comments-btn" style="display:none;">收起剩余评论</button>
             {% endif %}
-            <form method="post" action="{% url 'add_comment' post.id %}" class="detail-comment-form">
+            <form method="post" action="{% url 'moments:add_comment' post.id %}" class="detail-comment-form">
                 {% csrf_token %}
                 <input type="text" name="comment" placeholder="写评论..." required>
                 <button type="submit">发表评论</button>

@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     'chat',
     'moments',
     'user_profile',
+    'plaza',
+    'userzone',
 ]
 
 MIDDLEWARE = [
