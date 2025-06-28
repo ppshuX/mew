@@ -13,4 +13,16 @@ window.addEventListener('DOMContentLoaded', function () {
             }
         });
     }
+});
+
+// userzone 卡片hover效果
+$(function () {
+    $('.post-card').hover(
+        function () {
+            $(this).addClass('hovered');
+        },
+        function () {
+            $(this).removeClass('hovered');
+        }
+    );
 }); 

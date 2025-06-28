@@ -1,7 +1,7 @@
 /* 广场 Plaza 页面活泼朋友圈风格样式 */
 .moments-content-outer {
     background: #f5f6f7;
-    border-radius: 18px;
+    border-radius: 18px !important;
     box-shadow: 0 4px 24px rgba(252, 176, 196, 0.10), 0 1.5px 8px rgba(168, 106, 227, 0.10);
     padding: 36px 20px 40px 20px;
     margin: 40px auto 60px auto;

@@ -308,9 +308,9 @@ body {
     box-sizing: border-box;
     overflow-x: hidden;
     background: #fff8fc;
+    border-radius: 18px;
     /* 可根据需要添加阴影和圆角 */
     /* box-shadow: 0 4px 24px rgba(0,0,0,0.06); */
-    /* border-radius: 16px; */
 }
 
 .moments-list {

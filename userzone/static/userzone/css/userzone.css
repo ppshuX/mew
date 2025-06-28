@@ -1,0 +1,525 @@
+/* 全局样式 */
+body {
+    background: #f5f6f7;
+    min-height: 100vh;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* 主容器 */
+.uz-grid-root {
+    display: grid;
+    grid-template-columns: 1fr 2.5fr;
+    gap: 32px;
+    max-width: 1400px;
+    margin: 40px auto 0 auto;
+    padding: 0 20px;
+    min-height: 80vh;
+}
+
+/* 左右栏样式 */
+.uz-left,
+.uz-right {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    min-width: 0;
+    align-items: stretch;
+    flex: 1;
+}
+
+/* 卡片基础样式 */
+.uz-card {
+    background: rgba(255, 255, 255, 0.95) !important;
+    border-radius: 20px !important;
+    box-shadow:
+        0 8px 32px rgba(0, 0, 0, 0.1),
+        0 2px 8px rgba(0, 0, 0, 0.05) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    backdrop-filter: blur(20px);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+    margin-bottom: 0;
+}
+
+.uz-card:hover {
+    transform: translateY(-4px);
+    box-shadow:
+        0 12px 40px rgba(0, 0, 0, 0.15),
+        0 4px 12px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* 用户信息卡片无背景 */
+.uz-user-info {
+    position: relative;
+    background: none !important;
+    color: #333;
+    box-shadow: none !important;
+}
+
+.uz-user-info::before {
+    display: none;
+}
+
+.uz-user-info .card-body {
+    position: relative;
+    z-index: 1;
+    background: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 24px 24px 24px;
+}
+
+/* 头像更大 */
+.uz-avatar {
+    width: 100%;
+    max-width: 220px;
+    aspect-ratio: 1/1;
+    height: auto;
+    border-radius: 50%;
+    border: 4px solid #e0e0e0;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease;
+    margin-bottom: 16px;
+    object-fit: cover;
+    display: block;
+}
+
+.uz-avatar:hover {
+    transform: scale(1.08);
+}
+
+/* 昵称和签名更大 */
+.uz-nickname {
+    font-size: 2em;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: #222;
+    text-shadow: none;
+    text-align: center;
+    width: 100%;
+}
+
+.uz-school {
+    color: #666;
+    font-size: 1.1em;
+    margin-bottom: 8px;
+    text-align: center;
+    width: 100%;
+}
+
+.uz-signature {
+    color: #888;
+    font-size: 1.15em;
+    font-style: italic;
+    line-height: 1.6;
+    text-align: center;
+    width: 100%;
+}
+
+/* 统计信息更明显 */
+.uz-stats {
+    display: flex;
+    justify-content: space-around;
+    padding: 16px 0 0 0;
+    background: none;
+    border-radius: 12px;
+    margin: 16px 0 0 0;
+}
+
+.uz-stat-item {
+    text-align: center;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.uz-stat-label {
+    font-size: 1.1em;
+    opacity: 1;
+    color: #666;
+    font-weight: 500;
+    margin-bottom: 2px;
+}
+
+.uz-stat-number {
+    display: block;
+    font-size: 0.95em;
+    font-weight: 700;
+    color: #4a3fa3;
+    margin-bottom: 0;
+}
+
+/* 在线状态 */
+.uz-online-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 12px 0;
+    padding: 8px 12px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+}
+
+.uz-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #ccc;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    transition: all 0.3s ease;
+}
+
+.uz-dot.online {
+    background: #4ade80;
+    box-shadow: 0 0 8px rgba(74, 222, 128, 0.6);
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.1);
+    }
+}
+
+.uz-location {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.9em;
+}
+
+/* 访客区域 */
+.uz-visitors-section {
+    margin: 16px 0;
+}
+
+.uz-visitors-title {
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 12px;
+    font-size: 0.95em;
+}
+
+.uz-visitors-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.uz-visitor-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    object-fit: cover;
+    transition: transform 0.2s ease;
+}
+
+.uz-visitor-avatar:hover {
+    transform: scale(1.1);
+}
+
+.uz-no-visitor {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.9em;
+    font-style: italic;
+}
+
+/* 按钮样式 */
+.uz-btn {
+    display: inline-block;
+    padding: 4px 12px;
+    font-size: 0.95em;
+    border-radius: 16px;
+    background: linear-gradient(90deg, #a86ae3 0%, #fcb0c4 100%);
+    color: #fff;
+    border: none;
+    box-shadow: 0 2px 8px rgba(168, 106, 227, 0.08);
+    transition: all 0.2s;
+    margin-top: 6px;
+    margin-bottom: 0;
+}
+
+.uz-btn:hover {
+    background: linear-gradient(90deg, #fcb0c4 0%, #a86ae3 100%);
+    color: #fff;
+    transform: translateY(-2px) scale(1.03);
+}
+
+/* 内容区域标题 */
+.uz-section-title {
+    font-size: 1.2em;
+    font-weight: 700;
+    color: #2d3748;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.uz-section-icon {
+    font-size: 1.1em;
+}
+
+/* 动态卡片 */
+.uz-post-card {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+    margin-bottom: 16px;
+    overflow: hidden;
+}
+
+.uz-post-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+}
+
+.uz-post-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px 12px 20px;
+}
+
+.uz-post-author {
+    font-weight: 600;
+    color: #4a5568;
+    font-size: 0.95em;
+}
+
+.uz-post-time {
+    color: #a0aec0;
+    font-size: 0.85em;
+}
+
+.uz-post-content {
+    padding: 0 20px 16px 20px;
+    color: #2d3748;
+    line-height: 1.6;
+    font-size: 0.95em;
+}
+
+/* 图片网格 */
+.uz-post-images {
+    padding: 0 20px 16px 20px;
+}
+
+.uz-image-grid {
+    display: grid;
+    gap: 8px;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+/* 图片网格布局 */
+.uz-image-grid.grid-1 {
+    grid-template-columns: 1fr;
+    max-width: 300px;
+}
+
+.uz-image-grid.grid-2 {
+    grid-template-columns: 1fr 1fr;
+}
+
+.uz-image-grid.grid-3 {
+    grid-template-columns: 1fr 1fr 1fr;
+}
+
+.uz-image-grid.grid-4 {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+}
+
+.uz-image-grid.grid-5 {
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+}
+
+.uz-image-grid.grid-6 {
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+}
+
+.uz-image-grid.grid-7,
+.uz-image-grid.grid-8,
+.uz-image-grid.grid-9 {
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+}
+
+.uz-post-img {
+    width: 100%;
+    aspect-ratio: 1/1;
+    object-fit: cover;
+    border-radius: 8px;
+    transition: transform 0.3s ease;
+    cursor: pointer;
+}
+
+.uz-post-img:hover {
+    transform: scale(1.02);
+}
+
+/* 动态底部操作 */
+.uz-post-footer {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 12px 20px 16px 20px;
+    border-top: 1px solid #f7fafc;
+}
+
+.uz-post-action {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #718096;
+    font-size: 0.9em;
+    text-decoration: none;
+    transition: color 0.2s ease;
+    cursor: pointer;
+}
+
+.uz-post-action:hover {
+    color: #667eea;
+    text-decoration: none;
+}
+
+.uz-post-action-icon {
+    font-size: 1.1em;
+}
+
+/* 空状态 */
+.uz-empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: #a0aec0;
+}
+
+.uz-empty-icon {
+    font-size: 3em;
+    margin-bottom: 16px;
+    opacity: 0.5;
+}
+
+.uz-empty-text {
+    font-size: 1em;
+    font-style: italic;
+}
+
+/* 响应式设计 */
+@media (max-width: 1200px) {
+    .uz-grid-root {
+        grid-template-columns: 1fr 8px 2fr;
+        max-width: 1000px;
+    }
+}
+
+@media (max-width: 900px) {
+    .uz-grid-root {
+        display: block;
+        max-width: 100%;
+        padding: 0 16px;
+    }
+
+    .uz-left,
+    .uz-right {
+        margin-bottom: 24px;
+    }
+}
+
+@media (max-width: 600px) {
+    .uz-grid-root {
+        padding: 0 12px;
+        margin-top: 20px;
+    }
+
+    .uz-card {
+        border-radius: 16px !important;
+    }
+
+    .uz-post-card {
+        margin-bottom: 12px;
+    }
+
+    .uz-post-header,
+    .uz-post-content,
+    .uz-post-images,
+    .uz-post-footer {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+    .uz-avatar {
+        width: 60px !important;
+        height: 60px !important;
+    }
+
+    .uz-nickname {
+        font-size: 1.2em;
+    }
+
+    /* 移动端图片网格调整 */
+    .uz-image-grid.grid-4,
+    .uz-image-grid.grid-5,
+    .uz-image-grid.grid-6,
+    .uz-image-grid.grid-7,
+    .uz-image-grid.grid-8,
+    .uz-image-grid.grid-9 {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto;
+    }
+}
+
+/* 滚动条美化 */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.5);
+}
+
+/* 统计信息卡片自动填满剩余空间 */
+.uz-left .uz-card:last-child {
+    flex: 1 1 0;
+    display: flex;
+    flex-direction: column;
+}
+
+/* 让右侧"广场动态"卡片下方拉长 */
+.uz-right .uz-card:last-child {
+    min-height: 340px;
+}
+
+.uz-btn-center {
+    display: block;
+    margin: 8px auto 4px auto;
+    text-align: center;
+}
+
+/* 统计信息卡片更窄 */
+.uz-left .uz-card:last-child .card-body {
+    padding-left: 14px;
+    padding-right: 14px;
+}

@@ -228,3 +228,141 @@
         width: 100%;
     }
 }
+
+/* userzone 个人空间页面样式 */
+.userzone-container {
+    max-width: 900px;
+    margin: 48px auto 60px auto;
+    padding: 0 18px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.profile-card {
+    background: #fff;
+    border-radius: 18px;
+    box-shadow: 0 4px 24px rgba(168, 106, 227, 0.10);
+    padding: 32px 38px 24px 38px;
+    margin-bottom: 36px;
+    width: 100%;
+    max-width: 520px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    position: relative;
+}
+
+.profile-info {
+    margin-bottom: 12px;
+}
+
+.profile-username {
+    font-size: 2.1rem;
+    font-weight: bold;
+    color: #a86ae3;
+    margin-bottom: 6px;
+}
+
+.profile-signature {
+    font-size: 1.08rem;
+    color: #888;
+    margin-bottom: 2px;
+}
+
+.edit-profile-btn {
+    position: absolute;
+    right: 32px;
+    top: 32px;
+    background: linear-gradient(90deg, #a86ae3 0%, #fcb0c4 100%);
+    color: #fff;
+    border: none;
+    border-radius: 22px;
+    font-size: 1.05rem;
+    font-weight: 500;
+    padding: 8px 28px;
+    text-decoration: none;
+    transition: background 0.2s, color 0.2s;
+}
+
+.edit-profile-btn:hover {
+    background: linear-gradient(90deg, #fcb0c4 0%, #a86ae3 100%);
+    color: #fff;
+}
+
+.section-title {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #a86ae3;
+    margin: 32px 0 18px 0;
+    align-self: flex-start;
+}
+
+.post-list {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    margin-bottom: 18px;
+}
+
+.post-card {
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 2px 12px rgba(168, 106, 227, 0.08);
+    padding: 22px 28px 18px 28px;
+    min-width: 260px;
+    max-width: 360px;
+    flex: 1 1 260px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    transition: box-shadow 0.2s, background 0.2s;
+    position: relative;
+}
+
+.post-card .post-content {
+    font-size: 1.08rem;
+    color: #333;
+    margin-bottom: 18px;
+    min-height: 32px;
+}
+
+.view-detail-btn {
+    background: linear-gradient(90deg, #a86ae3 0%, #fcb0c4 100%);
+    color: #fff;
+    border: none;
+    border-radius: 18px;
+    font-size: 1rem;
+    font-weight: 500;
+    padding: 6px 22px;
+    text-decoration: none;
+    transition: background 0.2s, color 0.2s;
+}
+
+.view-detail-btn:hover {
+    background: linear-gradient(90deg, #fcb0c4 0%, #a86ae3 100%);
+    color: #fff;
+}
+
+.post-card:hover {
+    box-shadow: 0 8px 32px #e5d6fa;
+    background: #f8f4ff;
+}
+
+/* 朋友圈内容卡片特殊色调 */
+.post-card.moment {
+    background: linear-gradient(120deg, #e3eaff 60%, #b6d0ff 100%);
+    box-shadow: 0 2px 16px #b6d0ff33;
+}
+
+.post-card.moment:hover {
+    background: linear-gradient(120deg, #b6d0ff 0%, #e3eaff 100%);
+    box-shadow: 0 8px 32px #b6d0ff;
+}
+
+.no-post {
+    color: #aaa;
+    font-size: 1.05rem;
+    margin: 18px 0 18px 0;
+}

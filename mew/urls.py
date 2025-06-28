@@ -29,9 +29,15 @@ urlpatterns = [
     path('moments/', include('moments.urls')),
     path('user_profile/', include('user_profile.urls')),
     path('plaza/', include('plaza.urls')),
+    path('userzone/', include('userzone.urls')),
     path('admin/', admin.site.urls),
 
     path('accounts/login/', auth_views.LoginView.as_view(template_name='accounts/login.html'), name='login'),
     path('accounts/logout/', LogoutView.as_view(next_page=reverse_lazy('login')), name='logout'),
     path('accounts/register/', custom_views.register, name='register'),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]
+
+# 添加静态文件和媒体文件的URL配置
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -6,6 +6,7 @@
     <meta charset="UTF-8">
     <title>{% block title %}Mew{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'chat/css/bootstrap.min.css' %}">
+    {% block extra_head %}{% endblock %}
     <style>
         body {
                 {
@@ -240,7 +241,7 @@
                             <span class="nav-link"><b>{{ user.user_profile.nickname|default:user.username }}</b></span>
                         </li>
                         <li class="nav-item">
-                            <a href="{% url 'user_profile_detail' username=user.username %}" title="个人资料"
+                            <a href="{% url 'userzone:detail' username=user.username %}" title="个人空间"
                                 style="display:inline-flex;position:relative;width:40px;height:40px;min-width:40px;min-height:40px;border-radius:50%;background:#efefef;align-items:center;justify-content:center;margin-left:2px;vertical-align:middle;overflow:hidden;box-shadow:0 0 0 3px #e5d6fa,0 0 12px 0 #e5d6fa;">
                                 {% if user.user_profile.avatar %}
                                 {% if user.user_profile.avatar.url != '/media/avatars/default.jpg' %}
