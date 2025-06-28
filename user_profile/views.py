@@ -8,7 +8,7 @@ from django.contrib.auth.decorators import login_required
 
 def user_profile_detail(request, username):
     user = get_object_or_404(User, username=username)
-    user_profile, created = UserProfile.objects.get_or_create(user=user)
+    user_profile = get_object_or_404(UserProfile, user=user)
     return render(request, 'user_profile/user_profile_detail.html', {'user_profile': user_profile})
 
 @login_required
