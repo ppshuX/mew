@@ -41,9 +41,9 @@ $(function () {
 });
 
 document.addEventListener('DOMContentLoaded', function () {
-    const searchInput = document.getElementById('chat-search');
+    const searchInput = document.getElementById('chat-user-search');
     const userItems = document.querySelectorAll('.chat-user-item');
-    const noUserFound = document.getElementBtId('no-user-found');
+    const noUserFound = document.getElementById('no-user-found');
 
     searchInput.addEventListener('input', function () {
         const keyword = this.value.toLowerCase().trim();

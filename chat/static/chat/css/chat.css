@@ -205,6 +205,27 @@
     margin-bottom: 0 !important;
 }
 
+.chat-avatar,
+.chat-avatar-default {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #f8e1fa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    font-weight: bold;
+    color: #a259e6;
+    box-shadow: 0 0 0 2px #fff;
+    margin: 0 8px 0 8px !important;
+    align-self: flex-end !important;
+    user-select: none;
+    padding: 0;
+    line-height: 40px;
+    text-align: center;
+}
+
 .bubble-container {
     display: flex;
     flex-direction: column;
@@ -397,4 +418,46 @@
 .chat-msg.me .bubble-container .timestamp {
     text-align: right;
     margin-right: 12px;
+}
+
+.chat-avatar-default {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #f8e1fa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 0 2px #fff;
+    margin: 0 8px;
+    user-select: none;
+    padding: 0;
+}
+
+.avatar-initial {
+    display: block;
+    width: 40px;
+    text-align: center;
+    font-size: 22px;
+    font-weight: bold;
+    color: #a259e6;
+    line-height: 40px;
+    letter-spacing: 0;
+    margin: 0;
+    padding: 0;
+}
+
+/* 去除头像链接的下划线 */
+.chat-avatar-default,
+.chat-avatar-default .avatar-initial,
+a .chat-avatar-default,
+a .avatar-initial {
+    text-decoration: none !important;
+}
+
+a:link,
+a:visited,
+a:hover,
+a:active {
+    text-decoration: none !important;
 }

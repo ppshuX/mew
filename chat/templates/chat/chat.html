@@ -15,11 +15,13 @@
                 <div class="chat-user-item {% if user == selected_user %}active{% endif %}" data-user-id="{{ user.id }}"
                     data-username="{{ user.username }}">
                     <div class="chat-user-avatar">
-                        {% if user.profile.avatar and user.profile.avatar.url != '/media/avatars/default.jpg' %}
-                        <img src="{{ user.profile.avatar.url }}"
+                        {% if user.user_profile.avatar and user.user_profile.avatar.url != '/media/avatars/default.jpg' %}
+                        <img src="{{ user.user_profile.avatar.url }}"
                             style="width:100%;height:100%;border-radius:50%;object-fit:cover;">
                         {% else %}
-                        {{ user.username|first|upper }}
+                        <div class="chat-avatar-default">
+                            <span class="avatar-initial">{{ user.username|first|upper }}</span>
+                        </div>
                         {% endif %}
                     </div>
                     <div>
@@ -41,7 +43,13 @@
                 {% for msg in messages %}
                 <div class="chat-msg {% if msg.sender == request.user %}me{% else %}you{% endif %}">
                     {% if msg.sender != request.user %}
-                    <img src="{{ msg.sender.profile.avatar.url }}" class="chat-avatar">
+                    {% if msg.sender.user_profile.avatar and msg.sender.user_profile.avatar.url != '/media/avatars/default.jpg' %}
+                    <img src="{{ msg.sender.user_profile.avatar.url }}" class="chat-avatar">
+                    {% else %}
+                    <div class="chat-avatar-default">
+                        <span class="avatar-initial">{{ msg.sender.username|first|upper }}</span>
+                    </div>
+                    {% endif %}
                     {% endif %}
                     <div class="bubble-container">
                         <div class="timestamp">{{ msg.timestamp|date:"H:i" }}</div>
@@ -50,8 +58,9 @@
                     {% if msg.sender == request.user %}
                     <a href="{% url 'user_profile_detail' username=request.user.username %}" title="个人资料"
                         style="display:inline-block;">
-                        <img src="{{ msg.sender.profile.avatar.url }}" class="chat-avatar"
-                            style="cursor:pointer;vertical-align:bottom;">
+                        <div class="chat-avatar-default">
+                            <span class="avatar-initial">{{ msg.sender.username|first|upper }}</span>
+                        </div>
                     </a>
                     {% endif %}
                 </div>
@@ -73,20 +82,4 @@
 </div>
 
 <script src="{% static 'chat/js/chat.js' %}"></script>
-<script>
-    // 聊天用户实时搜索
-    $(function () {
-        $('#chat-user-search').on('input', function () {
-            var kw = $(this).val().toLowerCase();
-            $('#chat-user-list .chat-user-item').each(function () {
-                var username = $(this).data('username').toLowerCase();
-                if (username.indexOf(kw) !== -1) {
-                    $(this).show();
-                } else {
-                    $(this).hide();
-                }
-            });
-        });
-    });
-</script>
 {% endblock %}
