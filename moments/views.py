@@ -6,16 +6,17 @@ from django.http import JsonResponse
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
 from .forms import CustomRegisterForm
+from django.contrib import messages
 
 # Create your views here.
 @login_required
-def moments_list(request):
+def  moments_list(request):
     if request.method == 'POST':
         content = request.POST.get('content')
         image = request.FILES.get('image')
         if content or image:
             Post.objects.create(author=request.user, content=content, image=image)
-            return redirect('moments_list')
+            return redirect('moments:list')
         
     posts = Post.objects.all().order_by('-created_at')
     # ⭐ 添加判断：当前用户是否点赞了每个 post
@@ -116,3 +117,14 @@ def like_comment(request, comment_id):
         'liked': liked,
         'like_count': like_count
     })
+
+@login_required
+def delete_post(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    if request.user == post.author or request.user.is_superuser:
+        post.delete()
+        messages.success(request, '动态已删除')
+        return redirect('moments:list')
+    else:
+        messages.error(request, '你没有权限删除该动态')
+        return redirect('moments:post_detail', post_id=post_id)
