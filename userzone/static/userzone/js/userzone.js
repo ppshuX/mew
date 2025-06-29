@@ -136,12 +136,26 @@ document.addEventListener('DOMContentLoaded', function () {
             btns.forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
             const type = btn.getAttribute('data-type');
+
+            // 显示对应的内容区域
             Object.keys(lists).forEach(key => {
-                if (lists[key]) lists[key].style.display = (key === type) ? '' : 'none';
+                if (lists[key]) {
+                    if (key === type) {
+                        lists[key].style.display = 'block';
+                        lists[key].style.opacity = '1';
+                    } else {
+                        lists[key].style.display = 'none';
+                        lists[key].style.opacity = '0';
+                    }
+                }
             });
 
-            // 更新URL参数
-            updateURLParams(type, categoryFilter.value);
+            // 重新应用当前类别筛选
+            const currentCategory = categoryFilter ? categoryFilter.value : 'all';
+            filterPostsByCategory(currentCategory);
+
+            // 更新URL参数但不刷新页面
+            updateURLParams(type, currentCategory, false);
         });
     });
 
@@ -149,16 +163,52 @@ document.addEventListener('DOMContentLoaded', function () {
     if (categoryFilter) {
         categoryFilter.addEventListener('change', function () {
             const currentType = document.querySelector('.uz-filter-btn.active').getAttribute('data-type');
-            updateURLParams(currentType, this.value);
+            const selectedCategory = this.value;
+
+            // 客户端筛选：隐藏/显示对应类别的帖子
+            filterPostsByCategory(selectedCategory);
+
+            // 更新URL参数但不刷新页面
+            updateURLParams(currentType, selectedCategory, false);
         });
     }
 
-    // 更新URL参数并重新加载页面
-    function updateURLParams(type, category) {
+    // 客户端筛选帖子
+    function filterPostsByCategory(category) {
+        const currentType = document.querySelector('.uz-filter-btn.active').getAttribute('data-type');
+        const currentList = lists[currentType];
+
+        if (!currentList) return;
+
+        const posts = currentList.querySelectorAll('.uz-post-card');
+
+        posts.forEach(post => {
+            const categoryBadge = post.querySelector('.uz-category-badge');
+            if (categoryBadge) {
+                const postCategory = categoryBadge.getAttribute('data-category');
+                if (category === 'all' || postCategory === category) {
+                    post.style.display = '';
+                    post.style.opacity = '1';
+                } else {
+                    post.style.display = 'none';
+                    post.style.opacity = '0';
+                }
+            }
+        });
+    }
+
+    // 更新URL参数
+    function updateURLParams(type, category, reload = false) {
         const url = new URL(window.location);
         url.searchParams.set('type', type);
         url.searchParams.set('category', category);
-        window.location.href = url.toString();
+
+        if (reload) {
+            window.location.href = url.toString();
+        } else {
+            // 使用history API更新URL而不刷新页面
+            window.history.pushState({}, '', url.toString());
+        }
     }
 });
 

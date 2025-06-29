@@ -200,6 +200,17 @@ body {
     overflow-y: auto;
     max-height: 520px;
     padding-right: 4px;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.uz-filter-list[style*="display: none"] {
+    opacity: 0;
+    transform: translateY(10px);
+}
+
+.uz-filter-list[style*="display: block"] {
+    opacity: 1;
+    transform: translateY(0);
 }
 
 /* 筛选按钮区美化 */
@@ -226,7 +237,7 @@ body {
     font-size: 1.05rem;
     font-weight: 500;
     cursor: pointer;
-    transition: background 0.2s, color 0.2s;
+    transition: all 0.3s ease;
     box-shadow: 0 1px 4px rgba(120, 120, 160, 0.06);
 }
 
@@ -234,6 +245,10 @@ body {
 .uz-filter-btn:hover {
     background: linear-gradient(90deg, #a18cd1 0%, #fbc2eb 100%);
     color: #fff;
+}
+
+.uz-filter-btn:active {
+    transform: scale(0.95);
 }
 
 /* 编辑动态按钮风格 */
@@ -773,6 +788,7 @@ body {
 .uz-category-filter .form-select:focus {
     border-color: #a18cd1;
     box-shadow: 0 0 0 0.2rem rgba(161, 140, 209, 0.25);
+    transform: scale(1.02);
 }
 
 /* 类别标签样式 */
