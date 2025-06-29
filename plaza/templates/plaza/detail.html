@@ -1,0 +1,312 @@
+{% load static %}
+{% load humanize %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <title>广场动态详情</title>
+    <link rel="stylesheet" href="{% static 'chat/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'plaza/css/post_detail.css' %}">
+    <style>
+        body {
+            background: #f0f2f5;
+            font-family: 'Helvetica Neue', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+        }
+
+        .card {
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+        }
+
+        .card-text {
+            font-size: 1rem;
+        }
+
+        .img-fluid {
+            border-radius: 12px;
+        }
+
+        .comment-box {
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding: 8px 12px;
+        }
+
+        .comment-box strong {
+            color: #333;
+        }
+
+        .comment-box form {
+            display: inline;
+        }
+
+        .btn-outline-primary {
+            font-size: 0.95rem;
+        }
+
+        .input-group input {
+            font-size: 0.95rem;
+        }
+
+        .back-link {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        .vertical-divider {
+            width: 1.5px;
+            height: 38px;
+            background: #e0d7f7;
+            border-radius: 2px;
+            margin: 0 8px;
+            box-shadow: 0 0 2px #e0d7f7;
+        }
+
+        .avatar-border {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            border: 2px solid #c9a4f7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #eee;
+            font-size: 1.3rem;
+            color: #a86ae3;
+            box-shadow: 0 2px 8px #f3eaff;
+        }
+
+        .horizontal-divider {
+            width: 100%;
+            height: 1.5px;
+            background: #f3eaff;
+            border-radius: 1px;
+            margin: 10px 0 10px 0;
+        }
+
+        .detail-content {
+            font-size: 1.25rem;
+            line-height: 1.8;
+        }
+
+        /* 详情页图片网格样式 */
+        .detail-image-grid {
+            display: grid;
+            gap: 8px;
+            padding: 16px 0;
+            margin: 16px 0;
+        }
+
+        /* 单张图片 */
+        .detail-image-grid:has(.detail-image-card:only-child) {
+            grid-template-columns: 1fr;
+        }
+
+        .detail-image-grid:has(.detail-image-card:only-child) .detail-image-card {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* 两张图片 */
+        .detail-image-grid:has(.detail-image-card:nth-child(2):last-child) {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        /* 三张图片 */
+        .detail-image-grid:has(.detail-image-card:nth-child(3):last-child) {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .detail-image-grid:has(.detail-image-card:nth-child(3):last-child) .detail-image-card:last-child {
+            grid-column: 1 / -1;
+            max-width: 50%;
+            margin: 0 auto;
+        }
+
+        /* 四张及以上图片 */
+        .detail-image-grid:has(.detail-image-card:nth-child(n+4)) {
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        }
+
+        .detail-image-card {
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .detail-image-card:hover {
+            transform: scale(1.02);
+        }
+
+        .detail-image {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .detail-image-grid:has(.detail-image-card:nth-child(n+4)) {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
+
+            .detail-image-grid:has(.detail-image-card:nth-child(3):last-child) .detail-image-card:last-child {
+                max-width: 60%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .detail-image-grid:has(.detail-image-card:nth-child(n+4)) {
+                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            }
+
+            .detail-image-grid:has(.detail-image-card:nth-child(3):last-child) .detail-image-card:last-child {
+                max-width: 70%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <a href="{% url 'plaza:list' %}" class="back-float" title="返回广场">
+            <span style="font-size:1.5rem;">🏠</span>
+        </a>
+        <div class="detail-card detail-main" id="detail-main">
+            <div class="author-row" style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+                <div class="avatar-border" style="margin-right:0;">
+                    {% if post.author.user_profile.avatar and post.author.user_profile.avatar.url != '/media/avatars/default.jpg' %}
+                    <img src="{{ post.author.user_profile.avatar.url }}"
+                        style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;">
+                    {% else %}
+                    <div style="font-size:1.3rem;font-weight:600;color:#a86ae3;">
+                        {{ post.author.username|first|upper }}
+                    </div>
+                    {% endif %}
+                </div>
+                <span class="author-divider" style="color:#d1b3f7;font-size:1.2rem;font-weight:bold;">|</span>
+                <span class="author-name" style="font-weight:bold;font-size:1.05rem;color:#7a3ee5;">
+                    {{ post.author.user_profile.nickname|default:post.author.username }}
+                </span>
+                <span class="detail-time" style="color:#888;font-size:0.98rem;margin-left:8px;">
+                    {{ post.created_at|naturaltime }}
+                </span>
+            </div>
+
+            <!-- 多张图片显示 -->
+            {% if post.images.all %}
+            <div class="detail-image-grid">
+                {% for post_image in post.images.all %}
+                <div class="detail-image-card">
+                    <img src="{{ post_image.image.url }}" alt="动态图片" class="detail-image">
+                </div>
+                {% endfor %}
+            </div>
+            {% elif post.image %}
+            <!-- 兼容旧数据：单张图片 -->
+            <div class="detail-image-grid">
+                <div class="detail-image-card">
+                    <img src="{{ post.image.url }}" alt="动态图片" class="detail-image">
+                </div>
+            </div>
+            {% endif %}
+
+            <div id="detail-content" class="detail-content">{{ post.content|linebreaks }}</div>
+            <div class="detail-like-bar-wrapper">
+                <div class="detail-like-bar">
+                    <span style="font-size:1.05rem;color:#a86ae3;font-weight:600;margin-right:4px;">喜爱数：</span>
+                    <span class="detail-like-count">{{ post.likes.count }}</span>
+                    <form method="post" action="{% url 'plaza:like_post' post.id %}" style="display:inline;">
+                        {% csrf_token %}
+                        <button class="detail-like-btn" data-post-id="{{ post.id }}"
+                            data-liked="{{ liked_by_user|yesno:'true,false' }}">
+                            <span class="like-icon">
+                                {% if liked_by_user %}❤️{% else %}🤍{% endif %}
+                            </span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+            {% if request.user == post.author or request.user.is_superuser %}
+            <form method="post" action="{% url 'plaza:delete_post' post.id %}" style="display:inline;"
+                onsubmit="return confirm('确定要删除这条动态吗？');">
+                {% csrf_token %}
+                <button type="submit" class="detail-comment-delete-btn trash-btn" title="删除动态"
+                    style="margin-left:12px;font-size:1.3rem;vertical-align:middle;">
+                    <span class="trash-icon">🗑️</span>
+                </button>
+            </form>
+            {% endif %}
+        </div>
+    </div>
+    <button id="toggle-comments-btn" class="expand-comments-btn show-comments-rect"
+        title="收起评论区"><span>收起评论区</span></button>
+    <div style="height:32px;"></div>
+    <div class="detail-comments-footer" id="comments-footer"
+        style="position:static;box-shadow:none;max-width:820px;margin:0 auto 32px auto;display:block;">
+        <div class="detail-comments-footer-inner" id="comments-inner"
+            style="position:static;max-height:none;height:auto;overflow:visible;padding:0;">
+            <div class="detail-comments-title">全部评论：</div>
+            {% for c in comments %}
+            <div class="detail-comment-box">
+                <div class="detail-comment-content">
+                    <strong>{{ c.obj.author.user_profile.nickname|default:c.obj.author.username }}</strong>:
+                    <span>{{ c.obj.content|linebreaksbr }}</span>
+                    <span class="detail-comment-time">{{ c.obj.created_at|naturaltime }}</span>
+                </div>
+                <div class="comment-actions">
+                    <button class="comment-like-btn {% if c.liked_by_user %}liked{% endif %}"
+                        data-comment-id="{{ c.obj.id }}" data-liked="{{ c.liked_by_user|yesno:'true,false' }}"
+                        title="{{ c.liked_by_user|yesno:'取消点赞,点赞' }}">
+                        <span id="comment-like-icon-{{ c.obj.id }}">
+                            {% if c.liked_by_user %}👍{% else %}👍🏻{% endif %}
+                        </span>
+                        <span id="comment-like-text-{{ c.obj.id }}">
+                            {% if c.liked_by_user %}取消点赞{% else %}点赞{% endif %}
+                        </span>
+                        <span id="comment-like-count-{{ c.obj.id }}">
+                            {{ c.like_count }}
+                        </span>
+                    </button>
+                    {% if c.obj.author == request.user or request.user.is_superuser %}
+                    <form method="post" action="{% url 'plaza:delete_comment' c.obj.id %}" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="detail-comment-delete-btn trash-btn" title="删除">
+                            <span class="trash-icon">🗑️</span>
+                        </button>
+                    </form>
+                    {% endif %}
+                </div>
+            </div>
+            {% empty %}
+            <p class="text-muted">暂无评论</p>
+            {% endfor %}
+
+            {% if post.plaza_comments.count > 2 %}
+            <button id="show-more-comments-btn" class="show-more-comments-btn">展示剩余评论</button>
+            <button id="hide-more-comments-btn" class="show-more-comments-btn" style="display:none;">收起剩余评论</button>
+            {% endif %}
+            <form method="post" action="{% url 'plaza:add_comment' post.id %}" class="detail-comment-form">
+                {% csrf_token %}
+                <input type="text" name="comment" placeholder="写评论..." required>
+                <button type="submit">发表评论</button>
+            </form>
+        </div>
+    </div>
+    </div>
+    </div>
+    </div>
+
+    <script src="{% static 'plaza/js/post_detail.js' %}"></script>
+    <script src="{% static 'chat/js/jquery.min.js' %}"></script>
+
+</body>
+
+</html>

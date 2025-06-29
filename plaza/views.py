@@ -1,37 +1,120 @@
-from django.shortcuts import render, get_object_or_404, redirect
-from .models import Post, Like, Comment
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import Post, Comment, PostImage
+from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
-
-def plaza_list(request):
-    posts = Post.objects.all().order_by('-created_at')
-    return render(request, 'plaza/plaza.html', {'posts': posts})
-
-def plaza_detail(request, post_id):
-    post = get_object_or_404(Post, id=post_id)
-    return render(request, 'plaza/detail.html', {'post': post})
+from django.http import JsonResponse
+from django.contrib import messages
 
 @login_required
-def plaza_add_comment(request, post_id):
+def plaza_list(request):
     if request.method == 'POST':
         content = request.POST.get('content')
-        if content:
-            Comment.objects.create(post_id=post_id, author=request.user, content=content)
-    return redirect('plaza:detail', post_id=post_id)
+        images = request.FILES.getlist('image')
+        
+        if content or images:
+            post = Post.objects.create(author=request.user, content=content)
+            
+            # 处理多张图片上传
+            for image in images:
+                if image:
+                    PostImage.objects.create(post=post, image=image)
+            
+            return redirect('plaza:list')
+        
+    posts = Post.objects.all().order_by('-created_at')
+    # ⭐ 添加判断：当前用户是否点赞了每个 post
+    for post in posts:
+        post.is_liked = request.user in post.likes.all()
 
+    return render(request, 'plaza/plaza.html', {'posts': posts})
+
+@require_POST
 @login_required
-def plaza_like_post(request, post_id):
+def like_post(request, post_id):
     post = get_object_or_404(Post, id=post_id)
-    Like.objects.get_or_create(post=post, user=request.user)
-    return redirect('plaza:list')
+    user = request.user
+
+    if user in post.likes.all():
+        post.likes.remove(user)
+        liked = False
+    else:
+        post.likes.add(user)
+        liked = True
+
+    return JsonResponse({'liked': liked, 'like_count': post.likes.count()})
 
 @login_required
-def plaza_delete_comment(request, comment_id):
+def add_comment(request, post_id):
+    if request.method == 'POST':
+        content = request.POST.get('comment')
+        post = get_object_or_404(Post, id=post_id)
+        if content:
+            comment = Comment.objects.create(post=post, author=request.user, content=content)
+            return redirect('plaza:detail', post_id=comment.post.id)
+        else:
+            return redirect('plaza:detail', post_id=post_id)
+
+@login_required
+def delete_comment(request, comment_id):
     comment = get_object_or_404(Comment, id=comment_id)
-    if comment.author == request.user:
+    if request.user == comment.author or request.user.is_superuser:
         comment.delete()
     return redirect('plaza:detail', post_id=comment.post.id)
 
 @login_required
-def plaza_like_comment(request, comment_id):
-    # 你可以设计一个 CommentLike 模型来支持这一功能
-    return redirect('plaza:detail', post_id=comment_id)  # 这里先占位
+def plaza_detail(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    liked_by_user = request.user in post.likes.all()
+    comments = []
+    for comment in post.plaza_comments.all():
+        comments.append({
+            'obj': comment,
+            'liked_by_user': request.user in comment.likes.all(),
+            'like_count': comment.likes.count(),
+        })
+    return render(request, 'plaza/detail.html', {
+        'post': post,
+        'liked_by_user': liked_by_user,
+        'comments': comments,
+    })
+
+# 评论点赞视图
+@require_POST
+@login_required
+def like_comment(request, comment_id):
+    comment = get_object_or_404(Comment, id=comment_id)
+    user = request.user
+    
+    print(f"评论点赞请求: 评论ID={comment_id}, 用户={user.username}")
+    print(f"当前点赞状态: {user in comment.likes.all()}")
+
+    if user in comment.likes.all():
+        comment.likes.remove(user)
+        liked = False
+        print(f"取消点赞: 用户={user.username}, 评论ID={comment_id}")
+    else:
+        comment.likes.add(user)
+        liked = True
+        print(f"添加点赞: 用户={user.username}, 评论ID={comment_id}")
+
+    # 确保数据保存到数据库
+    comment.save()
+    
+    like_count = comment.likes.count()
+    print(f"点赞后状态: liked={liked}, like_count={like_count}")
+
+    return JsonResponse({
+        'liked': liked,
+        'like_count': like_count
+    })
+
+@login_required
+def delete_post(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    if request.user == post.author or request.user.is_superuser:
+        post.delete()
+        messages.success(request, '动态已删除')
+        return redirect('plaza:list')
+    else:
+        messages.error(request, '你没有权限删除该动态')
+        return redirect('plaza:detail', post_id=post_id)

@@ -174,7 +174,7 @@
                         data-comment-id="{{ c.obj.id }}" data-liked="{{ c.liked_by_user|yesno:'true,false' }}"
                         title="{{ c.liked_by_user|yesno:'取消点赞,点赞' }}">
                         <span id="comment-like-icon-{{ c.obj.id }}">
-                            {% if c.liked_by_user %}👍{% else %}👍{% endif %}
+                            {% if c.liked_by_user %}👍🏻{% else %}👍{% endif %}
                         </span>
                         <span id="comment-like-text-{{ c.obj.id }}">
                             {% if c.liked_by_user %}取消点赞{% else %}点赞{% endif %}

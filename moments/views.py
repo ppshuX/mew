@@ -48,16 +48,16 @@ def add_comment(request, post_id):
         post = get_object_or_404(Post, id=post_id)
         if content:
             comment = Comment.objects.create(post=post, author=request.user, content=content)
-            return redirect('post_detail', post_id=comment.post.id)
+            return redirect('moments:post_detail', post_id=comment.post.id)
         else:
-            return redirect('post_detail', post_id=post_id)
+            return redirect('moments:post_detail', post_id=post_id)
 
 @login_required
 def delete_comment(request, comment_id):
     comment = get_object_or_404(Comment, id=comment_id)
     if request.user == comment.author or request.user.is_superuser:
         comment.delete()
-    return redirect('post_detail', post_id=comment.post.id)
+    return redirect('moments:post_detail', post_id=comment.post.id)
 
 
 @login_required

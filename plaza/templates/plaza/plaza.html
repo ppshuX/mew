@@ -8,6 +8,7 @@
 {% block content %}
 <div class="moments-content-outer">
     <h3 class="publish-title mb-4">🌟 广 场 Plaza</h3>
+    <!-- 发布说说 -->
     <form method="post" enctype="multipart/form-data" class="publish-form mb-5"
         style="background:none;box-shadow:none;border-radius:0;padding:0;">
         {% csrf_token %}
@@ -19,18 +20,33 @@
         <button type="submit" class="btn btn-primary publish-btn">分享新鲜事</button>
         <hr class="publish-divider">
     </form>
-
+    <!-- 动态卡片 -->
     <div class="moments-list">
         {% for post in posts %}
         <div class="moment-card" onclick="window.location.href='{% url 'plaza:detail' post.id %}'">
             <div class="author-row">
+                {% if post.author.user_profile.avatar and post.author.user_profile.avatar.url != '/media/avatars/default.jpg' %}
+                <img class="avatar-img" src="{{ post.author.user_profile.avatar.url }}" alt="头像"
+                    style="width:36px;height:36px;border-radius:50%;object-fit:cover;vertical-align:middle;">
+                {% else %}
                 <span class="avatar-circle">{{ post.author.username|first|upper }}</span>
+                {% endif %}
                 <span class="author-divider">|</span>
-                <span class="author-name">{{ post.author.username }}</span>
+                <span class="author-name">{{ post.author.user_profile.nickname|default:post.author.username }}</span>
                 <span class="timestamp">{{ post.created_at|naturaltime }}</span>
             </div>
 
-            {% if post.image %}
+            <!-- 多张图片显示 -->
+            {% if post.images.all.count > 0 %}
+            <div class="image-grid">
+                {% for post_image in post.images.all %}
+                <div class="image-card">
+                    <img src="{{ post_image.image.url }}" alt="图片">
+                </div>
+                {% endfor %}
+            </div>
+            {% elif post.image %}
+            <!-- 兼容旧数据：单张图片 -->
             <div class="image-grid">
                 <div class="image-card">
                     <img src="{{ post.image.url }}" alt="图片">
@@ -39,12 +55,12 @@
             {% endif %}
 
             <div class="text-content">
-                {% if post.image %}
+                {% if post.images.all or post.image %}
                 <div class="content">{{ post.content }}</div>
                 {% else %}
                 <div class="content-long">{{ post.content }}</div>
                 {% endif %}
-
+                <!-- 点赞 -->
                 <div class="bottom-bar">
                     <button class="like-btn" data-post-id="{{ post.id }}" onclick="event.stopPropagation();">
                         <span class="like-icon" id="like-icon-{{ post.id }}">
@@ -53,20 +69,18 @@
                         <span class="like-count" id="like-count-{{ post.id }}">{{ post.like_count }}</span>
                     </button>
                 </div>
-
+                <!-- 评论预览 -->
                 <div class="comments mt-2">
-                    {% with post.comments.all|slice:':2' as comment_preview %}
-                    {% if comment_preview %}
+                    {% with post.plaza_comments.all|slice:':2' as comment_preview %}
                     {% for comment in comment_preview %}
-                    <div class="comment">
-                        <strong>{{ comment.author.username }}</strong>: {{ comment.content }}
-                    </div>
+                    <div class="comment"><strong>{{ comment.author.user_profile.nickname|default:comment.author.username
+                            }}</strong>: {{ comment.content }}</div>
                     {% endfor %}
-                    {% else %}
-                    <div class="no-comments">还没有评论</div>
-                    {% endif %}
-                    {% if post.comments.count > 2 %}
+                    {% if post.plaza_comments.count > 2 %}
                     <div class="view-more">查看更多评论...</div>
+                    {% endif %}
+                    {% if comment_preview|length == 0 %}
+                    <div class="no-comments">还没有评论</div>
                     {% endif %}
                     {% endwith %}
                 </div>
@@ -74,7 +88,6 @@
         </div>
         {% endfor %}
     </div>
-
     {% if posts|length == 0 %}
     <div class="alert alert-info mt-4">还没有任何动态，快来发布第一条吧！</div>
     {% endif %}
