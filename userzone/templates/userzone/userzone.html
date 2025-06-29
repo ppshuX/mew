@@ -84,17 +84,30 @@
                 <!-- 筛选按钮区 -->
                 <div class="uz-filter-btn-outer d-flex justify-content-center mb-3">
                     <div class="uz-filter-btn-group">
-                        <button class="uz-filter-btn active" data-type="moments">朋友圈动态</button>
-                        <button class="uz-filter-btn" data-type="plaza">广场动态</button>
+                        <button class="uz-filter-btn {% if current_type == 'moments' %}active{% endif %}"
+                            data-type="moments">朋友圈动态</button>
+                        <button class="uz-filter-btn {% if current_type == 'plaza' %}active{% endif %}"
+                            data-type="plaza">广场动态</button>
                         {% if is_owner %}
-                        <button class="uz-filter-btn" data-type="private">私密动态</button>
+                        <button class="uz-filter-btn {% if current_type == 'private' %}active{% endif %}"
+                            data-type="private">私密动态</button>
                         {% endif %}
+                    </div>
+                    <div class="uz-category-filter ms-3">
+                        <select class="form-select form-select-sm" id="category-filter">
+                            <option value="all">全部类别</option>
+                            {% for value, label in category_choices %}
+                            <option value="{{ value }}" {% if current_category == value %}selected{% endif %}>{{ label }}
+                            </option>
+                            {% endfor %}
+                        </select>
                     </div>
                     <button class="uz-edit-post-btn ms-4">编辑动态</button>
                 </div>
                 <!-- 内容区 -->
                 <div class="uz-filter-content">
-                    <div class="uz-filter-list" id="moments-list">
+                    <div class="uz-filter-list" id="moments-list" {% if current_type != 'moments' %}style="display:none;"
+                        {% endif %}>
                         {% if is_owner and form %}
                         <form method="post" enctype="multipart/form-data" class="uz-moments-form mb-4">
                             {% csrf_token %}
@@ -108,6 +121,12 @@
                             </div>
                             <div class="mb-2">
                                 <label style="font-size:0.98rem;">
+                                    {{ form.category.label }}: {{ form.category }}
+                                </label>
+                                {{ form.category.errors }}
+                            </div>
+                            <div class="mb-2">
+                                <label style="font-size:0.98rem;">
                                     {{ form.is_private }} 仅自己可见（私密动态）
                                 </label>
                                 {{ form.is_private.errors }}
@@ -115,6 +134,7 @@
                             <button type="submit" class="uz-btn uz-btn-center">发布动态</button>
                         </form>
                         {% endif %}
+                        <div style="color:red;">moments_posts 数量: {{ moments_posts|length }}</div>
                         <div class="uz-posts-grid">
                             {% for post in moments_posts %}
                             <div class="uz-post-card uz-feed-card" data-url="{% url 'moments:post_detail' post.id %}">
@@ -150,6 +170,14 @@
                                 </div>
                                 <!-- 正文区 -->
                                 <div class="uz-feed-content">{{ post.content|linebreaksbr|safe }}</div>
+                                <!-- 类别标签 -->
+                                <div class="uz-feed-category">
+                                    <span class="uz-category-badge" data-category="{{ post.category }}">
+                                        {% for value, label in category_choices %}
+                                        {% if value == post.category %}{{ label }}{% endif %}
+                                        {% endfor %}
+                                    </span>
+                                </div>
                                 <!-- 图片宫格区 -->
                                 {% if post.image %}
                                 <div class="uz-feed-images">
@@ -167,7 +195,8 @@
                             {% endfor %}
                         </div>
                     </div>
-                    <div class="uz-filter-list" id="plaza-list" style="display:none;">
+                    <div class="uz-filter-list" id="plaza-list" {% if current_type != 'plaza' %}style="display:none;" {%
+                        endif %}>
                         <div class="uz-posts-grid">
                             {% for post in plaza_posts %}
                             <div class="uz-post-card uz-feed-card" data-url="{% url 'plaza:detail' post.id %}">
@@ -198,6 +227,14 @@
                                 </div>
                                 <!-- 正文区 -->
                                 <div class="uz-feed-content">{{ post.content|linebreaksbr|safe }}</div>
+                                <!-- 类别标签 -->
+                                <div class="uz-feed-category">
+                                    <span class="uz-category-badge" data-category="{{ post.category }}">
+                                        {% for value, label in category_choices %}
+                                        {% if value == post.category %}{{ label }}{% endif %}
+                                        {% endfor %}
+                                    </span>
+                                </div>
                                 <!-- 图片宫格区 -->
                                 {% if post.images.all %}
                                 <div class="uz-feed-images">
@@ -224,7 +261,8 @@
                         </div>
                     </div>
                     {% if is_owner %}
-                    <div class="uz-filter-list" id="private-list" style="display:none;">
+                    <div class="uz-filter-list" id="private-list" {% if current_type != 'private' %}style="display:none;"
+                        {% endif %}>
                         <div class="uz-posts-grid">
                             {% for post in private_posts %}
                             <div class="uz-post-card" data-url="{% url 'moments:post_detail' post.id %}">
@@ -238,6 +276,14 @@
                                     <span class="uz-post-time">{{ post.created_at|date:"Y-m-d H:i" }}</span>
                                 </div>
                                 <div class="uz-post-content">{{ post.content }}</div>
+                                <!-- 类别标签 -->
+                                <div class="uz-feed-category">
+                                    <span class="uz-category-badge" data-category="{{ post.category }}">
+                                        {% for value, label in category_choices %}
+                                        {% if value == post.category %}{{ label }}{% endif %}
+                                        {% endfor %}
+                                    </span>
+                                </div>
                                 {% if post.image %}
                                 <div class="uz-post-images">
                                     <div class="uz-image-grid">
@@ -270,4 +316,5 @@
         </div>
     </div>
 </div>
+{% endif %}
 {% endblock %}

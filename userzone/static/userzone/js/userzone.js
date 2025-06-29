@@ -128,6 +128,9 @@ document.addEventListener('DOMContentLoaded', function () {
         plaza: document.getElementById('plaza-list'),
         private: document.getElementById('private-list')
     };
+    const categoryFilter = document.getElementById('category-filter');
+
+    // 动态类型筛选
     btns.forEach(btn => {
         btn.addEventListener('click', function () {
             btns.forEach(b => b.classList.remove('active'));
@@ -136,8 +139,27 @@ document.addEventListener('DOMContentLoaded', function () {
             Object.keys(lists).forEach(key => {
                 if (lists[key]) lists[key].style.display = (key === type) ? '' : 'none';
             });
+
+            // 更新URL参数
+            updateURLParams(type, categoryFilter.value);
         });
     });
+
+    // 类别筛选
+    if (categoryFilter) {
+        categoryFilter.addEventListener('change', function () {
+            const currentType = document.querySelector('.uz-filter-btn.active').getAttribute('data-type');
+            updateURLParams(currentType, this.value);
+        });
+    }
+
+    // 更新URL参数并重新加载页面
+    function updateURLParams(type, category) {
+        const url = new URL(window.location);
+        url.searchParams.set('type', type);
+        url.searchParams.set('category', category);
+        window.location.href = url.toString();
+    }
 });
 
 // 图片预览功能
@@ -339,3 +361,4 @@ style.textContent = `
     }
 `;
 document.head.appendChild(style);
+

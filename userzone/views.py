@@ -15,15 +15,24 @@ def userzone(request, username):
     
     is_owner = (request.user == user_profile.user)
     
+    # 获取筛选参数
+    post_type = request.GET.get('type', 'moments')  # moments, plaza, private
+    category = request.GET.get('category', 'all')   # all, daily, study, work, etc.
+    
     if is_owner:
-        if is_owner:
-            moments_posts = MomentsPost.objects.filter(author=user_profile.user, is_private=False).order_by('-created_at')
-            private_posts = MomentsPost.objects.filter(author=user_profile.user, is_private=True).order_by('-created_at')
+        moments_posts = MomentsPost.objects.filter(author=user_profile.user).order_by('-created_at')
+        private_posts = MomentsPost.objects.filter(author=user_profile.user, is_private=True).order_by('-created_at')
     else:
         moments_posts = MomentsPost.objects.filter(author=user_profile.user, is_private=False).order_by('-created_at')
         private_posts = []
     
     plaza_posts = PlazaPost.objects.filter(author=user_profile.user).order_by('-created_at')
+    
+    # 按类别筛选
+    if category != 'all':
+        moments_posts = moments_posts.filter(category=category)
+        plaza_posts = plaza_posts.filter(category=category)
+        private_posts = private_posts.filter(category=category)
     
     # 添加调试信息
     print(f"Debug: Found {moments_posts.count()} moments posts for user {username}")
@@ -42,6 +51,9 @@ def userzone(request, username):
         else:
             form = MomentsPostForm()
     
+    # 获取所有类别选项
+    category_choices = MomentsPost.CATEGORY_CHOICES
+    
     context = {
         'user_profile': user_profile,
         'is_owner': is_owner,
@@ -50,5 +62,8 @@ def userzone(request, username):
         'private_posts': private_posts,
         'recent_visitors': [],  # 需实现
         'form': form,
+        'current_type': post_type,
+        'current_category': category,
+        'category_choices': category_choices,
     }
     return render(request, 'userzone/userzone.html', context)
