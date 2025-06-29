@@ -79,6 +79,11 @@
 
     <!-- 右栏 -->
     <div class="uz-right">
+        <div style="color:red; font-weight:bold;">
+            DEBUG: current_type = {{ current_type }} |
+            current_category = {{ current_category }} |
+            moments_posts count = {{ moments_posts|length }}
+        </div>
         <div class="card uz-card">
             <div class="card-body">
                 <!-- 筛选按钮区 -->
@@ -106,8 +111,71 @@
                 </div>
                 <!-- 内容区 -->
                 <div class="uz-filter-content">
-                    <div class="uz-filter-list" id="moments-list" {% if current_type == 'moments' %}style="display:block;"
-                        {% else %}style="display:none;" {% endif %}>
+                    <div class="uz-posts-grid">
+                        {% for post in moments_posts %}
+                        <div class="uz-post-card uz-feed-card" data-url="{% url 'moments:post_detail' post.id %}">
+                            <!-- 顶部信息区 -->
+                            <div class="uz-feed-header d-flex align-items-center justify-content-between">
+                                <div class="d-flex align-items-center gap-2">
+                                    {% with profile=post.author.user_profile %}
+                                        {% if profile and profile.avatar %}
+                                            <img src="{{ profile.avatar.url }}" class="uz-feed-avatar"
+                                                alt="{{ profile.nickname|default:post.author.username }}">
+                                        {% else %}
+                                            <div class="uz-feed-avatar"
+                                                style="width: 40px; height: 40px; border-radius: 50%; background-color: #e9ecef; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #6c757d;">
+                                                {{ post.author.username|first|upper }}
+                                            </div>
+                                        {% endif %}
+
+                                        <div class="uz-feed-meta">
+                                            <span class="uz-feed-author">
+                                                {{ profile.nickname|default:post.author.username }}
+                                            </span>
+                                            <span class="uz-feed-time">
+                                                {{ post.created_at|date:"Y-m-d H:i" }}
+                                            </span>
+                                            {% if profile.school or profile.location %}
+                                                <span class="uz-feed-location">
+                                                    {{ profile.school|default:profile.location }}
+                                                </span>
+                                            {% endif %}
+                                        </div>
+                                    {% endwith %}
+                                </div>
+                                <a class="uz-feed-detail-btn" href="{% url 'moments:post_detail' post.id %}"
+                                    target="_blank">原文</a>
+                            </div>
+
+                            <!-- 正文 -->
+                            <div class="uz-feed-content">{{ post.content|linebreaksbr|safe }}</div>
+
+                            <!-- 类别标签 -->
+                            <div class="uz-feed-category">
+                                <span class="uz-category-badge" data-category="{{ post.category }}">
+                                    {% for value, label in category_choices %}
+                                    {% if value == post.category %}{{ label }}{% endif %}
+                                    {% endfor %}
+                                </span>
+                            </div>
+
+                            <!-- 图片 -->
+                            {% if post.image %}
+                            <div class="uz-feed-images">
+                                <div class="uz-feed-image-grid">
+                                    <img src="{{ post.image.url }}" class="uz-feed-img" alt="动态图片">
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                        {% empty %}
+                        <div class="uz-empty-state">
+                            <div class="uz-empty-icon">📝</div>
+                            <div class="uz-empty-text">你还没有发朋友圈哦~</div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <div class="uz-filter-list" id="moments-list" style="display:block;">
                         {% if is_owner and form %}
                         <form method="post" enctype="multipart/form-data" class="uz-moments-form mb-4">
                             {% csrf_token %}
@@ -134,7 +202,17 @@
                             <button type="submit" class="uz-btn uz-btn-center">发布动态</button>
                         </form>
                         {% endif %}
-                        <div style="color:red;">moments_posts 数量: {{ moments_posts|length }}</div>
+                        <div style="color:blue;">
+                            <div style="color:blue;">
+                                {% for post in moments_posts %}
+                                <p>POST: {{ post.id }} | {{ post.content }} | author={{ post.author.username }}</p>
+                                {% endfor %}
+                            </div>
+                            {% for post in moments_posts %}
+                            <div>post.id: {{ post.id }} | post.author: {{ post.author }} | post.content: {{ post.content
+                                }}</div>
+                            {% endfor %}
+                        </div>
                         <div class="uz-posts-grid">
                             {% for post in moments_posts %}
                             <div class="uz-post-card uz-feed-card" data-url="{% url 'moments:post_detail' post.id %}">
@@ -207,8 +285,9 @@
                                         <img src="{{ post.author.user_profile.avatar.url }}" class="uz-feed-avatar"
                                             alt="{{ post.author.user_profile.nickname }}">
                                         <div class="uz-feed-meta">
-                                            <span class="uz-feed-author">{{
-                                                post.author.user_profile.nickname|default:post.author.username }}</span>
+                                            <span class="uz-feed-author">
+                                                {{ post.author.user_profile.nickname|default:post.author.username
+                                                }}</span>
                                             <span class="uz-feed-time">{{ post.created_at|date:'Y-m-d H:i' }}</span>
                                         </div>
                                         {% else %}
@@ -309,12 +388,12 @@
                             </div>
                             {% endfor %}
                         </div>
-                        {% endif %}
                     </div>
-
+                    {% endif %}
                 </div>
             </div>
         </div>
     </div>
+</div>
 </div>
 {% endblock %}

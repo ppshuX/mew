@@ -16,8 +16,8 @@ def userzone(request, username):
     is_owner = (request.user == user_profile.user)
     
     # 获取筛选参数
-    post_type = request.GET.get('type', 'moments')  # moments, plaza, private
-    category = request.GET.get('category', 'all')   # all, daily, study, work, etc.
+    post_type = request.GET.get('type', 'moments').strip()  # moments, plaza, private
+    category = request.GET.get('category', 'all').strip()   # all, daily, study, work, etc.
     
     if is_owner:
         moments_posts = MomentsPost.objects.filter(author=user_profile.user).order_by('-created_at')
