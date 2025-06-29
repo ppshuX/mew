@@ -14,17 +14,19 @@
     <div class="uz-left">
         <!-- 用户信息卡片 -->
         <div class="card uz-card uz-user-info">
-            <div class="card-body uz-user-info-body">
-                <img src="{{ user_profile.avatar.url }}" class="uz-avatar" alt="{{ user_profile.nickname }}">
-                <div class="uz-user-info-text">
+            <div class="card-body d-flex align-items-center gap-4">
+                <img src="{{ user_profile.avatar.url }}" class="rounded-circle uz-avatar"
+                    alt="{{ user_profile.nickname }}">
+                <div class="flex-grow-1">
                     <div class="uz-nickname">{{ user_profile.nickname }}</div>
                     <div class="uz-school">{{ user_profile.school }}</div>
                     <div class="uz-signature">{{ user_profile.bio|default:"这个人很神秘，什么都没写。" }}</div>
                 </div>
             </div>
         </div>
+
         <!-- 统计信息卡片 -->
-        <div class="card uz-card uz-stats-card">
+        <div class="card uz-card">
             <div class="card-body">
                 <div class="uz-stats">
                     <div class="uz-stat-item">
@@ -40,10 +42,14 @@
                         <span class="uz-stat-number">{{ user_profile.view_count|default:0 }}</span>
                     </div>
                 </div>
+
+                <!-- 在线状态 -->
                 <div class="uz-online-status">
                     <span class="uz-dot {% if user_profile.is_online %}online{% endif %}"></span>
                     <span class="uz-location">{{ user_profile.ip_location }}</span>
                 </div>
+
+                <!-- 最近访客 -->
                 <div class="uz-visitors-section">
                     <div class="uz-visitors-title">最近访客</div>
                     <div class="uz-visitors-grid">
@@ -55,24 +61,28 @@
                         {% endfor %}
                     </div>
                 </div>
-                <div class="uz-btn-center-wrap">
-                    {% if is_owner %}
-                    <a href="{% url 'user_profile_detail' user_profile.user.username %}"
-                        class="uz-btn uz-btn-center">进入个人详情页</a>
-                    {% else %}
-                    <a href="/profile/{{ user_profile.user.username }}/" class="uz-btn uz-btn-center">进入个人详情页</a>
-                    {% endif %}
-                </div>
+
+                <!-- 操作按钮 -->
+                {% if is_owner %}
+                <a href="{% url 'user_profile_detail' user_profile.user.username %}"
+                    class="uz-btn uz-btn-center">进入个人详情页</a>
+                {% else %}
+                <a href="/profile/{{ user_profile.user.username }}/" class="uz-btn uz-btn-center">进入个人详情页</a>
+                {% endif %}
             </div>
         </div>
     </div>
+
     <!-- 右栏 -->
     <div class="uz-right">
         <!-- 朋友圈动态 -->
-        <div class="card uz-card uz-moments-card">
+        <div class="card uz-card">
             <div class="card-body">
-                <h5 class="uz-section-title"><span class="uz-section-icon">🔒</span> 我的朋友圈</h5>
-                <div class="uz-post-list">
+                <h5 class="uz-section-title">
+                    <span class="uz-section-icon">🔒</span>
+                    我的朋友圈
+                </h5>
+                <div>
                     {% for post in moments_posts %}
                     <div class="uz-post-card">
                         <div class="uz-post-header">
@@ -90,12 +100,18 @@
                         </div>
                         {% endif %}
                         <div class="uz-post-footer">
-                            <a href="{% url 'moments:post_detail' post.id %}" class="uz-post-action"><span
-                                    class="uz-post-action-icon">👁️</span> 查看详情</a>
-                            <span class="uz-post-action"><span class="uz-post-action-icon">👍</span> {{
-                                post.likes.count|default:0 }}</span>
-                            <span class="uz-post-action"><span class="uz-post-action-icon">💬</span> {{
-                                post.comments.count|default:0 }}</span>
+                            <a href="{% url 'moments:post_detail' post.id %}" class="uz-post-action">
+                                <span class="uz-post-action-icon">👁️</span>
+                                查看详情
+                            </a>
+                            <span class="uz-post-action">
+                                <span class="uz-post-action-icon">👍</span>
+                                {{ post.likes.count|default:0 }}
+                            </span>
+                            <span class="uz-post-action">
+                                <span class="uz-post-action-icon">💬</span>
+                                {{ post.comments.count|default:0 }}
+                            </span>
                         </div>
                     </div>
                     {% empty %}
@@ -107,11 +123,15 @@
                 </div>
             </div>
         </div>
+
         <!-- 广场动态 -->
-        <div class="card uz-card uz-plaza-card">
+        <div class="card uz-card">
             <div class="card-body">
-                <h5 class="uz-section-title"><span class="uz-section-icon">🌐</span> Ta 的广场动态</h5>
-                <div class="uz-post-list">
+                <h5 class="uz-section-title">
+                    <span class="uz-section-icon">🌐</span>
+                    Ta 的广场动态
+                </h5>
+                <div>
                     {% for post in plaza_posts %}
                     <div class="uz-post-card">
                         <div class="uz-post-header">
@@ -129,12 +149,18 @@
                         </div>
                         {% endif %}
                         <div class="uz-post-footer">
-                            <a href="{% url 'plaza:detail' post.id %}" class="uz-post-action"><span
-                                    class="uz-post-action-icon">👁️</span> 查看详情</a>
-                            <span class="uz-post-action"><span class="uz-post-action-icon">👍</span> {{
-                                post.likes.count|default:0 }}</span>
-                            <span class="uz-post-action"><span class="uz-post-action-icon">💬</span> {{
-                                post.comments.count|default:0 }}</span>
+                            <a href="{% url 'plaza:detail' post.id %}" class="uz-post-action">
+                                <span class="uz-post-action-icon">👁️</span>
+                                查看详情
+                            </a>
+                            <span class="uz-post-action">
+                                <span class="uz-post-action-icon">👍</span>
+                                {{ post.likes.count|default:0 }}
+                            </span>
+                            <span class="uz-post-action">
+                                <span class="uz-post-action-icon">💬</span>
+                                {{ post.comments.count|default:0 }}
+                            </span>
                         </div>
                     </div>
                     {% empty %}
