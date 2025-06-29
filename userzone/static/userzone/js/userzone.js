@@ -41,7 +41,8 @@ document.addEventListener('DOMContentLoaded', function () {
     // 图片预览功能
     const postImages = document.querySelectorAll('.uz-post-img');
     postImages.forEach(img => {
-        img.addEventListener('click', function () {
+        img.addEventListener('click', function (e) {
+            e.stopPropagation(); // 阻止事件冒泡，避免触发卡片点击
             showImagePreview(this.src, this.alt);
         });
 
@@ -55,8 +56,41 @@ document.addEventListener('DOMContentLoaded', function () {
     likeButtons.forEach(button => {
         if (button.textContent.includes('👍')) {
             button.addEventListener('click', function (e) {
+                e.stopPropagation(); // 阻止事件冒泡，避免触发卡片点击
                 e.preventDefault();
                 animateLike(this);
+            });
+        }
+    });
+
+    // 动态卡片点击跳转
+    const postCards = document.querySelectorAll('.uz-post-card');
+    postCards.forEach(card => {
+        // 检查是否有data-url属性
+        const url = card.getAttribute('data-url');
+        if (url) {
+            card.style.cursor = 'pointer';
+
+            card.addEventListener('click', function (e) {
+                // 如果点击的是图片或按钮，不跳转
+                if (e.target.closest('.uz-post-img') || e.target.closest('.uz-post-action')) {
+                    return;
+                }
+
+                // 添加点击反馈
+                this.style.transform = 'scale(0.98)';
+                setTimeout(() => {
+                    window.location.href = url;
+                }, 150);
+            });
+
+            // 悬停效果
+            card.addEventListener('mouseenter', function () {
+                this.style.transform = 'translateY(-4px) scale(1.01)';
+            });
+
+            card.addEventListener('mouseleave', function () {
+                this.style.transform = 'translateY(0) scale(1)';
             });
         }
     });
@@ -88,15 +122,20 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // 动态卡片悬停效果
-    const postCards = document.querySelectorAll('.uz-post-card');
-    postCards.forEach(card => {
-        card.addEventListener('mouseenter', function () {
-            this.style.transform = 'translateY(-4px) scale(1.01)';
-        });
-
-        card.addEventListener('mouseleave', function () {
-            this.style.transform = 'translateY(0) scale(1)';
+    const btns = document.querySelectorAll('.uz-filter-btn');
+    const lists = {
+        moments: document.getElementById('moments-list'),
+        plaza: document.getElementById('plaza-list'),
+        private: document.getElementById('private-list')
+    };
+    btns.forEach(btn => {
+        btn.addEventListener('click', function () {
+            btns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            const type = btn.getAttribute('data-type');
+            Object.keys(lists).forEach(key => {
+                if (lists[key]) lists[key].style.display = (key === type) ? '' : 'none';
+            });
         });
     });
 });

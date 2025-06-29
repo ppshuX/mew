@@ -20,6 +20,12 @@ class UserProfile(models.Model):
     gender = models.CharField(max_length=1, choices=GENDER_CHOICES, blank=True, verbose_name='性别')
     birthday = models.DateField(null=True, blank=True, verbose_name='生日')
     location = models.CharField(max_length=50, blank=True, verbose_name='所在地')
+    school = models.CharField(max_length=100, blank=True, verbose_name='学校')
+    ip_location = models.CharField(max_length=100, blank=True, verbose_name='IP位置')
+    is_online = models.BooleanField(default=False, verbose_name='在线状态')
+    following_count = models.IntegerField(default=0, verbose_name='关注数')
+    follower_count = models.IntegerField(default=0, verbose_name='粉丝数')
+    view_count = models.IntegerField(default=0, verbose_name='阅读量')
 
     def __str__(self):
         return f"{self.user.username}的资料"

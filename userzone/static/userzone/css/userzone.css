@@ -1,6 +1,6 @@
 /* 全局样式 */
 body {
-    background: #f5f6f7;
+    background: linear-gradient(135deg, #fafdff 0%, #e3e9f7 100%) !important;
     min-height: 100vh;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
@@ -8,437 +8,372 @@ body {
 /* 主容器 */
 .uz-grid-root {
     display: flex;
-    flex-direction: row;
-    align-items: stretch;
-    max-width: 1400px;
-    margin: 40px auto 0 auto;
-    padding: 0 20px;
-    height: 70vh;
     gap: 32px;
+    align-items: stretch;
+    max-width: 1200px;
+    margin: 40px auto 0 auto;
+    padding: 0 40px;
 }
 
 /* 左右栏样式 */
-.uz-left,
-.uz-right {
+.uz-left {
+    flex: 1 1 0;
     display: flex;
     flex-direction: column;
-    flex: 1 1 0;
+    gap: 24px;
+    min-width: 260px;
+}
+
+.uz-right {
+    flex: 2.236 1 0;
     min-width: 0;
-    height: 100%;
-    gap: 32px;
+    display: flex;
+    flex-direction: column;
+    justify-content: stretch;
 }
 
 /* 卡片基础样式 */
 .uz-card {
-    background: rgba(255, 255, 255, 0.95) !important;
-    border-radius: 20px !important;
-    box-shadow:
-        0 8px 32px rgba(0, 0, 0, 0.1),
-        0 2px 8px rgba(0, 0, 0, 0.05) !important;
-    border: 1px solid rgba(255, 255, 255, 0.2) !important;
-    backdrop-filter: blur(20px);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    overflow: hidden;
-    margin-bottom: 0;
+    border-radius: 18px;
+    box-shadow: 0 4px 24px 0 rgba(80, 80, 120, 0.08);
+    margin-bottom: 24px;
+    background: #fff;
+    border: none;
 }
 
-.uz-card:hover {
-    transform: translateY(-4px);
-    box-shadow:
-        0 12px 40px rgba(0, 0, 0, 0.15),
-        0 4px 12px rgba(0, 0, 0, 0.1) !important;
-}
-
-/* 用户信息卡片无背景 */
 .uz-user-info {
-    position: relative;
-    background: none !important;
-    color: #333;
-    box-shadow: none !important;
-}
-
-.uz-user-info::before {
-    display: none;
-}
-
-.uz-user-info .card-body {
-    position: relative;
-    z-index: 1;
-    background: none;
+    min-height: 220px;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 32px 24px 24px 24px;
+    justify-content: space-between;
 }
 
-/* 头像更大 */
+/* 用户头像更大，居中，圆形 */
 .uz-avatar {
-    width: 100%;
-    max-width: 220px;
-    aspect-ratio: 1/1;
-    height: auto;
-    border-radius: 50%;
-    border: 4px solid #e0e0e0;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-    transition: transform 0.3s ease;
-    margin-bottom: 16px;
+    width: 140px;
+    height: 140px;
     object-fit: cover;
+    border-radius: 50%;
+    border: 5px solid #fff;
+    box-shadow: 0 4px 16px rgba(120, 120, 160, 0.12);
     display: block;
+    margin: 0 auto 8px auto;
 }
 
-.uz-avatar:hover {
-    transform: scale(1.08);
-}
-
-/* 昵称和签名更大 */
 .uz-nickname {
-    font-size: 2em;
-    font-weight: 700;
-    margin-bottom: 8px;
-    color: #222;
-    text-shadow: none;
-    text-align: center;
-    width: 100%;
+    font-size: 1.4rem;
+    font-weight: bold;
+    margin-bottom: 4px;
 }
 
 .uz-school {
-    color: #666;
-    font-size: 1.1em;
-    margin-bottom: 8px;
-    text-align: center;
-    width: 100%;
-}
-
-.uz-signature {
+    font-size: 1rem;
     color: #888;
-    font-size: 1.15em;
-    font-style: italic;
-    line-height: 1.6;
-    text-align: center;
-    width: 100%;
 }
 
-/* 统计信息更明显 */
-.uz-stats {
-    display: flex;
-    justify-content: space-around;
-    padding: 16px 0 0 0;
-    background: none;
-    border-radius: 12px;
-    margin: 16px 0 0 0;
-    flex-shrink: 0;
+/* 签名字体美化 */
+.uz-signature {
+    font-size: 1.08rem;
+    color: #8a6fc2;
+    background: #f7f7fa;
+    border-radius: 14px;
+    padding: 12px 18px;
+    margin-top: 12px;
+    min-height: 38px;
+    font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', Arial, sans-serif;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    text-shadow: 0 1px 4px #f3eaff;
+    box-shadow: 0 1px 4px rgba(120, 120, 160, 0.04);
+    text-align: center;
 }
 
-.uz-stat-item {
-    text-align: center;
-    color: #333;
+.uz-stats-visitors-card {
+    min-height: 220px;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    justify-content: space-between;
+}
+
+.uz-stats {
+    gap: 0.5rem;
 }
 
 .uz-stat-label {
-    font-size: 1.1em;
-    opacity: 1;
-    color: #666;
-    font-weight: 500;
-    margin-bottom: 2px;
+    display: block;
+    color: #888;
+    font-size: 0.95rem;
 }
 
 .uz-stat-number {
-    display: block;
-    font-size: 0.95em;
-    font-weight: 700;
-    color: #4a3fa3;
-    margin-bottom: 0;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #5a5a9e;
 }
 
-/* 在线状态 */
 .uz-online-status {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin: 12px 0;
-    padding: 8px 12px;
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 8px;
-    flex-shrink: 0;
+    font-size: 0.95rem;
+    color: #aaa;
 }
 
 .uz-dot {
-    width: 12px;
-    height: 12px;
+    display: inline-block;
+    width: 8px;
+    height: 8px;
     border-radius: 50%;
     background: #ccc;
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    transition: all 0.3s ease;
+    margin-right: 6px;
+    vertical-align: middle;
 }
 
 .uz-dot.online {
-    background: #4ade80;
-    box-shadow: 0 0 8px rgba(74, 222, 128, 0.6);
-    animation: pulse 2s infinite;
+    background: #4be37b;
 }
 
-@keyframes pulse {
-
-    0%,
-    100% {
-        transform: scale(1);
-    }
-
-    50% {
-        transform: scale(1.1);
-    }
-}
-
-.uz-location {
-    color: rgba(255, 255, 255, 0.8);
-    font-size: 0.9em;
-}
-
-/* 访客区域 */
 .uz-visitors-section {
-    margin: 16px 0;
-    flex-shrink: 0;
+    margin-top: 8px;
 }
 
 .uz-visitors-title {
-    font-weight: 600;
-    color: rgba(255, 255, 255, 0.9);
-    margin-bottom: 12px;
-    font-size: 0.95em;
+    font-size: 1rem;
+    color: #888;
+    margin-bottom: 6px;
+    text-align: center;
 }
 
 .uz-visitors-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
+    min-height: 38px;
 }
 
 .uz-visitor-avatar {
-    width: 36px;
-    height: 36px;
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
-    border: 2px solid rgba(255, 255, 255, 0.3);
     object-fit: cover;
-    transition: transform 0.2s ease;
-}
-
-.uz-visitor-avatar:hover {
-    transform: scale(1.1);
+    border: 2px solid #fff;
+    box-shadow: 0 1px 4px rgba(120, 120, 160, 0.08);
+    margin-right: 2px;
 }
 
 .uz-no-visitor {
-    color: rgba(255, 255, 255, 0.6);
-    font-size: 0.9em;
-    font-style: italic;
+    color: #bbb;
+    font-size: 0.95rem;
 }
 
-/* 按钮样式 */
-.uz-btn {
+.uz-btn-center {
     display: inline-block;
-    padding: 4px 12px;
-    font-size: 0.95em;
-    border-radius: 16px;
-    background: linear-gradient(90deg, #a86ae3 0%, #fcb0c4 100%);
+    margin: 0 auto;
+    background: linear-gradient(90deg, #a18cd1 0%, #fbc2eb 100%);
+    color: #fff;
+    border-radius: 20px;
+    padding: 6px 22px;
+    font-size: 1rem;
+    border: none;
+    box-shadow: 0 2px 8px rgba(120, 120, 160, 0.08);
+    transition: background 0.2s;
+}
+
+.uz-btn-center:hover {
+    background: linear-gradient(90deg, #fbc2eb 0%, #a18cd1 100%);
+}
+
+/* 右侧大卡片内容区滚动 */
+.uz-right .uz-card {
+    height: 100%;
+    min-height: 480px;
+    max-height: 680px;
+    display: flex;
+    flex-direction: column;
+}
+
+.uz-filter-content {
+    flex: 1 1 0;
+    min-height: 0;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.uz-filter-list {
+    flex: 1 1 0;
+    min-height: 0;
+    overflow-y: auto;
+    max-height: 520px;
+    padding-right: 4px;
+}
+
+/* 筛选按钮区美化 */
+.uz-filter-btn-outer {
+    width: 100%;
+    justify-content: center;
+    display: flex;
+    margin-top: 24px;
+}
+
+.uz-filter-btn-group {
+    display: flex;
+    gap: 18px;
+    justify-content: center;
+}
+
+.uz-filter-btn {
+    border: none;
+    outline: none;
+    background: #f7f7fa;
+    color: #7a6fc2;
+    border-radius: 22px;
+    padding: 8px 28px;
+    font-size: 1.05rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+    box-shadow: 0 1px 4px rgba(120, 120, 160, 0.06);
+}
+
+.uz-filter-btn.active,
+.uz-filter-btn:hover {
+    background: linear-gradient(90deg, #a18cd1 0%, #fbc2eb 100%);
+    color: #fff;
+}
+
+/* 编辑动态按钮风格 */
+.uz-edit-post-btn {
+    background: linear-gradient(90deg, #ffb86c 0%, #ff6bcb 100%);
     color: #fff;
     border: none;
-    box-shadow: 0 2px 8px rgba(168, 106, 227, 0.08);
-    transition: all 0.2s;
-    margin-top: 6px;
-    margin-bottom: 0;
+    border-radius: 22px;
+    padding: 8px 28px;
+    font-size: 1.05rem;
+    font-weight: 600;
+    margin-left: 32px;
+    box-shadow: 0 2px 8px rgba(255, 107, 203, 0.08);
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+    text-decoration: none !important;
+    outline: none;
 }
 
-.uz-btn:hover {
-    background: linear-gradient(90deg, #fcb0c4 0%, #a86ae3 100%);
+.uz-edit-post-btn:hover {
+    background: linear-gradient(90deg, #ff6bcb 0%, #ffb86c 100%);
     color: #fff;
-    transform: translateY(-2px) scale(1.03);
+    box-shadow: 0 4px 16px rgba(255, 107, 203, 0.16);
 }
 
-/* 内容区域标题 */
-.uz-section-title {
-    font-size: 1.2em;
-    font-weight: 700;
-    color: #2d3748;
-    margin-bottom: 20px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.uz-section-icon {
-    font-size: 1.1em;
-}
-
-/* 动态卡片 */
+/* 动态卡片内容美化 */
 .uz-post-card {
-    background: white;
-    border-radius: 16px;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-    border: 1px solid rgba(0, 0, 0, 0.05);
-    transition: all 0.3s ease;
-    margin-bottom: 16px;
-    overflow: hidden;
+    border-radius: 14px;
+    box-shadow: 0 2px 12px 0 rgba(80, 80, 120, 0.06);
+    background: #fff;
+    margin-bottom: 18px;
+    padding: 18px 18px 12px 18px;
+    transition: box-shadow 0.2s;
+    cursor: pointer;
 }
 
 .uz-post-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+    box-shadow: 0 6px 24px 0 rgba(80, 80, 120, 0.13);
 }
 
 .uz-post-header {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    padding: 16px 20px 12px 20px;
+    font-size: 0.98rem;
+    color: #888;
+    margin-bottom: 6px;
 }
 
 .uz-post-author {
-    font-weight: 600;
-    color: #4a5568;
-    font-size: 0.95em;
-}
-
-.uz-post-time {
-    color: #a0aec0;
-    font-size: 0.85em;
+    font-weight: bold;
+    color: #7a6fc2;
 }
 
 .uz-post-content {
-    padding: 0 20px 16px 20px;
-    color: #2d3748;
-    line-height: 1.6;
-    font-size: 0.95em;
+    font-size: 1.08rem;
+    color: #444;
+    margin-bottom: 8px;
 }
 
-/* 图片网格 */
 .uz-post-images {
-    padding: 0 20px 16px 20px;
+    margin-bottom: 8px;
 }
 
 .uz-image-grid {
-    display: grid;
-    gap: 8px;
-    border-radius: 12px;
-    overflow: hidden;
-}
-
-/* 图片网格布局 */
-.uz-image-grid.grid-1 {
-    grid-template-columns: 1fr;
-    max-width: 300px;
-}
-
-.uz-image-grid.grid-2 {
-    grid-template-columns: 1fr 1fr;
-}
-
-.uz-image-grid.grid-3 {
-    grid-template-columns: 1fr 1fr 1fr;
-}
-
-.uz-image-grid.grid-4 {
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr 1fr;
-}
-
-.uz-image-grid.grid-5 {
-    grid-template-columns: 1fr 1fr 1fr;
-    grid-template-rows: 1fr 1fr;
-}
-
-.uz-image-grid.grid-6 {
-    grid-template-columns: 1fr 1fr 1fr;
-    grid-template-rows: 1fr 1fr;
-}
-
-.uz-image-grid.grid-7,
-.uz-image-grid.grid-8,
-.uz-image-grid.grid-9 {
-    grid-template-columns: 1fr 1fr 1fr;
-    grid-template-rows: 1fr 1fr 1fr;
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
 }
 
 .uz-post-img {
-    width: 100%;
-    aspect-ratio: 1/1;
+    width: 60px;
+    height: 60px;
     object-fit: cover;
     border-radius: 8px;
-    transition: transform 0.3s ease;
-    cursor: pointer;
+    border: 1px solid #eee;
 }
 
-.uz-post-img:hover {
-    transform: scale(1.02);
-}
-
-/* 动态底部操作 */
 .uz-post-footer {
     display: flex;
-    align-items: center;
-    gap: 20px;
-    padding: 12px 20px 16px 20px;
-    border-top: 1px solid #f7fafc;
+    gap: 18px;
+    color: #888;
+    font-size: 0.98rem;
+    margin-top: 4px;
 }
 
 .uz-post-action {
     display: flex;
     align-items: center;
-    gap: 6px;
-    color: #718096;
-    font-size: 0.9em;
-    text-decoration: none;
-    transition: color 0.2s ease;
-    cursor: pointer;
-}
-
-.uz-post-action:hover {
-    color: #667eea;
-    text-decoration: none;
+    gap: 4px;
 }
 
 .uz-post-action-icon {
-    font-size: 1.1em;
+    font-size: 1.1rem;
 }
 
-/* 空状态 */
 .uz-empty-state {
     text-align: center;
-    padding: 40px 20px;
-    color: #a0aec0;
+    color: #bbb;
+    margin: 32px 0;
 }
 
 .uz-empty-icon {
-    font-size: 3em;
-    margin-bottom: 16px;
-    opacity: 0.5;
+    font-size: 2.2rem;
+    margin-bottom: 8px;
 }
 
 .uz-empty-text {
-    font-size: 1em;
-    font-style: italic;
+    font-size: 1.08rem;
 }
 
 /* 响应式设计 */
-@media (max-width: 1200px) {
-    .uz-grid-root {
-        grid-template-columns: 1fr 8px 2fr;
-        max-width: 1000px;
-    }
-}
-
 @media (max-width: 900px) {
     .uz-grid-root {
-        display: block;
-        max-width: 100%;
-        padding: 0 16px;
+        flex-direction: column;
+        gap: 0;
+        max-width: 100vw;
+        padding: 0 8px;
     }
 
-    .uz-left,
+    .uz-left {
+        flex-direction: row;
+        gap: 16px;
+        flex-wrap: wrap;
+        width: 100%;
+        min-width: 0;
+    }
+
     .uz-right {
-        margin-bottom: 24px;
+        width: 100%;
+        min-width: 0;
+    }
+
+    .uz-right .uz-card {
+        max-height: 80vh;
+        min-height: 320px;
+        height: auto;
+    }
+
+    .uz-filter-list {
+        max-height: 60vh;
     }
 }
 
@@ -446,29 +381,9 @@ body {
 
     .uz-grid-root,
     .uz-left,
-    .uz-right,
-    .uz-left .uz-card:last-child,
-    .uz-left .uz-card:last-child .card-body {
-        display: block !important;
-        height: auto !important;
-        min-height: 0 !important;
-        flex: none !important;
-        flex-direction: initial !important;
-    }
-
-    .uz-btn-center {
-        position: static !important;
-        left: auto !important;
-        transform: none !important;
-        bottom: auto !important;
-        margin: 16px auto 0 auto !important;
-        width: 90% !important;
-        min-width: 0 !important;
-        font-size: 1em !important;
-        padding: 10px 0 !important;
-        z-index: 10;
-        display: block !important;
-        text-align: center;
+    .uz-right {
+        gap: 24px;
+        padding: 0 12px;
     }
 
     .uz-card {
@@ -476,24 +391,21 @@ body {
     }
 
     .uz-post-card {
-        margin-bottom: 12px;
+        border-radius: 12px;
     }
 
     .uz-post-header,
     .uz-post-content,
-    .uz-post-images,
     .uz-post-footer {
-        padding-left: 16px;
-        padding-right: 16px;
+        padding: 12px 16px;
     }
 
     .uz-avatar {
-        width: 60px !important;
-        height: 60px !important;
+        max-width: 180px;
     }
 
     .uz-nickname {
-        font-size: 1.2em;
+        font-size: 1.8em;
     }
 
     .uz-image-grid.grid-4,
@@ -507,7 +419,7 @@ body {
     }
 }
 
-/* 滚动条美化 */
+/* 滚动条样式 */
 ::-webkit-scrollbar {
     width: 8px;
 }
@@ -518,65 +430,326 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.3);
+    background: rgba(0, 0, 0, 0.2);
     border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.5);
+    background: rgba(0, 0, 0, 0.3);
 }
 
-/* 左下统计卡片拉伸填满 */
+/* 左栏最后一个卡片 */
 .uz-left .uz-card:last-child {
-    position: relative;
+    flex-grow: 1;
     display: flex;
     flex-direction: column;
-    height: 100%;
 }
 
 .uz-left .uz-card:last-child .card-body {
-    padding-bottom: 60px !important;
-    height: 100%;
+    flex-grow: 1;
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
+}
+
+/* 右栏最后一个卡片 */
+.uz-right .uz-card:last-child {
+    flex-grow: 1;
+    overflow-y: auto;
+}
+
+/* 区域标题 */
+.uz-section-title {
+    font-size: 1.4em;
+    font-weight: 700;
+    margin-bottom: 24px;
+    color: #333;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.uz-section-icon {
+    font-size: 1.2em;
+}
+
+/* 动态网格布局 */
+.uz-posts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 36px;
+    margin-top: 16px;
+}
+
+/* 合并后左侧大卡片风格，提升优先级 */
+.uz-left .uz-profile-card {
+    padding: 0;
+    background: #fff;
+    border-radius: 18px;
+    box-shadow: 0 4px 24px 0 rgba(80, 80, 120, 0.08);
+    overflow: hidden;
+}
+
+.uz-left .uz-profile-avatar-box {
+    background: none;
+}
+
+.uz-left .uz-nickname {
+    font-size: 1.35rem;
+    font-weight: bold;
+    color: #222;
+    margin-bottom: 2px;
+}
+
+.uz-left .uz-school {
+    font-size: 1.05rem;
+    color: #888;
+}
+
+.uz-left .uz-signature {
+    font-size: 1.08rem;
+    color: #8a6fc2;
+    background: #f7f7fa;
+    border-radius: 14px;
+    padding: 12px 18px;
+    margin-top: 12px;
+    min-height: 38px;
+    font-family: 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', Arial, sans-serif;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    text-shadow: 0 1px 4px #f3eaff;
+    box-shadow: 0 1px 4px rgba(120, 120, 160, 0.04);
+    text-align: center;
+    margin-bottom: 0;
+}
+
+.uz-left .uz-divider {
+    width: 90%;
+    height: 1px;
+    background: #f0f0f0;
+    margin: 0 auto 0 auto;
+}
+
+.uz-left .uz-stats-row {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 8px 0 0 0;
+}
+
+.uz-left .uz-stat-item {
+    min-width: 60px;
+}
+
+.uz-left .uz-stat-number {
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: #5a5a9e;
+    line-height: 1.2;
+}
+
+.uz-left .uz-stat-label {
+    font-size: 0.95rem;
+    color: #888;
+    margin-top: 2px;
+}
+
+.uz-left .uz-profile-meta {
+    font-size: 0.98rem;
+    color: #aaa;
+    padding: 0 0 2px 0;
+}
+
+.uz-left .uz-visitors-section {
+    margin-top: 0;
+    padding-top: 0;
+}
+
+.uz-left .uz-visitors-title {
+    font-size: 1rem;
+    color: #888;
+    margin-bottom: 6px;
+    text-align: left;
+    font-weight: 500;
+}
+
+.uz-left .uz-visitors-count {
+    color: #bfa6e2;
+    font-size: 0.98em;
+    font-weight: 400;
+}
+
+.uz-left .uz-visitors-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    min-height: 38px;
+}
+
+.uz-left .uz-visitor-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #fff;
+    box-shadow: 0 1px 4px rgba(120, 120, 160, 0.08);
+    margin-right: 0;
+}
+
+.uz-left .uz-no-visitor {
+    color: #bbb;
+    font-size: 0.95rem;
+}
+
+.uz-left .uz-btn-center {
+    display: block;
+    margin: 18px auto 8px auto;
+    background: linear-gradient(90deg, #a18cd1 0%, #fbc2eb 100%);
+    color: #fff;
+    border-radius: 20px;
+    padding: 8px 32px;
+    font-size: 1rem;
+    border: none;
+    box-shadow: 0 2px 8px rgba(120, 120, 160, 0.08);
+    transition: background 0.2s;
+    text-align: center;
+    width: fit-content;
+}
+
+.uz-left .uz-btn-center:hover {
+    background: linear-gradient(90deg, #fbc2eb 0%, #a18cd1 100%);
+}
+
+/* 极简动态卡片风格 */
+.uz-feed-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: none;
+    border: 1px solid #f0f0f0;
+    margin-bottom: 24px;
+    padding: 18px 22px 14px 22px;
     position: relative;
 }
 
-/* 右下广场动态卡片拉伸填满 */
-.uz-right .uz-card:last-child {
-    flex: 1 1 0;
+.uz-feed-header {
+    border-bottom: 1px solid #f3f3f3;
+    padding-bottom: 8px;
+    margin-bottom: 10px;
+}
+
+.uz-feed-avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 8px;
+    border: 2px solid #fff;
+    box-shadow: 0 1px 4px rgba(120, 120, 160, 0.06);
+}
+
+.uz-feed-meta {
     display: flex;
     flex-direction: column;
-    height: 100%;
-    min-height: 0;
+    gap: 0;
 }
 
-/* 按钮始终贴底 */
-.uz-btn-center {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    bottom: 20px;
-    margin: 0;
-    width: max-content;
-    min-width: 120px;
-    padding: 8px 24px;
-    border-radius: 20px;
-    text-align: center;
-    z-index: 10;
+.uz-feed-author {
+    font-weight: bold;
+    color: #222;
+    font-size: 1.08rem;
+    margin-bottom: 1px;
 }
 
-.uz-bottom-row {
-    display: flex;
-    flex-direction: row;
-    gap: 32px;
+.uz-feed-time {
+    color: #aaa;
+    font-size: 0.95rem;
+    margin-right: 6px;
+}
+
+.uz-feed-location {
+    color: #bdbdbd;
+    font-size: 0.95rem;
+}
+
+.uz-feed-detail-btn {
+    position: relative;
+    top: 0;
+    right: 0;
+    font-size: 0.98rem;
+    color: #7a6fc2;
+    background: none;
+    border: none;
+    padding: 2px 10px;
+    border-radius: 8px;
+    text-decoration: underline;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.uz-feed-detail-btn:hover {
+    background: #f3f0fa;
+    color: #4a3fa3;
+}
+
+.uz-feed-content {
+    font-size: 1.08rem;
+    color: #333;
+    margin-bottom: 10px;
+    line-height: 1.7;
+    word-break: break-all;
+}
+
+.uz-feed-content a {
+    color: #4a90e2;
+    text-decoration: underline;
+    word-break: break-all;
+}
+
+.uz-feed-content .hashtag,
+.uz-feed-content a[href*='#'] {
+    color: #7a6fc2;
+    font-weight: 500;
+    background: #f3f0fa;
+    border-radius: 6px;
+    padding: 0 4px;
+    margin: 0 2px;
+}
+
+.uz-feed-images {
+    margin-top: 6px;
+}
+
+.uz-feed-image-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+    gap: 6px;
+}
+
+.uz-feed-img {
     width: 100%;
+    aspect-ratio: 1/1;
+    object-fit: cover;
+    border-radius: 8px;
+    background: #f7f7fa;
 }
 
-.uz-left-card,
-.uz-right-card {
-    flex: 1 1 0;
-    display: flex;
-    flex-direction: column;
-    height: 100%;
+/* 所有按钮无下划线 */
+.uz-filter-btn,
+.uz-filter-btn.active,
+.uz-filter-btn:hover,
+.uz-btn-center,
+.uz-btn-center:hover,
+.uz-feed-detail-btn,
+.uz-feed-detail-btn:hover {
+    text-decoration: none !important;
+}
+
+/* 导航栏按钮选中/悬停无下划线 */
+.nav-link,
+.nav-link.active,
+.nav-link:active,
+.nav-link:focus,
+.nav-link:hover {
+    text-decoration: none !important;
 }

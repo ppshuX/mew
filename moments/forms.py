@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django.core.exceptions import ValidationError
+from .models import Post
 
 class CustomRegisterForm(UserCreationForm):
     class Meta:
@@ -22,3 +23,11 @@ class CustomRegisterForm(UserCreationForm):
         if password1 and password2 and password1 != password2:
             raise ValidationError("两次输入的密码不一致")
         return cleaned_data
+
+class MomentsPostForm(forms.ModelForm):
+    class Meta:
+        model = Post
+        fields = ['content', 'image', 'is_private']
+        widgets = {
+            'content': forms.Textarea(attrs={'rows': 3, 'placeholder': '想说点什么...'}),
+        }

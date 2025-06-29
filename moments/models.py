@@ -8,6 +8,7 @@ class Post(models.Model):
     image = models.ImageField(upload_to='moments_posts/', blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     likes = models.ManyToManyField(User, related_name='liked_posts', blank=True)
+    is_private = models.BooleanField(default=False, verbose_name='私密动态')
 
     def like_count(self):
         return self.likes.count()
