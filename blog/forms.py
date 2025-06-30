@@ -25,7 +25,7 @@ class BlogPostForm(forms.Form):
         required=False
     )
     content = forms.CharField(
-        max_length=500,
+        max_length=5000,
         widget=forms.Textarea(attrs={'class': 'mew-form-textarea', 'placeholder': '写下你的动态内容……', 'rows': 6}),
         required=True
     )

@@ -34,7 +34,7 @@ def blog_create(request):
                     image=image,
                     category=category
                 )
-                return redirect('plaza:detail', pk=plaza_post.pk)
+                return redirect('plaza:detail', post_id=plaza_post.pk)
             else:
                 moments_post = MomentsPost.objects.create(
                     author=request.user,

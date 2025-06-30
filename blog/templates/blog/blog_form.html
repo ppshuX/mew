@@ -21,6 +21,11 @@
             <div class="mb-4">
                 <label class="mew-form-label">内容 <span style="color: #ff6bcb;">*</span></label>
                 {{ form.content }}
+                <div id="content-counter" style="text-align:right;font-size:0.98rem;margin-top:4px;color:#aaa;">
+                </div>
+                <div id="content-warning" style="color:#ff4d4f;font-size:0.98rem;margin-top:2px;display:none;">
+                    字数已超出最大限制！
+                </div>
             </div>
             <div class="mb-4">
                 <label class="mew-form-label">类别</label>
