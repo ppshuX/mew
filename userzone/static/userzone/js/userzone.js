@@ -3,6 +3,29 @@
 // UserZone 页面交互效果
 document.addEventListener('DOMContentLoaded', function () {
 
+    // 编辑动态按钮点击事件
+    const editPostBtn = document.querySelector('.uz-edit-post-btn');
+    console.log('查找编辑动态按钮:', editPostBtn);
+    if (editPostBtn) {
+        console.log('找到编辑动态按钮，添加点击事件');
+        editPostBtn.addEventListener('click', function () {
+            console.log('编辑动态按钮被点击');
+            // 跳转到blog创建页面
+            window.location.href = '/blog/create/';
+        });
+
+        // 添加悬停效果
+        editPostBtn.addEventListener('mouseenter', function () {
+            this.style.transform = 'translateY(-2px) scale(1.02)';
+        });
+
+        editPostBtn.addEventListener('mouseleave', function () {
+            this.style.transform = 'translateY(0) scale(1)';
+        });
+    } else {
+        console.log('未找到编辑动态按钮');
+    }
+
     // 卡片进入动画
     const cards = document.querySelectorAll('.uz-card');
     const observerOptions = {

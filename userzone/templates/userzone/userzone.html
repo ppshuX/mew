@@ -4,8 +4,8 @@
 
 {% block extra_head %}
 <!-- 强制加载静态文件，防止缓存 -->
-<link rel="stylesheet" href="{% static 'userzone/css/userzone.css' %}?v=11">
-<script src="{% static 'userzone/js/userzone.js' %}?v=11"></script>
+<link rel="stylesheet" href="{% static 'userzone/css/userzone.css' %}?v=12">
+<script src="{% static 'userzone/js/userzone.js' %}?v=12"></script>
 {% endblock %}
 
 {% block content %}
@@ -79,7 +79,7 @@
 
     <!-- 右栏 -->
     <div class="uz-right">
-        
+
         <div class="card uz-card">
             <div class="card-body">
                 <!-- 筛选按钮区 -->
@@ -103,7 +103,7 @@
                             {% endfor %}
                         </select>
                     </div>
-                    <button class="uz-edit-post-btn ms-4">编辑动态</button>
+                    <button class="uz-edit-post-btn ms-4" onclick="window.location.href='/blog/create/'">编辑动态</button>
                 </div>
                 <!-- 内容区 -->
                 <div class="uz-filter-content">

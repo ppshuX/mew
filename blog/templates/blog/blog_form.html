@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}写博客{% endblock %}
+
+{% block content %}
+<div class="container mt-5" style="max-width: 800px;">
+    <h2 class="mb-4">{{ post.title|default:"写博客" }}</h2>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="mb-3">
+            {{ form.title.label_tag }} {{ form.title }}
+        </div>
+        <div class="mb-3">
+            {{ form.cover_image.label_tag }} {{ form.cover_image }}
+        </div>
+        <div class="mb-3">
+            {{ form.content.label_tag }} {{ form.content }}
+        </div>
+        <div class="mb-3">
+            {{ form.category.label_tag }} {{ form.category }}
+        </div>
+        <div class="mb-3">
+            <label>{{ form.is_draft }} 保存为草稿</label>
+        </div>
+        <button type="submit" class="btn btn-primary">保存</button>
+    </form>
+</div>
+{% endblock %}

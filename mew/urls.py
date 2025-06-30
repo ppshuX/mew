@@ -30,6 +30,7 @@ urlpatterns = [
     path('user_profile/', include('user_profile.urls')),
     path('plaza/', include('plaza.urls')),
     path('userzone/', include('userzone.urls')),
+    path('blog/', include('blog.urls')),
     path('admin/', admin.site.urls),
 
     path('accounts/login/', auth_views.LoginView.as_view(template_name='accounts/login.html'), name='login'),
