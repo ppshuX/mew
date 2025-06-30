@@ -328,6 +328,12 @@
                 </div>
             </div>
             {% endfor %}
+
+            <form method="post" action="{% url 'moments:add_comment' post.id %}" class="detail-comment-form">
+                {% csrf_token %}
+                <input type="text" name="comment" placeholder="写评论..." required>
+                <button type="submit">发表评论</button>
+            </form>
         </div>
     </div>
     <div id="image-modal" class="image-modal" style="display:none;">
