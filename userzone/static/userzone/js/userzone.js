@@ -130,6 +130,28 @@ document.addEventListener('DOMContentLoaded', function () {
     };
     const categoryFilter = document.getElementById('category-filter');
 
+    // 初始化：确保当前选中的类型正确显示
+    function initializeDisplay() {
+        const activeBtn = document.querySelector('.uz-filter-btn.active');
+        if (activeBtn) {
+            const activeType = activeBtn.getAttribute('data-type');
+            Object.keys(lists).forEach(key => {
+                if (lists[key]) {
+                    if (key === activeType) {
+                        lists[key].style.display = 'block';
+                        lists[key].style.opacity = '1';
+                    } else {
+                        lists[key].style.display = 'none';
+                        lists[key].style.opacity = '0';
+                    }
+                }
+            });
+        }
+    }
+
+    // 页面加载时初始化显示
+    initializeDisplay();
+
     // 动态类型筛选
     btns.forEach(btn => {
         btn.addEventListener('click', function () {

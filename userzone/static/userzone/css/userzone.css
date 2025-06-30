@@ -8,20 +8,21 @@ body {
 /* 主容器 */
 .uz-grid-root {
     display: flex;
-    gap: 32px;
-    align-items: stretch;
+    gap: 12px;
+    align-items: flex-start;
     max-width: 1200px;
     margin: 40px auto 0 auto;
-    padding: 0 40px;
+    padding: 0 20px;
 }
 
 /* 左右栏样式 */
 .uz-left {
-    flex: 1 1 0;
+    flex: none;
     display: flex;
     flex-direction: column;
     gap: 24px;
-    min-width: 260px;
+    min-width: 320px;
+    max-width: 400px;
 }
 
 .uz-right {
@@ -50,20 +51,22 @@ body {
 
 /* 用户头像更大，居中，圆形 */
 .uz-avatar {
-    width: 140px;
-    height: 140px;
+    width: 180px;
+    height: 180px;
     object-fit: cover;
     border-radius: 50%;
     border: 5px solid #fff;
     box-shadow: 0 4px 16px rgba(120, 120, 160, 0.12);
     display: block;
     margin: 0 auto 8px auto;
+    max-width: 220px;
+    max-height: 220px;
 }
 
 .uz-nickname {
-    font-size: 1.4rem;
+    font-size: 2rem;
     font-weight: bold;
-    margin-bottom: 4px;
+    margin-bottom: 8px;
 }
 
 .uz-school {
@@ -179,38 +182,36 @@ body {
 
 /* 右侧大卡片内容区滚动 */
 .uz-right .uz-card {
-    height: 100%;
-    min-height: 480px;
-    max-height: 680px;
+    /* min-height: 480px; */
+    height: auto;
     display: flex;
     flex-direction: column;
+    padding: 32px 0 32px 0;
 }
 
 .uz-filter-content {
-    flex: 1 1 0;
-    min-height: 0;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
+    flex: unset;
+    min-height: unset;
+    overflow: unset;
+    display: block;
 }
 
 .uz-filter-list {
     flex: 1 1 0;
     min-height: 0;
     overflow-y: auto;
-    max-height: 520px;
-    padding-right: 4px;
-    transition: opacity 0.3s ease, transform 0.3s ease;
+    padding: 20px;
+    transition: opacity 0.3s ease, display 0.3s ease;
 }
 
 .uz-filter-list[style*="display: none"] {
     opacity: 0;
-    transform: translateY(10px);
+    pointer-events: none;
 }
 
 .uz-filter-list[style*="display: block"] {
     opacity: 1;
-    transform: translateY(0);
+    pointer-events: auto;
 }
 
 /* 筛选按钮区美化 */
@@ -223,8 +224,9 @@ body {
 
 .uz-filter-btn-group {
     display: flex;
-    gap: 18px;
+    gap: 32px;
     justify-content: center;
+    margin-right: 32px;
 }
 
 .uz-filter-btn {
@@ -260,7 +262,7 @@ body {
     padding: 8px 28px;
     font-size: 1.05rem;
     font-weight: 600;
-    margin-left: 32px;
+    margin-left: 32px !important;
     box-shadow: 0 2px 8px rgba(255, 107, 203, 0.08);
     cursor: pointer;
     transition: background 0.2s, color 0.2s, box-shadow 0.2s;
@@ -366,14 +368,29 @@ body {
         gap: 0;
         max-width: 100vw;
         padding: 0 8px;
+        align-items: center;
     }
 
     .uz-left {
-        flex-direction: row;
-        gap: 16px;
-        flex-wrap: wrap;
-        width: 100%;
         min-width: 0;
+        align-items: center;
+    }
+
+    .uz-left .uz-card {
+        width: 95vw;
+        max-width: 420px;
+        padding: 32px 10px 32px 10px;
+    }
+
+    .uz-avatar {
+        width: 140px;
+        height: 140px;
+        max-width: 180px;
+        max-height: 180px;
+    }
+
+    .uz-nickname {
+        font-size: 2.2rem;
     }
 
     .uz-right {
@@ -491,9 +508,16 @@ body {
 /* 动态网格布局 */
 .uz-posts-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 36px;
-    margin-top: 16px;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    grid-column-gap: 8px;
+    grid-row-gap: 20px;
+    margin-top: 12px;
+    padding: 10px;
+    align-items: stretch;
+    justify-items: center;
+    max-width: 1400px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 /* 合并后左侧大卡片风格，提升优先级 */
@@ -638,16 +662,32 @@ body {
 
 /* 极简动态卡片风格 */
 .uz-feed-card {
+    width: 100%;
+    max-width: 340px;
+    height: 540px;
+    overflow: hidden;
     background: #fff;
     border-radius: 12px;
     box-shadow: none;
-    border: 1px solid #f0f0f0;
-    margin-bottom: 24px;
-    padding: 18px 22px 14px 22px;
+    border: 1.5px solid #ececf6;
+    margin-bottom: 0;
+    padding: 22px 18px 16px 18px;
     position: relative;
+    display: flex;
+    flex-direction: column;
+    transition: box-shadow 0.2s, border-color 0.2s;
+}
+
+.uz-feed-card:hover {
+    box-shadow: 0 6px 24px 0 rgba(80, 80, 120, 0.13);
+    border-color: #d6d6e7;
 }
 
 .uz-feed-header {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 10px;
     border-bottom: 1px solid #f3f3f3;
     padding-bottom: 8px;
     margin-bottom: 10px;
@@ -658,7 +698,7 @@ body {
     height: 38px;
     border-radius: 50%;
     object-fit: cover;
-    margin-right: 8px;
+    margin-right: 0;
     border: 2px solid #fff;
     box-shadow: 0 1px 4px rgba(120, 120, 160, 0.06);
 }
@@ -667,6 +707,7 @@ body {
     display: flex;
     flex-direction: column;
     gap: 0;
+    margin-left: 8px;
 }
 
 .uz-feed-author {
@@ -708,11 +749,13 @@ body {
 }
 
 .uz-feed-content {
-    font-size: 1.08rem;
-    color: #333;
-    margin-bottom: 10px;
-    line-height: 1.7;
-    word-break: break-all;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 10;
+    -webkit-box-orient: vertical;
+    line-clamp: 10;
+    max-height: 16em;
 }
 
 .uz-feed-content a {
@@ -743,8 +786,10 @@ body {
 
 .uz-feed-img {
     width: 100%;
-    aspect-ratio: 1/1;
-    object-fit: cover;
+    height: auto;
+    max-width: 100%;
+    max-height: 220px;
+    object-fit: contain;
     border-radius: 8px;
     background: #f7f7fa;
 }
@@ -771,6 +816,7 @@ body {
 
 /* 类别筛选器样式 */
 .uz-category-filter {
+    margin-right: 24px;
     display: flex;
     align-items: center;
 }
@@ -867,4 +913,22 @@ body {
         order: 3;
         margin-left: 0 !important;
     }
+
+    /* 移动端调整内边距 */
+    .uz-posts-grid {
+        padding: 12px;
+        /* 移动端减少内边距 */
+    }
+
+    .uz-filter-list {
+        padding: 12px;
+        /* 移动端减少内边距 */
+    }
+}
+
+.uz-left .uz-card {
+    height: auto;
+    min-height: unset;
+    flex: none;
+    padding: 32px 24px 32px 24px;
 }
