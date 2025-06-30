@@ -11,48 +11,127 @@
             <span style="font-size: 2.2rem; vertical-align: middle;">📝</span>
             <span style="vertical-align: middle;">写动态</span>
         </div>
-        <form method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            <div class="mb-4">
-                <label class="mew-form-label">标题（可选）</label>
-                {{ form.title }}
-                <div class="mew-form-text">标题是可选的，如果不填写将只显示内容</div>
-            </div>
-            <div class="mb-4">
-                <label class="mew-form-label">内容 <span style="color: #ff6bcb;">*</span></label>
-                {{ form.content }}
-                <div id="content-counter" style="text-align:right;font-size:0.98rem;margin-top:4px;color:#aaa;">
+        <!-- 模式切换Tab -->
+        <div class="mew-edit-mode-tabs" style="display: flex; justify-content: center; margin-bottom: 24px;">
+            <button id="tab-normal" class="mew-edit-tab active" type="button" style="margin-right: 16px;">普通动态</button>
+            <button id="tab-blog" class="mew-edit-tab" type="button">博客编辑</button>
+        </div>
+        <!-- 普通动态表单 -->
+        <div id="normal-mode-form">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="mb-4">
+                    <label class="mew-form-label">标题（可选）</label>
+                    {{ form.title }}
+                    <div class="mew-form-text">标题是可选的，如果不填写将只显示内容</div>
                 </div>
-                <div id="content-warning" style="color:#ff4d4f;font-size:0.98rem;margin-top:2px;display:none;">
-                    字数已超出最大限制！
+                <div class="mb-4">
+                    <label class="mew-form-label">内容 <span style="color: #ff6bcb;">*</span></label>
+                    {{ form.content }}
+                    <div id="content-counter" style="text-align:right;font-size:0.98rem;margin-top:4px;color:#aaa;">
+                    </div>
+                    <div id="content-warning" style="color:#ff4d4f;font-size:0.98rem;margin-top:2px;display:none;">
+                        字数已超出最大限制！
+                    </div>
                 </div>
-            </div>
-            <div class="mb-4">
-                <label class="mew-form-label">类别</label>
-                {{ form.category }}
-            </div>
-            <div class="mb-4">
-                <!-- 多图上传区域 -->
-                <div style="margin-top:10px;">
-                    <label class="mew-form-label">多图上传</label>
-                    <div id="image-preview-container" style="display:flex;flex-wrap:wrap;gap:10px;"></div>
-                    <input type="file" id="id_images" name="images" accept="image/*" multiple style="display:none;">
-                    <button type="button" id="add-image-btn" class="btn btn-outline-primary"
-                        style="margin-top:8px;">选择图片</button>
-                    <div class="mew-form-text">最多可选9张图片，支持预览和删除</div>
+                <div class="mb-4">
+                    <label class="mew-form-label">类别</label>
+                    {{ form.category }}
                 </div>
-            </div>
-            <div class="mb-4">
-                <label class="mew-form-label">发布到</label>
-                {{ form.publish_type }}
-            </div>
-            <hr class="mew-form-btn-divider">
-            <div class="mew-form-btn-row">
-                <a href="{% url 'userzone:detail' request.user.username %}" class="mew-form-btn-cancel">取消</a>
-                <button type="submit" class="mew-form-btn-main">发布</button>
-            </div>
-        </form>
+                <div class="mb-4">
+                    <!-- 多图上传区域 -->
+                    <div style="margin-top:10px;">
+                        <label class="mew-form-label">多图上传</label>
+                        <div id="image-preview-container" style="display:flex;flex-wrap:wrap;gap:10px;"></div>
+                        <input type="file" id="id_images" name="images" accept="image/*" multiple style="display:none;">
+                        <button type="button" id="add-image-btn" class="btn btn-outline-primary"
+                            style="margin-top:8px;">选择图片</button>
+                        <div class="mew-form-text">最多可选9张图片，支持预览和删除</div>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <label class="mew-form-label">发布到</label>
+                    {{ form.publish_type }}
+                </div>
+                <hr class="mew-form-btn-divider">
+                <div class="mew-form-btn-row">
+                    <a href="{% url 'userzone:detail' request.user.username %}" class="mew-form-btn-cancel">取消</a>
+                    <button type="submit" class="mew-form-btn-main">发布</button>
+                </div>
+            </form>
+        </div>
+        <!-- 博客编辑表单 -->
+        <div id="blog-mode-form" style="display:none;">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="mb-4">
+                    <label class="mew-form-label">博客标题 <span style="color: #ff6bcb;">*</span></label>
+                    <input type="text" name="blog_title" class="form-control" maxlength="100" required>
+                </div>
+                <div class="mb-4">
+                    <label class="mew-form-label">封面图</label>
+                    <input type="file" name="blog_cover" class="form-control" accept="image/*">
+                </div>
+                <div class="mb-4">
+                    <label class="mew-form-label">类别</label>
+                    {{ form.category }}
+                </div>
+                <div class="mb-4">
+                    <label class="mew-form-label">内容 <span style="color: #ff6bcb;">*</span></label>
+                    <!-- 富文本编辑器占位，后续用CKEditor替换 -->
+                    <textarea name="blog_content" id="blog-content-textarea" class="form-control" rows="10"
+                        required></textarea>
+                    <div id="blog-content-counter"
+                        style="text-align:right;font-size:0.98rem;margin-top:4px;color:#aaa;"></div>
+                </div>
+                <div class="mb-4">
+                    <label class="mew-form-label">标签（可选，逗号分隔）</label>
+                    <input type="text" name="blog_tags" class="form-control" placeholder="如：技术,生活,随笔">
+                </div>
+                <div class="mb-4">
+                    <label class="mew-form-label">摘要（可选）</label>
+                    <textarea name="blog_summary" class="form-control" rows="2" maxlength="200"
+                        placeholder="一句话介绍你的博客"></textarea>
+                </div>
+                <div class="mb-4 d-flex justify-content-between align-items-center">
+                    <span id="blog-word-count">字数：0</span>
+                    <div>
+                        <button type="button" class="btn btn-outline-secondary me-2" id="blog-preview-btn">预览</button>
+                        <button type="button" class="btn btn-outline-info me-2" id="blog-save-draft-btn">保存草稿</button>
+                        <button type="submit" class="btn btn-primary">发布博客</button>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 <script src="{% static 'blog/js/blog_form.js' %}"></script>
+<script>
+    // Tab切换逻辑
+    const tabNormal = document.getElementById('tab-normal');
+    const tabBlog = document.getElementById('tab-blog');
+    const normalForm = document.getElementById('normal-mode-form');
+    const blogForm = document.getElementById('blog-mode-form');
+
+    tabNormal.onclick = function () {
+        tabNormal.classList.add('active');
+        tabBlog.classList.remove('active');
+        normalForm.style.display = '';
+        blogForm.style.display = 'none';
+    };
+    tabBlog.onclick = function () {
+        tabBlog.classList.add('active');
+        tabNormal.classList.remove('active');
+        normalForm.style.display = 'none';
+        blogForm.style.display = '';
+    };
+    // 字数统计（博客内容）
+    const blogContent = document.getElementById('blog-content-textarea');
+    const blogWordCount = document.getElementById('blog-word-count');
+    if (blogContent && blogWordCount) {
+        blogContent.addEventListener('input', function () {
+            blogWordCount.textContent = '字数：' + blogContent.value.length;
+        });
+    }
+</script>
 {% endblock %}
