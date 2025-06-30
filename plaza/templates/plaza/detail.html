@@ -223,15 +223,12 @@
                 <div class="detail-like-bar">
                     <span style="font-size:1.05rem;color:#a86ae3;font-weight:600;margin-right:4px;">喜爱数：</span>
                     <span class="detail-like-count">{{ post.likes.count }}</span>
-                    <form method="post" action="{% url 'plaza:like_post' post.id %}" style="display:inline;">
-                        {% csrf_token %}
-                        <button class="detail-like-btn" data-post-id="{{ post.id }}"
-                            data-liked="{{ liked_by_user|yesno:'true,false' }}">
-                            <span class="like-icon">
-                                {% if liked_by_user %}❤️{% else %}🤍{% endif %}
-                            </span>
-                        </button>
-                    </form>
+                    <button class="detail-like-btn" data-post-id="{{ post.id }}"
+                        data-liked="{{ liked_by_user|yesno:'true,false' }}">
+                        <span class="like-icon">
+                            {% if liked_by_user %}❤️{% else %}🤍{% endif %}
+                        </span>
+                    </button>
                 </div>
             </div>
             {% if request.user == post.author or request.user.is_superuser %}
@@ -302,10 +299,9 @@
     </div>
     </div>
     </div>
-    </div>
 
-    <script src="{% static 'plaza/js/post_detail.js' %}"></script>
     <script src="{% static 'chat/js/jquery.min.js' %}"></script>
+    <script src="{% static 'plaza/js/post_detail.js' %}"></script>
 
 </body>
 
