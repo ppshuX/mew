@@ -37,8 +37,6 @@ body {
     margin-bottom: 18px;
 }
 
-
-
 .detail-content {
     font-size: 1.35rem;
     color: #333;
@@ -539,6 +537,11 @@ span.detail-like-count {
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
     cursor: pointer;
     transition: transform 0.2s ease;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .detail-image-card:hover {
@@ -547,8 +550,10 @@ span.detail-like-count {
 
 .detail-image {
     width: 100%;
-    height: auto;
+    height: 100%;
+    object-fit: cover;
     display: block;
+    border-radius: 12px;
 }
 
 @media (max-width: 768px) {

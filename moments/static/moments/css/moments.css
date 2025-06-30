@@ -41,6 +41,7 @@ body {
     flex-direction: column;
     height: 100%;
     min-height: 220px;
+    max-height: 600px;
     transition: transform 0.2s ease-in-out;
     cursor: pointer;
     padding: 16px 8px 16px 8px;
@@ -56,8 +57,8 @@ body {
 
 /* 图片区域 */
 .image-grid {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
     gap: 6px;
     padding: 8px;
     background-color: #f0f0f0;
@@ -66,22 +67,20 @@ body {
 
 .image-card {
     position: relative;
-    flex: 0 0 calc(50% - 4px);
+    width: 100%;
+    aspect-ratio: 1 / 1;
     display: flex;
     justify-content: center;
     align-items: center;
-    aspect-ratio: 1 / 1;
     overflow: hidden;
     border-radius: 6px;
     background: #e9e9e9;
 }
 
 .image-card img {
-    max-width: 100%;
-    max-height: 100%;
-    height: auto;
-    width: auto;
-    object-fit: contain;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
     border-radius: 6px;
 }
 
@@ -369,4 +368,49 @@ body {
     font-weight: bold;
     font-size: 1.05rem;
     color: #7a3ee5;
+}
+
+/* 一张图片时，居中放大 */
+.image-grid:has(.image-card:only-child) {
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+    height: 320px;
+    background: #f0f0f0;
+}
+
+.image-grid:has(.image-card:only-child) .image-card {
+    width: 320px;
+    height: 320px;
+    aspect-ratio: 1 / 1;
+}
+
+.image-grid:has(.image-card:only-child) img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* 四张图片时，2x2正方形宫格，整体居中放大 */
+.image-grid.four-images {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 8px;
+    justify-content: center;
+    align-items: center;
+    height: 320px;
+    background: #f0f0f0;
+}
+
+.image-grid.four-images .image-card {
+    width: 100%;
+    height: 100%;
+    aspect-ratio: 1 / 1;
+}
+
+.image-grid.four-images img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }

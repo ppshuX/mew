@@ -664,7 +664,8 @@ body {
 .uz-feed-card {
     width: 100%;
     max-width: 340px;
-    height: 540px;
+    height: 400px;
+    min-height: 400px;
     overflow: hidden;
     background: #fff;
     border-radius: 12px;
@@ -775,23 +776,24 @@ body {
 }
 
 .uz-feed-images {
-    margin-top: 6px;
+    max-height: 180px;
+    overflow-y: auto;
+    margin-bottom: 8px;
 }
 
 .uz-feed-image-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+    grid-template-columns: repeat(3, 1fr);
     gap: 6px;
 }
 
 .uz-feed-img {
     width: 100%;
-    height: auto;
-    max-width: 100%;
-    max-height: 220px;
-    object-fit: contain;
+    height: 100px;
+    object-fit: cover;
     border-radius: 8px;
     background: #f7f7fa;
+    display: block;
 }
 
 /* 所有按钮无下划线 */

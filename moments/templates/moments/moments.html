@@ -34,7 +34,7 @@
                 <span class="timestamp">{{ post.created_at|naturaltime }}</span>
             </div>
             {% if post.images.all %}
-            <div class="image-grid">
+            <div class="image-grid{% if post.images.all|length == 4 %} four-images{% endif %}">
                 {% for img in post.images.all %}
                 <div class="image-card">
                     <img src="{{ img.image.url }}" alt="图片">
