@@ -182,7 +182,8 @@
         <div class="detail-card detail-main" id="detail-main">
             <div class="author-row" style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
                 <div class="avatar-border" style="margin-right:0;">
-                    {% if post.author.user_profile.avatar and post.author.user_profile.avatar.url != '/media/avatars/default.jpg' %}
+                    {% if post.author.user_profile.avatar and post.author.user_profile.avatar.url !=
+                    '/media/avatars/default.jpg' %}
                     <img src="{{ post.author.user_profile.avatar.url }}"
                         style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;">
                     {% else %}
@@ -287,6 +288,8 @@
             {% endfor %}
         </div>
     </div>
+    <script src="{% static 'chat/js/jquery.min.js' %}"></script>
+    <script src="{% static 'moments/js/post_detail.js' %}"></script>
 </body>
 
 </html>
