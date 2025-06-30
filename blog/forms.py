@@ -10,7 +10,7 @@ PUBLISH_CHOICES = [
 class BlogPostForm(forms.ModelForm):
     class Meta:
         model = BlogPost
-        fields = ['content', 'title', 'cover_image', 'category', 'publish_type']
+        fields = ['content', 'title', 'cover_image', 'category', 'publish_type', 'blog_tags', 'blog_summary']
 
     CATEGORY_CHOICES = [
         ('daily', '日常'),
@@ -48,4 +48,14 @@ class BlogPostForm(forms.ModelForm):
         widget=forms.Select(attrs={'class': 'mew-form-select'}),
         initial='private',
         label='发布到'
+    )
+    blog_tags = forms.CharField(
+        max_length=200,
+        required=False,
+        widget=forms.TextInput(attrs={'class': 'mew-form-input', 'placeholder': '如：技术,生活,随笔'})
+    )
+    blog_summary = forms.CharField(
+        max_length=200,
+        required=False,
+        widget=forms.Textarea(attrs={'class': 'mew-form-textarea', 'placeholder': '一句话介绍你的博客', 'rows': 2})
     )

@@ -11,6 +11,10 @@ class BlogPost(models.Model):
     is_draft = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    is_blog = models.BooleanField(default=False, verbose_name='是否为博客')
+    blog_tags = models.CharField(max_length=200, blank=True, null=True, verbose_name='标签')
+    blog_summary = models.CharField(max_length=200, blank=True, null=True, verbose_name='摘要')
+    publish_type = models.CharField(max_length=20, default='private', verbose_name='发布到')
 
     def __str__(self):
         return self.title

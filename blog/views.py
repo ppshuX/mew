@@ -4,6 +4,7 @@ from .forms import BlogPostForm
 from moments.models import Post as MomentsPost, MomentsImage
 from plaza.models import Post as PlazaPost, PostImage as PlazaPostImage
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
 
 # Create your views here.
 @login_required
@@ -80,3 +81,72 @@ def blog_edit(request, pk):
     else:
         form = BlogPostForm(instance=post)
     return render(request, 'blog/blog_form.html', {'form':form, 'post': post})
+
+@login_required
+def create_post(request):
+    if request.method == 'POST':
+        is_blog = 'blog_title' in request.POST
+        if is_blog:
+            post = BlogPost(
+                author=request.user,
+                title=request.POST.get('blog_title'),
+                content=request.POST.get('blog_content'),
+                cover_image=request.FILES.get('blog_cover'),
+                category=request.POST.get('category'),
+                is_blog=True,
+                blog_tags=request.POST.get('blog_tags'),
+                blog_summary=request.POST.get('blog_summary'),
+                is_draft='draft' in request.POST,
+                publish_type=request.POST.get('publish_type', 'private'),
+            )
+        else:
+            post = BlogPost(
+                author=request.user,
+                title=request.POST.get('title'),
+                content=request.POST.get('content'),
+                cover_image=request.FILES.get('cover_image'),
+                category=request.POST.get('category'),
+                is_blog=False,
+                is_draft='draft' in request.POST,
+                publish_type=request.POST.get('publish_type', 'private'),
+            )
+        post.save()
+        return redirect('userzone:detail', request.user.username)
+    else:
+        form = BlogPostForm()
+    return render(request, 'blog/blog_form.html', {'form': form})
+
+@login_required
+def draft_list(request):
+    drafts = BlogPost.objects.filter(author=request.user, is_draft=True).order_by('-updated_at')
+    paginator = Paginator(drafts, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    return render(request, 'blog/draft_list.html', {'page_obj': page_obj})
+
+CATEGORY_CHOICES = [
+    ('daily', '日常'),
+    ('study', '学习'),
+    ('work', '工作'),
+    ('travel', '旅行'),
+    ('food', '美食'),
+    ('sports', '运动'),
+    ('entertainment', '娱乐'),
+    ('other', '其他'),
+]
+
+@login_required
+def simple_create(request):
+    if request.method == 'POST':
+        post = BlogPost(
+            author=request.user,
+            title=request.POST.get('title'),
+            content=request.POST.get('content'),
+            category=request.POST.get('category'),
+            is_blog=False,
+            publish_type=request.POST.get('publish_type', 'private'),
+        )
+        post.save()
+        # 图片上传等可后续扩展
+        return redirect('userzone:detail', request.user.username)
+    return render(request, 'blog/blog_form_simple.html', {'category_choices': CATEGORY_CHOICES})
