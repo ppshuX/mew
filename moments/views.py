@@ -18,7 +18,7 @@ def  moments_list(request):
             Post.objects.create(author=request.user, content=content, image=image)
             return redirect('moments:list')
         
-    posts = Post.objects.all().order_by('-created_at')
+    posts = Post.objects.filter(is_private=False).order_by('-created_at')
     # ⭐ 添加判断：当前用户是否点赞了每个 post
     for post in posts:
         post.is_liked = request.user in post.likes.all()

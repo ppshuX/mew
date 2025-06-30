@@ -20,7 +20,7 @@ def userzone(request, username):
     category = request.GET.get('category', 'all').strip()   # all, daily, study, work, etc.
     
     if is_owner:
-        moments_posts = MomentsPost.objects.filter(author=user_profile.user).order_by('-created_at')
+        moments_posts = MomentsPost.objects.filter(author=user_profile.user, is_private=False).order_by('-created_at')
         private_posts = MomentsPost.objects.filter(author=user_profile.user, is_private=True).order_by('-created_at')
     else:
         moments_posts = MomentsPost.objects.filter(author=user_profile.user, is_private=False).order_by('-created_at')

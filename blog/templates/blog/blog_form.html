@@ -1,29 +1,47 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block title %}写博客{% endblock %}
+{% block title %}写动态{% endblock %}
 
 {% block content %}
-<div class="container mt-5" style="max-width: 800px;">
-    <h2 class="mb-4">{{ post.title|default:"写博客" }}</h2>
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        <div class="mb-3">
-            {{ form.title.label_tag }} {{ form.title }}
+<link rel="stylesheet" href="{% static 'blog/css/blog_form.css' %}">
+<div class="mew-form-bg">
+    <div class="mew-form-card">
+        <div class="mew-form-title">
+            <span style="font-size: 2.2rem; vertical-align: middle;">📝</span>
+            <span style="vertical-align: middle;">写动态</span>
         </div>
-        <div class="mb-3">
-            {{ form.cover_image.label_tag }} {{ form.cover_image }}
-        </div>
-        <div class="mb-3">
-            {{ form.content.label_tag }} {{ form.content }}
-        </div>
-        <div class="mb-3">
-            {{ form.category.label_tag }} {{ form.category }}
-        </div>
-        <div class="mb-3">
-            <label>{{ form.is_draft }} 保存为草稿</label>
-        </div>
-        <button type="submit" class="btn btn-primary">保存</button>
-    </form>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="mb-4">
+                <label class="mew-form-label">标题（可选）</label>
+                {{ form.title }}
+                <div class="mew-form-text">标题是可选的，如果不填写将只显示内容</div>
+            </div>
+            <div class="mb-4">
+                <label class="mew-form-label">内容 <span style="color: #ff6bcb;">*</span></label>
+                {{ form.content }}
+            </div>
+            <div class="mb-4">
+                <label class="mew-form-label">类别</label>
+                {{ form.category }}
+            </div>
+            <div class="mb-4">
+                <label class="mew-form-label">配图</label>
+                {{ form.cover_image }}
+                <div class="mew-form-text">可以选择一张图片作为动态配图</div>
+            </div>
+            <div class="mb-4">
+                <label class="mew-form-label">发布到</label>
+                {{ form.publish_type }}
+            </div>
+            <hr class="mew-form-btn-divider">
+            <div class="mew-form-btn-row">
+                <a href="{% url 'userzone:detail' request.user.username %}" class="mew-form-btn-cancel">取消</a>
+                <button type="submit" class="mew-form-btn-main">发布</button>
+            </div>
+        </form>
+    </div>
 </div>
+<script src="{% static 'blog/js/blog_form.js' %}"></script>
 {% endblock %}
