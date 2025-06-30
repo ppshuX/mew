@@ -73,8 +73,7 @@
                 <div class="comments mt-2">
                     {% with post.plaza_comments.all|slice:':2' as comment_preview %}
                     {% for comment in comment_preview %}
-                    <div class="comment"><strong>{{ comment.author.user_profile.nickname|default:comment.author.username
-                            }}</strong>: {{ comment.content }}</div>
+                    <div class="comment"><strong>{{ comment.author.user_profile.nickname|default:comment.author.username }}</strong>: {{ comment.content }}</div>
                     {% endfor %}
                     {% if post.plaza_comments.count > 2 %}
                     <div class="view-more">查看更多评论...</div>
