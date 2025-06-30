@@ -40,3 +40,14 @@ class Comment(models.Model):
     
     def is_liked_by(self, user):
         return self.likes.filter(id=user.id).exists()
+
+class MomentsImage(models.Model):
+    post = models.ForeignKey(Post, related_name='images', on_delete=models.CASCADE)
+    image = models.ImageField(upload_to='moments_images/')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['created_at']
+
+    def __str__(self):
+        return f"图片 - {self.post.author.username} - {self.created_at.strftime('%Y-%m-%d %H:%M')}"

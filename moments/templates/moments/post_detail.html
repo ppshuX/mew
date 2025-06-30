@@ -5,7 +5,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>动态详情页</title>
+    <title>朋友圈动态详情</title>
     <link rel="stylesheet" href="{% static 'chat/css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'moments/css/post_tetail.css' %}">
     <style>
@@ -93,6 +93,84 @@
             font-size: 1.25rem;
             line-height: 1.8;
         }
+
+        /* 详情页图片网格样式 */
+        .detail-image-grid {
+            display: grid;
+            gap: 8px;
+            padding: 16px 0;
+            margin: 16px 0;
+        }
+
+        /* 单张图片 */
+        .detail-image-grid:has(.detail-image-card:only-child) {
+            grid-template-columns: 1fr;
+        }
+
+        .detail-image-grid:has(.detail-image-card:only-child) .detail-image-card {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* 两张图片 */
+        .detail-image-grid:has(.detail-image-card:nth-child(2):last-child) {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        /* 三张图片 */
+        .detail-image-grid:has(.detail-image-card:nth-child(3):last-child) {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .detail-image-grid:has(.detail-image-card:nth-child(3):last-child) .detail-image-card:last-child {
+            grid-column: 1 / -1;
+            max-width: 50%;
+            margin: 0 auto;
+        }
+
+        /* 四张及以上图片 */
+        .detail-image-grid:has(.detail-image-card:nth-child(n+4)) {
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        }
+
+        .detail-image-card {
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .detail-image-card:hover {
+            transform: scale(1.02);
+        }
+
+        .detail-image {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .detail-image-grid:has(.detail-image-card:nth-child(n+4)) {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
+
+            .detail-image-grid:has(.detail-image-card:nth-child(3):last-child) .detail-image-card:last-child {
+                max-width: 60%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .detail-image-grid:has(.detail-image-card:nth-child(n+4)) {
+                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            }
+
+            .detail-image-grid:has(.detail-image-card:nth-child(3):last-child) .detail-image-card:last-child {
+                max-width: 70%;
+            }
+        }
     </style>
 </head>
 
@@ -121,9 +199,21 @@
                     {{ post.created_at|naturaltime }}
                 </span>
             </div>
-            {% if post.image %}
-            <div class="detail-image-card">
-                <img src="{{ post.image.url }}" alt="动态图片" class="detail-image">
+            <!-- 多张图片显示 -->
+            {% if post.images.all %}
+            <div class="detail-image-grid">
+                {% for post_image in post.images.all %}
+                <div class="detail-image-card">
+                    <img src="{{ post_image.image.url }}" alt="动态图片" class="detail-image">
+                </div>
+                {% endfor %}
+            </div>
+            {% elif post.image %}
+            <!-- 兼容旧数据：单张图片 -->
+            <div class="detail-image-grid">
+                <div class="detail-image-card">
+                    <img src="{{ post.image.url }}" alt="动态图片" class="detail-image">
+                </div>
             </div>
             {% endif %}
             <div id="detail-content" class="detail-content">{{ post.content|linebreaks }}</div>
@@ -186,35 +276,17 @@
                     {% if c.obj.author == request.user or request.user.is_superuser %}
                     <form method="post" action="{% url 'moments:delete_comment' c.obj.id %}" style="display:inline;">
                         {% csrf_token %}
-                        <button type="submit" class="detail-comment-delete-btn trash-btn" title="删除">
+                        <button type="submit" class="detail-comment-delete-btn trash-btn" title="删除评论"
+                            style="margin-left:12px;font-size:1.3rem;vertical-align:middle;">
                             <span class="trash-icon">🗑️</span>
                         </button>
                     </form>
                     {% endif %}
                 </div>
             </div>
-            {% empty %}
-            <p class="text-muted">暂无评论</p>
             {% endfor %}
-
-            {% if post.comments.count > 2 %}
-            <button id="show-more-comments-btn" class="show-more-comments-btn">展示剩余评论</button>
-            <button id="hide-more-comments-btn" class="show-more-comments-btn" style="display:none;">收起剩余评论</button>
-            {% endif %}
-            <form method="post" action="{% url 'moments:add_comment' post.id %}" class="detail-comment-form">
-                {% csrf_token %}
-                <input type="text" name="comment" placeholder="写评论..." required>
-                <button type="submit">发表评论</button>
-            </form>
         </div>
     </div>
-    </div>
-    </div>
-    </div>
-
-    <script src="{% static 'moments/js/post_detail.js' %}"></script>
-    <script src="{% static 'chat/js/jquery.min.js' %}"></script>
-
 </body>
 
 </html>

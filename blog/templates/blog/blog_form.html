@@ -35,6 +35,15 @@
                 <label class="mew-form-label">配图</label>
                 {{ form.cover_image }}
                 <div class="mew-form-text">可以选择一张图片作为动态配图</div>
+                <!-- 多图上传区域 -->
+                <div style="margin-top:10px;">
+                    <label class="mew-form-label">多图上传</label>
+                    <div id="image-preview-container" style="display:flex;flex-wrap:wrap;gap:10px;"></div>
+                    <input type="file" id="id_images" name="images" accept="image/*" multiple style="display:none;">
+                    <button type="button" id="add-image-btn" class="btn btn-outline-primary"
+                        style="margin-top:8px;">选择图片</button>
+                    <div class="mew-form-text">最多可选9张图片，支持预览和删除</div>
+                </div>
             </div>
             <div class="mb-4">
                 <label class="mew-form-label">发布到</label>

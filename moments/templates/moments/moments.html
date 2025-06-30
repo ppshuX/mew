@@ -33,7 +33,15 @@
                 <span class="author-name">{{ post.author.username }}</span>
                 <span class="timestamp">{{ post.created_at|naturaltime }}</span>
             </div>
-            {% if post.image %}
+            {% if post.images.all %}
+            <div class="image-grid">
+                {% for img in post.images.all %}
+                <div class="image-card">
+                    <img src="{{ img.image.url }}" alt="图片">
+                </div>
+                {% endfor %}
+            </div>
+            {% elif post.image %}
             <div class="image-grid">
                 <div class="image-card">
                     <img src="{{ post.image.url }}" alt="图片">

@@ -1,8 +1,8 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import BlogPost
+from .models import BlogPost, BlogImage
 from .forms import BlogPostForm
-from moments.models import Post as MomentsPost
-from plaza.models import Post as PlazaPost
+from moments.models import Post as MomentsPost, MomentsImage
+from plaza.models import Post as PlazaPost, PostImage as PlazaPostImage
 from django.contrib.auth.decorators import login_required
 
 # Create your views here.
@@ -11,6 +11,11 @@ def blog_create(request):
     if request.method == 'POST':
         form = BlogPostForm(request.POST, request.FILES)
         if form.is_valid():
+            post = form.save(commit=False)
+            post.author = request.user
+            post.save()
+            for img in request.FILES.getlist('images'):
+                BlogImage.objects.create(post=post, image=img)
             content = form.cleaned_data['content']
             title = form.cleaned_data.get('title', '').strip()
             if title:
@@ -26,6 +31,9 @@ def blog_create(request):
                     category=category,
                     is_private=False
                 )
+                # 同步多图到朋友圈
+                for img in post.images.all():
+                    MomentsImage.objects.create(post=moments_post, image=img.image)
                 return redirect('moments:post_detail', post_id=moments_post.pk)
             elif publish_type == 'plaza':
                 plaza_post = PlazaPost.objects.create(
@@ -34,6 +42,9 @@ def blog_create(request):
                     image=image,
                     category=category
                 )
+                # 同步多图到广场
+                for img in post.images.all():
+                    PlazaPostImage.objects.create(post=plaza_post, image=img.image)
                 return redirect('plaza:detail', post_id=plaza_post.pk)
             else:
                 moments_post = MomentsPost.objects.create(
@@ -62,7 +73,9 @@ def blog_edit(request, pk):
     if request.method == 'POST':
         form = BlogPostForm(request.POST, request.FILES, instance=post)
         if form.is_valid():
-            form.save()
+            post = form.save(commit=False)
+            post.author = request.user
+            post.save()
             return redirect('blog_detail', pk=pk)
     else:
         form = BlogPostForm(instance=post)

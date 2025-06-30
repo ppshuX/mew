@@ -7,7 +7,11 @@ PUBLISH_CHOICES = [
     ('plaza', '广场'),
 ]
 
-class BlogPostForm(forms.Form):
+class BlogPostForm(forms.ModelForm):
+    class Meta:
+        model = BlogPost
+        fields = ['content', 'title', 'cover_image', 'category', 'publish_type']
+
     CATEGORY_CHOICES = [
         ('daily', '日常'),
         ('study', '学习'),

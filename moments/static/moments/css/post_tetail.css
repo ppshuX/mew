@@ -37,25 +37,7 @@ body {
     margin-bottom: 18px;
 }
 
-.detail-image-card {
-    background: #faf7ff;
-    border-radius: 14px;
-    box-shadow: 0 2px 10px rgba(168, 106, 227, 0.07);
-    padding: 18px 0 10px 0;
-    margin-bottom: 22px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
 
-.detail-image {
-    max-width: 320px;
-    max-height: 240px;
-    border-radius: 10px;
-    box-shadow: 0 1px 6px rgba(168, 106, 227, 0.10);
-    object-fit: contain;
-    background: #fff;
-}
 
 .detail-content {
     font-size: 1.35rem;
@@ -510,4 +492,81 @@ span.detail-like-count {
     gap: 6px;
     margin-left: 16px;
     min-width: 90px;
+}
+
+/* 详情页图片网格样式 */
+.detail-image-grid {
+    display: grid;
+    gap: 8px;
+    padding: 16px 0;
+    margin: 16px 0;
+}
+
+/* 单张图片 */
+.detail-image-grid:has(.detail-image-card:only-child) {
+    grid-template-columns: 1fr;
+}
+
+.detail-image-grid:has(.detail-image-card:only-child) .detail-image-card {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* 两张图片 */
+.detail-image-grid:has(.detail-image-card:nth-child(2):last-child) {
+    grid-template-columns: 1fr 1fr;
+}
+
+/* 三张图片 */
+.detail-image-grid:has(.detail-image-card:nth-child(3):last-child) {
+    grid-template-columns: 1fr 1fr;
+}
+
+.detail-image-grid:has(.detail-image-card:nth-child(3):last-child) .detail-image-card:last-child {
+    grid-column: 1 / -1;
+    max-width: 50%;
+    margin: 0 auto;
+}
+
+/* 四张及以上图片 */
+.detail-image-grid:has(.detail-image-card:nth-child(n+4)) {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+.detail-image-card {
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.detail-image-card:hover {
+    transform: scale(1.02);
+}
+
+.detail-image {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+@media (max-width: 768px) {
+    .detail-image-grid:has(.detail-image-card:nth-child(n+4)) {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    }
+
+    .detail-image-grid:has(.detail-image-card:nth-child(3):last-child) .detail-image-card:last-child {
+        max-width: 60%;
+    }
+}
+
+@media (max-width: 480px) {
+    .detail-image-grid:has(.detail-image-card:nth-child(n+4)) {
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    }
+
+    .detail-image-grid:has(.detail-image-card:nth-child(3):last-child) .detail-image-card:last-child {
+        max-width: 70%;
+    }
 }

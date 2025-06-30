@@ -14,3 +14,7 @@ class BlogPost(models.Model):
 
     def __str__(self):
         return self.title
+
+class BlogImage(models.Model):
+    post = models.ForeignKey(BlogPost, related_name='images', on_delete=models.CASCADE)
+    image = models.ImageField(upload_to='blog_images/')
