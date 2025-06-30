@@ -171,6 +171,49 @@
                 max-width: 70%;
             }
         }
+
+        .image-modal {
+            position: fixed;
+            z-index: 9999;
+            left: 0;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .image-modal-backdrop {
+            position: absolute;
+            left: 0;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+        }
+
+        .image-modal-img {
+            position: relative;
+            max-width: 90vw;
+            max-height: 90vh;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+            z-index: 1;
+            background: #fff;
+            object-fit: contain;
+            animation: modal-zoom-in 0.2s;
+        }
+
+        @keyframes modal-zoom-in {
+            from {
+                transform: scale(0.7);
+            }
+
+            to {
+                transform: scale(1);
+            }
+        }
     </style>
 </head>
 
@@ -287,8 +330,80 @@
             {% endfor %}
         </div>
     </div>
+    <div id="image-modal" class="image-modal" style="display:none;">
+        <div class="image-modal-backdrop"></div>
+        <img id="image-modal-img" class="image-modal-img" src="" alt="预览">
+    </div>
     <script src="{% static 'chat/js/jquery.min.js' %}"></script>
     <script src="{% static 'moments/js/post_detail.js' %}"></script>
+    <script>
+        let scale = 1;
+        let isDragging = false, startX = 0, startY = 0, imgX = 0, imgY = 0;
+        const modal = document.getElementById('image-modal');
+        const modalImg = document.getElementById('image-modal-img');
+        document.querySelectorAll('.detail-image').forEach(img => {
+            img.addEventListener('click', function (e) {
+                e.stopPropagation();
+                modalImg.src = this.src;
+                modal.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+                scale = 1; imgX = 0; imgY = 0;
+                modalImg.style.transform = 'scale(1)';
+                modalImg.style.cursor = 'grab';
+            });
+        });
+        modalImg.onwheel = function (e) {
+            e.preventDefault();
+            const delta = e.deltaY || e.wheelDelta;
+            let oldScale = scale;
+            if (delta < 0) {
+                scale = Math.min(scale + 0.1, 5);
+            } else {
+                scale = Math.max(scale - 0.1, 0.2);
+            }
+            imgX = 0; imgY = 0;
+            if (scale === 1) {
+                modalImg.style.transform = `scale(1)`;
+            } else {
+                modalImg.style.transform = `scale(${scale}) translate(0px, 0px)`;
+            }
+        };
+        modalImg.onmousedown = function (e) {
+            if (scale === 1) return;
+            isDragging = true;
+            startX = e.clientX;
+            startY = e.clientY;
+            modalImg.style.cursor = 'grabbing';
+            e.preventDefault();
+        };
+        window.addEventListener('mousemove', function (e) {
+            if (!isDragging) return;
+            let dx = e.clientX - startX;
+            let dy = e.clientY - startY;
+            modalImg.style.transform = `scale(${scale}) translate(${imgX + dx}px, ${imgY + dy}px)`;
+        });
+        window.addEventListener('mouseup', function (e) {
+            if (!isDragging) return;
+            let dx = e.clientX - startX;
+            let dy = e.clientY - startY;
+            imgX += dx;
+            imgY += dy;
+            isDragging = false;
+            modalImg.style.cursor = 'grab';
+        });
+        function resetImgTransform() {
+            scale = 1; imgX = 0; imgY = 0; isDragging = false;
+            modalImg.style.transform = 'scale(1)';
+            modalImg.style.cursor = 'grab';
+        }
+        modal.addEventListener('click', function (e) {
+            if (e.target === this || e.target.classList.contains('image-modal-backdrop')) {
+                this.style.display = 'none';
+                document.body.style.overflow = '';
+                resetImgTransform();
+            }
+        });
+    </script>
 </body>
 
 </html>
