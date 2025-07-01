@@ -8,7 +8,8 @@ class BlogPost(models.Model):
     cover_image = models.ImageField(upload_to='blog/covers/', blank=True, null=True)
     content = models.TextField()
     category = models.CharField(max_length=50, default='未分类')
-    is_draft = models.BooleanField(default=False)
+    is_draft = models.BooleanField(default=False, verbose_name="是否草稿")
+    last_saved_time = models.DateTimeField(auto_now=True, verbose_name="最后保存时间")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     is_blog = models.BooleanField(default=False, verbose_name='是否为博客')
@@ -18,6 +19,19 @@ class BlogPost(models.Model):
 
     def __str__(self):
         return self.title
+    
+    def like_count(self):
+        """返回点赞数，博客暂时返回0"""
+        return 0
+    
+    def comment_count(self):
+        """返回评论数，博客暂时返回0"""
+        return 0
+
+    def get_summary(self, length=50):
+        if not self.content:
+            return ''
+        return (self.content[:length] + '...') if len(self.content) > length else self.content
 
 class BlogImage(models.Model):
     post = models.ForeignKey(BlogPost, related_name='images', on_delete=models.CASCADE)

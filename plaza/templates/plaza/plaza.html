@@ -23,6 +23,47 @@
     <!-- 动态卡片 -->
     <div class="moments-list">
         {% for post in posts %}
+        {% if post.content_type == 'blog' %}
+        <!-- 博客卡片 -->
+        <div class="blog-card" onclick="window.location.href='{% url 'blog_detail' post.id %}'">
+            <div class="blog-badge">📓 博客</div>
+            <div class="author-row">
+                {% if post.author.user_profile.avatar and post.author.user_profile.avatar.url != '/media/avatars/default.jpg' %}
+                <img class="avatar-img" src="{{ post.author.user_profile.avatar.url }}" alt="头像"
+                    style="width:36px;height:36px;border-radius:50%;object-fit:cover;vertical-align:middle;">
+                {% else %}
+                <span class="avatar-circle">{{ post.author.username|first|upper }}</span>
+                {% endif %}
+                <span class="author-divider">|</span>
+                <span class="author-name">{{ post.author.user_profile.nickname|default:post.author.username }}</span>
+                <span class="timestamp">{{ post.created_at|naturaltime }}</span>
+            </div>
+
+            <!-- 博客封面图 -->
+            <div class="blog-cover">
+                {% if post.cover_image %}
+                <img src="{{ post.cover_image.url }}" alt="博客封面" class="blog-cover-img">
+                {% else %}
+                <div class="blog-cover-default">
+                    <span class="blog-default-text">Blog</span>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- 博客内容 -->
+            <div class="blog-content">
+                <h3 class="blog-title">{{ post.title }}</h3>
+                {% if post.blog_summary %}
+                <p class="blog-summary">{{ post.blog_summary }}</p>
+                {% endif %}
+                <button class="read-more-btn"
+                    onclick="event.stopPropagation(); window.location.href='{% url 'blog_detail' post.id %}'">
+                    阅读全文
+                </button>
+            </div>
+        </div>
+        {% else %}
+        <!-- 普通动态卡片 -->
         <div class="moment-card" onclick="window.location.href='{% url 'plaza:detail' post.id %}'">
             <div class="author-row">
                 {% if post.author.user_profile.avatar and post.author.user_profile.avatar.url != '/media/avatars/default.jpg' %}
@@ -73,7 +114,10 @@
                 <div class="comments mt-2">
                     {% with post.plaza_comments.all|slice:':2' as comment_preview %}
                     {% for comment in comment_preview %}
-                    <div class="comment"><strong>{{ comment.author.user_profile.nickname|default:comment.author.username}}</strong>: {{ comment.content }}</div>
+                    <div class="comment">
+                        <strong>{{comment.author.user_profile.nickname|default:comment.author.username}}
+                            
+                        </strong>: {{comment.content }}</div>
                     {% endfor %}
                     {% if post.plaza_comments.count > 2 %}
                     <div class="view-more">查看更多评论...</div>
@@ -85,6 +129,7 @@
                 </div>
             </div>
         </div>
+        {% endif %}
         {% endfor %}
     </div>
     {% if posts|length == 0 %}

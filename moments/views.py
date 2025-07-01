@@ -1,5 +1,6 @@
 from django.shortcuts import render,redirect, get_object_or_404
 from .models import Post, Comment
+from blog.models import BlogPost
 from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
@@ -7,6 +8,8 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
 from .forms import CustomRegisterForm
 from django.contrib import messages
+from itertools import chain
+from operator import attrgetter
 
 # Create your views here.
 @login_required
@@ -18,12 +21,29 @@ def  moments_list(request):
             Post.objects.create(author=request.user, content=content, image=image)
             return redirect('moments:list')
         
+    # 获取普通动态
     posts = Post.objects.filter(is_private=False).order_by('-created_at')
+    # 获取博客动态（发布到朋友圈的博客）
+    blog_posts = BlogPost.objects.filter(
+        publish_type='moments', 
+        is_draft=False,
+        is_blog=True
+    ).order_by('-created_at')
+    
+    # 合并两种类型的内容并按时间排序
+    all_content = list(chain(posts, blog_posts))
+    all_content.sort(key=attrgetter('created_at'), reverse=True)
+    
     # ⭐ 添加判断：当前用户是否点赞了每个 post
-    for post in posts:
-        post.is_liked = request.user in post.likes.all()
+    for item in all_content:
+        if hasattr(item, 'likes'):  # 普通动态
+            item.is_liked = request.user in item.likes.all()
+            item.content_type = 'post'
+        else:  # 博客
+            item.is_liked = False  # 博客暂时不支持点赞
+            item.content_type = 'blog'
 
-    return render(request, 'moments/moments.html',{'posts': posts})
+    return render(request, 'moments/moments.html',{'posts': all_content})
 
 @require_POST
 @login_required

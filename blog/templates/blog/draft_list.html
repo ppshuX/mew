@@ -1,41 +1,26 @@
 {% extends "base.html" %}
 {% block title %}草稿箱{% endblock %}
+
 {% block content %}
-<div class="container mt-5" style="max-width: 900px;">
-    <h2 class="mb-4">我的草稿箱</h2>
-    {% if page_obj.object_list %}
-    <div class="list-group mb-4">
-        {% for draft in page_obj.object_list %}
-        <div class="list-group-item d-flex justify-content-between align-items-center">
-            <div>
-                <a href="{% url 'blog_edit' draft.id %}" class="fw-bold">{{ draft.title|default:'未命名草稿' }}</a>
-                <div class="text-muted small">保存时间：{{ draft.updated_at|date:'Y-m-d H:i' }}</div>
-            </div>
-            <div>
-                <a href="{% url 'blog_edit' draft.id %}" class="btn btn-sm btn-outline-primary me-2">继续编辑</a>
-                <form method="post" action="{% url 'blog_delete' draft.id %}" style="display:inline;">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-sm btn-outline-danger"
-                        onclick="return confirm('确定要删除该草稿吗？');">删除</button>
-                </form>
+<h2 class="mb-3">📥 我的草稿箱</h2>
+
+{% if drafts %}
+<ul class="list-group">
+    {% for d in drafts %}
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+        <div class="w-75">
+            <a href="{% url 'edit_blog' d.id %}" class="fw-bold text-dark text-decoration-none">
+                {{ d.title|default:"（无标题）" }}
+            </a>
+            <div class="text-muted small">
+                {{ d.get_summary|linebreaksbr }}
             </div>
         </div>
-        {% endfor %}
-    </div>
-    <nav>
-        <ul class="pagination justify-content-center">
-            {% if page_obj.has_previous %}
-            <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">上一页</a></li>
-            {% endif %}
-            <li class="page-item disabled"><span class="page-link">第 {{ page_obj.number }} 页 / 共 {{
-                    page_obj.paginator.num_pages }} 页</span></li>
-            {% if page_obj.has_next %}
-            <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">下一页</a></li>
-            {% endif %}
-        </ul>
-    </nav>
-    {% else %}
-    <div class="alert alert-info text-center">你还没有保存过草稿</div>
-    {% endif %}
-</div>
+        <small class="text-muted text-end">{{ d.last_saved_time|date:"Y-m-d H:i" }}</small>
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
+<p class="text-muted">暂无草稿，快去创作吧～</p>
+{% endif %}
 {% endblock %}

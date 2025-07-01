@@ -5,106 +5,253 @@
 
 {% block content %}
 <link rel="stylesheet" href="{% static 'blog/css/blog_form.css' %}">
+<!-- ToastUI Editor CSS -->
+<link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" />
+<!-- ToastUI Editor UMD JS -->
+<script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
 <div class="mew-form-bg">
     <div class="mew-form-card" style="max-width:900px;margin:0 auto;position:relative;">
         <a href="{% url 'blog_simple_create' %}" class="mew-switch-btn">切换到普通动态编辑</a>
+        <a href="{% url 'draft_list' %}" class="btn btn-outline-secondary"
+            style="position:absolute;top:24px;right:160px;z-index:2;">进入草稿箱</a>
         <div class="mew-form-title">
             博客编辑
         </div>
         <!-- 顶部区域 -->
-        <div class="row mb-3 align-items-end">
-            <div class="col-md-7">
-                <label class="mew-form-label">博客标题 <span style="color: #ff6bcb;">*</span></label>
-                <input type="text" name="blog_title" class="form-control" maxlength="100" placeholder="请输入博客标题"
-                    required>
+        <form id="blog-form" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="row mb-3 align-items-end">
+                <div class="col-md-7">
+                    <label class="mew-form-label">博客标题 <span style="color: #ff6bcb;">*</span></label>
+                    <input type="text" name="blog_title" class="form-control" maxlength="100" placeholder="请输入博客标题"
+                        required value="{{ blog.title|default:'' }}">
+                </div>
+                <div class="col-md-5">
+                    <label class="mew-form-label">关键词</label>
+                    <input type="text" name="blog_tags" class="form-control" placeholder="多个关键词用中文逗号分隔"
+                        value="{{ blog.blog_tags|default:'' }}">
+                </div>
             </div>
-            <div class="col-md-5">
-                <label class="mew-form-label">关键词</label>
-                <input type="text" name="blog_tags" class="form-control" placeholder="多个关键词用中文逗号分隔">
+            <div class="row mb-2">
+                <div class="col-md-7"><small class="text-danger" id="title-tip">标题不能为空</small></div>
+                <div class="col-md-5"><small class="text-muted">关键词用于分类或搜索</small></div>
             </div>
-        </div>
-        <div class="row mb-2">
-            <div class="col-md-7"><small class="text-danger" id="title-tip">标题不能为空</small></div>
-            <div class="col-md-5"><small class="text-muted">关键词用于分类或搜索</small></div>
-        </div>
-        <!-- 编辑器区域 -->
-        <div class="mb-4" style="max-width:900px;margin:0 auto;">
-            <div class="d-flex mb-2">
-                <button type="button" id="tab-edit" class="btn btn-sm btn-primary me-2 active">编辑</button>
-                <button type="button" id="tab-preview" class="btn btn-sm btn-outline-secondary">预览</button>
+            <!-- 编辑器区域 -->
+            <div class="mb-4" style="max-width:900px;margin:0 auto;">
+                <div class="d-flex mb-2">
+                    <button type="button" id="tab-edit" class="btn btn-sm btn-primary me-2 active">富文本编辑</button>
+                    <button type="button" id="tab-markdown" class="btn btn-sm btn-outline-info">Markdown编辑</button>
+                    <button type="button" id="tab-preview" class="btn btn-sm btn-outline-secondary">预览</button>
+                </div>
+                <div id="editor-area">
+                    <textarea name="blog_content" id="blog-content-textarea" class="form-control" rows="12"
+                        required>{{ blog.content|default:'' }}</textarea>
+                </div>
+                <div id="markdown-area" style="display:none;">
+                    <div id="toastui-editor"></div>
+                </div>
+                <div id="blog-preview-area"
+                    style="display:none;min-height:300px;border:1px solid #eee;background:#fafbfc;padding:18px 20px;border-radius:6px;">
+                </div>
             </div>
-            <div id="editor-area">
-                <textarea name="blog_content" id="blog-content-textarea" class="form-control" rows="12"
-                    required></textarea>
+            <!-- 辅助字段区 -->
+            <div class="row mb-4">
+                <div class="col-md-4 mb-3 mb-md-0">
+                    <label class="mew-form-label">封面图</label>
+                    <input type="file" name="blog_cover" class="form-control" accept="image/*"
+                        onchange="previewCover(this)">
+                    <img id="cover-preview"
+                        src="{% if blog.cover_image %}{{ blog.cover_image.url }}{% else %}#{% endif %}" alt="封面预览"
+                        style="{% if blog.cover_image %}display:block;{% else %}display:none;{% endif %}max-width:100%;margin-top:8px;border-radius:4px;" />
+                </div>
+                <div class="col-md-4 mb-3 mb-md-0">
+                    <label class="mew-form-label">类别</label>
+                    <select name="category" class="form-select form-select-sm">
+                        <option value="all">全部类别</option>
+                        {% for value, label in category_choices %}
+                        <option value="{{ value }}" {% if blog.category == value %}selected{% endif %}>{{ label }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="mew-form-label">摘要（可选）</label>
+                    <textarea name="blog_summary" class="form-control" rows="2" maxlength="200"
+                        placeholder="一句话介绍你的博客">{{ blog.blog_summary|default:'' }}</textarea>
+                </div>
             </div>
-            <div id="blog-preview-area"
-                style="display:none;min-height:300px;border:1px solid #eee;background:#fafbfc;padding:18px 20px;border-radius:6px;">
+            <!-- 操作按钮区 -->
+            <div class="d-flex justify-content-center mb-2">
+                <button type="button" class="btn btn-outline-primary" id="save-draft-btn">保存草稿</button>
+                <button type="submit" class="btn btn-primary">发布博客</button>
             </div>
-        </div>
-        <!-- 辅助字段区 -->
-        <div class="row mb-4">
-            <div class="col-md-4 mb-3 mb-md-0">
-                <label class="mew-form-label">封面图</label>
-                <input type="file" name="blog_cover" class="form-control" accept="image/*"
-                    onchange="previewCover(this)">
-                <img id="cover-preview" src="#" alt="封面预览"
-                    style="display:none;max-width:100%;margin-top:8px;border-radius:4px;" />
-            </div>
-            <div class="col-md-4 mb-3 mb-md-0">
-                <label class="mew-form-label">类别</label>
-                <select name="category" class="form-select form-select-sm">
-                    <option value="all">全部类别</option>
-                    {% for value, label in category_choices %}
-                    <option value="{{ value }}">{{ label }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            <div class="col-md-4">
-                <label class="mew-form-label">摘要（可选）</label>
-                <textarea name="blog_summary" class="form-control" rows="2" maxlength="200"
-                    placeholder="一句话介绍你的博客"></textarea>
-            </div>
-        </div>
-        <!-- 操作按钮区 -->
-        <div class="d-flex justify-content-center mb-2">
-            <button type="button" class="btn btn-outline-info me-3" id="blog-save-draft-btn">保存草稿</button>
-            <button type="submit" class="btn btn-primary">发布博客</button>
-        </div>
+        </form>
     </div>
 </div>
+
 <script src="{% static 'blog/js/blog_form.js' %}"></script>
 <script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
 <script>
     // Tab切换逻辑
     const tabEdit = document.getElementById('tab-edit');
     const tabPreview = document.getElementById('tab-preview');
+    const tabMarkdown = document.getElementById('tab-markdown');
     const editorArea = document.getElementById('editor-area');
+    const markdownArea = document.getElementById('markdown-area');
     const previewArea = document.getElementById('blog-preview-area');
     let editorInstance = null;
+    let toastEditor = null;
+    let currentMode = 'rich'; // 'rich' 或 'markdown'
+
+    // 初始化 ToastUI Editor
+    function initToastEditor() {
+        if (!toastEditor) {
+            toastEditor = new window.toastui.Editor({
+                el: document.querySelector('#toastui-editor'),
+                height: '400px',
+                initialEditType: 'markdown',
+                previewStyle: 'vertical',
+                language: 'zh-CN',
+                hooks: {
+                    addImageBlobHook: function (blob, callback) {
+                        const formData = new FormData();
+                        formData.append('image', blob);
+                        fetch('/api/upload_blog_image/', {
+                            method: 'POST',
+                            body: formData,
+                            credentials: 'include'
+                        })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.url) {
+                                    callback(data.url, blob.name);
+                                } else {
+                                    alert('图片上传失败');
+                                }
+                            })
+                            .catch(() => alert('图片上传失败'));
+                        return false;
+                    }
+                }
+            });
+            // 粘贴拦截（Markdown模式）
+            setTimeout(() => {
+                const mdEl = document.querySelector('.toastui-editor-md-container');
+                if (mdEl) {
+                    mdEl.addEventListener('paste', function (e) {
+                        const pastedData = (e.clipboardData || window.clipboardData).getData('text');
+                        if (pastedData && pastedData.startsWith('data:image')) {
+                            e.preventDefault();
+                            alert('检测到 base64 图片，建议使用上传功能插入图片以防止页面卡顿。');
+                        }
+                    });
+                }
+                // 粘贴拦截（WYSIWYG模式）
+                const wwEl = document.querySelector('.toastui-editor-ww-container');
+                if (wwEl) {
+                    wwEl.addEventListener('paste', function (e) {
+                        const pastedData = (e.clipboardData || window.clipboardData).getData('text');
+                        if (pastedData && pastedData.startsWith('data:image')) {
+                            e.preventDefault();
+                            alert('检测到 base64 图片，建议使用上传功能插入图片以防止页面卡顿。');
+                        }
+                    });
+                }
+            }, 500);
+        }
+    }
 
     function switchToEdit() {
         tabEdit.classList.add('active');
         tabPreview.classList.remove('active');
+        tabMarkdown.classList.remove('active');
         editorArea.style.display = '';
+        markdownArea.style.display = 'none';
         previewArea.style.display = 'none';
+        currentMode = 'rich';
     }
+
     function switchToPreview() {
         tabPreview.classList.add('active');
         tabEdit.classList.remove('active');
+        tabMarkdown.classList.remove('active');
         editorArea.style.display = 'none';
+        markdownArea.style.display = 'none';
         previewArea.style.display = '';
-        if (editorInstance) {
-            previewArea.innerHTML = editorInstance.getData();
+        let content = '';
+        if (currentMode === 'markdown' && toastEditor) {
+            content = toastEditor.getHTML();
+        } else if (editorInstance) {
+            content = editorInstance.getData();
+        }
+        previewArea.innerHTML = content;
+    }
+
+    function switchToMarkdown() {
+        tabMarkdown.classList.add('active');
+        tabEdit.classList.remove('active');
+        tabPreview.classList.remove('active');
+        editorArea.style.display = 'none';
+        markdownArea.style.display = '';
+        previewArea.style.display = 'none';
+        currentMode = 'markdown';
+
+        // 初始化 ToastUI Editor
+        initToastEditor();
+
+        // 如果从富文本编辑器切换，尝试转换内容
+        if (editorInstance && !toastEditor.getMarkdown()) {
+            const richContent = editorInstance.getData();
+            const markdownText = convertHtmlToMarkdown(richContent);
+            toastEditor.setMarkdown(markdownText);
         }
     }
+
+    // 简单的HTML到Markdown转换函数
+    function convertHtmlToMarkdown(html) {
+        let markdown = html
+            .replace(/<h1[^>]*>(.*?)<\/h1>/gi, '# $1\n\n')
+            .replace(/<h2[^>]*>(.*?)<\/h2>/gi, '## $1\n\n')
+            .replace(/<h3[^>]*>(.*?)<\/h3>/gi, '### $1\n\n')
+            .replace(/<h4[^>]*>(.*?)<\/h4>/gi, '#### $1\n\n')
+            .replace(/<h5[^>]*>(.*?)<\/h5>/gi, '##### $1\n\n')
+            .replace(/<h6[^>]*>(.*?)<\/h6>/gi, '###### $1\n\n')
+            .replace(/<strong[^>]*>(.*?)<\/strong>/gi, '**$1**')
+            .replace(/<b[^>]*>(.*?)<\/b>/gi, '**$1**')
+            .replace(/<em[^>]*>(.*?)<\/em>/gi, '*$1*')
+            .replace(/<i[^>]*>(.*?)<\/i>/gi, '*$1*')
+            .replace(/<ul[^>]*>([\s\S]*?)<\/ul>/gi, function (match, content) {
+                return content.replace(/<li[^>]*>([\s\S]*?)<\/li>/gi, '- $1\n') + '\n';
+            })
+            .replace(/<ol[^>]*>([\s\S]*?)<\/ol>/gi, function (match, content) {
+                let counter = 1;
+                return content.replace(/<li[^>]*>([\s\S]*?)<\/li>/gi, function () {
+                    return counter++ + '. ' + arguments[1] + '\n';
+                }) + '\n';
+            })
+            .replace(/<blockquote[^>]*>([\s\S]*?)<\/blockquote>/gi, '> $1\n\n')
+            .replace(/<p[^>]*>([\s\S]*?)<\/p>/gi, '$1\n\n')
+            .replace(/<br\s*\/?>/gi, '\n')
+            .replace(/<[^>]*>/g, '')
+            .replace(/&nbsp;/g, ' ')
+            .replace(/&amp;/g, '&')
+            .replace(/&lt;/g, '<')
+            .replace(/&gt;/g, '>')
+            .replace(/&quot;/g, '"')
+            .trim();
+
+        return markdown;
+    }
+
     tabEdit.onclick = switchToEdit;
     tabPreview.onclick = switchToPreview;
+    tabMarkdown.onclick = switchToMarkdown;
 
     // 初始化CKEditor 5
     ClassicEditor.create(document.querySelector('#blog-content-textarea'), {
         toolbar: {
             items: [
-                'heading', '|', 'bold', 'italic', 'underline', 'strikethrough', 'link', 'bulletedList', 'numberedList', 'blockQuote', 'insertTable', 'imageUpload', 'imageInsert', 'undo', 'redo'
+                'heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote', 'insertTable', 'imageUpload', 'undo', 'redo'
             ]
         },
         language: 'zh-cn',
@@ -128,22 +275,42 @@
             preview.style.display = 'none';
         }
     }
-    // 保存草稿按钮逻辑
-    const saveDraftBtn = document.getElementById('blog-save-draft-btn');
-    if (saveDraftBtn) {
-        saveDraftBtn.onclick = function (e) {
-            e.preventDefault();
-            const form = this.closest('form');
-            let input = form.querySelector('input[name="is_draft"]');
-            if (!input) {
-                input = document.createElement('input');
-                input.type = 'hidden';
-                input.name = 'is_draft';
-                input.value = '1';
-                form.appendChild(input);
+
+    // 表单提交前处理
+    document.querySelector('form').addEventListener('submit', function (e) {
+        if (currentMode === 'markdown' && toastEditor) {
+            // 如果是Markdown模式，将Markdown内容转换为HTML
+            const htmlContent = toastEditor.getHTML();
+
+            // 将转换后的HTML设置到隐藏的富文本字段
+            if (editorInstance) {
+                editorInstance.setData(htmlContent);
+            } else {
+                document.getElementById('blog-content-textarea').value = htmlContent;
             }
-            form.submit();
         }
-    }
+    });
+
+    document.addEventListener('DOMContentLoaded', function () {
+        var saveDraftBtn = document.getElementById('save-draft-btn');
+        if (saveDraftBtn) {
+            saveDraftBtn.onclick = function () {
+                const form = document.getElementById('blog-form');
+                if (!form) {
+                    alert('未找到表单，无法保存草稿！');
+                    return;
+                }
+                let hidden = form.querySelector('input[name="is_draft"]');
+                if (!hidden) {
+                    hidden = document.createElement('input');
+                    hidden.type = 'hidden';
+                    hidden.name = 'is_draft';
+                    form.appendChild(hidden);
+                }
+                hidden.value = 'true';
+                form.submit();
+            };
+        }
+    });
 </script>
 {% endblock %}
