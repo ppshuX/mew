@@ -9,19 +9,24 @@ document.addEventListener('DOMContentLoaded', function () {
     if (input && preview && addBtn) {
         let filesArr = [];
 
-        addBtn.onclick = () => input.click();
+        if (addBtn && input) {
+            addBtn.onclick = () => input.click();
+        }
 
-        input.onchange = function (e) {
-            let newFiles = Array.from(e.target.files);
-            if (filesArr.length + newFiles.length > 9) {
-                alert('最多只能上传9张图片');
-                return;
-            }
-            filesArr = filesArr.concat(newFiles);
-            renderPreview();
-        };
+        if (input) {
+            input.onchange = function (e) {
+                let newFiles = Array.from(e.target.files);
+                if (filesArr.length + newFiles.length > 9) {
+                    alert('最多只能上传9张图片');
+                    return;
+                }
+                filesArr = filesArr.concat(newFiles);
+                renderPreview();
+            };
+        }
 
         function renderPreview() {
+            if (!preview) return;
             preview.innerHTML = '';
             filesArr.forEach((file, idx) => {
                 let reader = new FileReader();
@@ -33,17 +38,24 @@ document.addEventListener('DOMContentLoaded', function () {
                         <span data-idx="${idx}" style="position:absolute;top:0;right:0;cursor:pointer;color:red;font-weight:bold;font-size:20px;background:#fff;border-radius:50%;padding:0 6px;">×</span>
                     `;
                     preview.appendChild(div);
-                    div.querySelector('span').onclick = function () {
-                        filesArr.splice(idx, 1);
-                        renderPreview();
-                    };
+                    let spans = document.querySelectorAll('span');
+                    spans.forEach(function (span) {
+                        if (span) {
+                            span.onclick = function () {
+                                filesArr.splice(idx, 1);
+                                renderPreview();
+                            };
+                        }
+                    });
                 };
                 reader.readAsDataURL(file);
             });
             // 更新input的files
-            let dataTransfer = new DataTransfer();
-            filesArr.forEach(f => dataTransfer.items.add(f));
-            input.files = dataTransfer.files;
+            if (input) {
+                let dataTransfer = new DataTransfer();
+                filesArr.forEach(f => dataTransfer.items.add(f));
+                input.files = dataTransfer.files;
+            }
         }
     }
 }); 

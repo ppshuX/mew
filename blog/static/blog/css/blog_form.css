@@ -122,10 +122,10 @@
     flex-direction: row;
     align-items: flex-end;
     justify-content: space-between;
-    position: absolute;
+    position: static;
     left: 0;
     bottom: 32px;
-    padding: 0 64px;
+    padding: 0 0;
     box-sizing: border-box;
 }
 
@@ -541,4 +541,55 @@
     .toastui-editor-md-vertical-style .toastui-editor-md-preview {
         display: none !important;
     }
+}
+
+/* 让文件选择按钮上下居中 */
+input[type='file'].form-control {
+    display: flex;
+    align-items: center;
+    height: 48px;
+    padding: 8px 12px;
+    font-size: 1.08rem;
+    border-radius: 12px;
+    border: 1.5px solid #e3e8f0;
+    background: #fff;
+    box-shadow: none;
+}
+
+/* 兼容webkit浏览器的文件按钮美化 */
+input[type='file'].form-control::-webkit-file-upload-button {
+    height: 32px;
+    margin: 0 8px 0 0;
+    padding: 0 18px;
+    border-radius: 8px;
+    background: #f7f8fa;
+    border: 1px solid #d1d5db;
+    color: #22223b;
+    font-size: 1.05rem;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+}
+
+input[type='file'].form-control::-webkit-file-upload-button:hover {
+    background: #e6edff;
+    color: #4a6fdc;
+}
+
+/* 兼容firefox */
+input[type='file'].form-control::file-selector-button {
+    height: 32px;
+    margin: 0 8px 0 0;
+    padding: 0 18px;
+    border-radius: 8px;
+    background: #f7f8fa;
+    border: 1px solid #d1d5db;
+    color: #22223b;
+    font-size: 1.05rem;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+}
+
+input[type='file'].form-control::file-selector-button:hover {
+    background: #e6edff;
+    color: #4a6fdc;
 }
