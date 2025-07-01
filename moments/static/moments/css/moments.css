@@ -519,3 +519,33 @@ body {
     object-fit: cover;
     border-radius: 6px;
 }
+
+.publish-form-flex {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.publish-form-row {
+    margin-bottom: 18px;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.publish-form-bottom {
+    align-items: center;
+    justify-content: space-between;
+    gap: 18px;
+}
+
+.no-border {
+    border: none !important;
+    background: none !important;
+    box-shadow: none !important;
+    padding-left: 0 !important;
+}
+
+.ml-auto {
+    margin-left: auto;
+}

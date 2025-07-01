@@ -8,15 +8,16 @@
 <div class="moments-content-outer">
     <h3 class="publish-title mb-4">👋 朋友圈 Moments</h3>
     <!-- 发布说说 -->
-    <form method="post" enctype="multipart/form-data" class="publish-form mb-5"
-        style="background:none;box-shadow:none;border-radius:0;padding:0;">
+    <form method="post" enctype="multipart/form-data" class="publish-form mb-5 publish-form-flex">
         {% csrf_token %}
-        <textarea name="content" class="form-control publish-textarea mb-3" rows="3" placeholder="想说点什么..."
-            required></textarea>
-        <div class="publish-row">
-            <input type="file" name="image" multiple accept="image/*" class="form-control publish-file">
+        <div class="publish-form-row">
+            <textarea name="content" class="form-control publish-textarea mb-3" rows="3" placeholder="想说点什么..."
+                required></textarea>
         </div>
-        <button type="submit" class="btn btn-primary publish-btn">分享新鲜事</button>
+        <div class="publish-form-row publish-form-bottom">
+            <input type="file" name="image" multiple accept="image/*" class="form-control publish-file no-border">
+            <button type="submit" class="btn btn-primary publish-btn ml-auto">分享新鲜事</button>
+        </div>
         <hr class="publish-divider">
     </form>
     <!-- 动态卡片 -->
