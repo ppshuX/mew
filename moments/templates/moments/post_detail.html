@@ -259,6 +259,8 @@
                 </div>
             </div>
             {% endif %}
+            <!-- 分割线 -->
+            <div style="height:1px;background:#eee;margin:32px 0;"></div>
             <div id="detail-content" class="detail-content">{{ post.content|linebreaks }}</div>
             <div class="detail-like-bar-wrapper">
                 <div class="detail-like-bar">
@@ -296,7 +298,7 @@
             style="position:static;max-height:none;height:auto;overflow:visible;padding:0;">
             <div class="detail-comments-title">全部评论：</div>
             {% for c in comments %}
-            <div class="detail-comment-box">
+            <div class="detail-comment-box" {% if forloop.counter >= 2 %}style="display:none;"{% endif %}>
                 <div class="detail-comment-content">
                     <strong>{{ c.obj.author.user_profile.nickname|default:c.obj.author.username }}</strong>:
                     <span>{{ c.obj.content|linebreaksbr }}</span>
@@ -328,7 +330,14 @@
                 </div>
             </div>
             {% endfor %}
-
+            {% if comments|length > 2 %}
+            <button id="show-more-comments-btn" class="show-more-comments-btn">展示剩余评论</button>
+            <button id="hide-more-comments-btn" class="show-more-comments-btn" style="display:none;">收起剩余评论</button>
+            {% endif %}
+            {% if comments|length == 0 %}
+            <div style="height:1px;background:#eee;margin:12px 0 8px 0;"></div>
+            <div class="no-comments">还没有评论</div>
+            {% endif %}
             <form method="post" action="{% url 'moments:add_comment' post.id %}" class="detail-comment-form">
                 {% csrf_token %}
                 <input type="text" name="comment" placeholder="写评论..." required>
@@ -407,6 +416,27 @@
                 this.style.display = 'none';
                 document.body.style.overflow = '';
                 resetImgTransform();
+            }
+        });
+        // 评论区展开/收起
+        document.addEventListener('DOMContentLoaded', function () {
+            const showBtn = document.getElementById('show-more-comments-btn');
+            const hideBtn = document.getElementById('hide-more-comments-btn');
+            if (showBtn && hideBtn) {
+                showBtn.onclick = function () {
+                    document.querySelectorAll('.detail-comment-box').forEach((el, idx) => {
+                        if (idx >= 2) el.style.display = '';
+                    });
+                    showBtn.style.display = 'none';
+                    hideBtn.style.display = '';
+                };
+                hideBtn.onclick = function () {
+                    document.querySelectorAll('.detail-comment-box').forEach((el, idx) => {
+                        if (idx >= 2) el.style.display = 'none';
+                    });
+                    showBtn.style.display = '';
+                    hideBtn.style.display = 'none';
+                };
             }
         });
     </script>
