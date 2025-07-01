@@ -1,0 +1,31 @@
+{% load humanize %}
+<div class="detail-comment-box">
+    <div class="detail-comment-content">
+        <strong>
+            {% if c.obj.author.user_profile.nickname %}
+            {{ c.obj.author.user_profile.nickname }}
+            {% else %}
+            {{ c.obj.author.username }}
+            {% endif %}
+        </strong>:
+        <span>{{ c.obj.content|linebreaksbr }}</span>
+        <span class="detail-comment-time">{{ c.obj.created_at|naturaltime }}</span>
+    </div>
+    <div class="comment-actions">
+        <button class="comment-like-btn {% if c.liked_by_user %}liked{% endif %}" data-comment-id="{{ c.obj.id }}"
+            data-liked="{{ c.liked_by_user|yesno:'true,false' }}" title="{{ c.liked_by_user|yesno:'取消点赞,点赞' }}">
+            <span id="comment-like-icon-{{ c.obj.id }}">{% if c.liked_by_user %}👍{% else %}👍🏻{% endif %}</span>
+            <span id="comment-like-text-{{ c.obj.id }}">{% if c.liked_by_user %}取消点赞{% else %}点赞{% endif %}</span>
+            <span id="comment-like-count-{{ c.obj.id }}">{{ c.like_count }}</span>
+        </button>
+        {% if c.obj.author == user or user.is_superuser %}
+        <form method="post" action="{% url 'delete_blog_comment' c.obj.id %}" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit" class="detail-comment-delete-btn trash-btn" title="删除评论"
+                style="margin-left:12px;font-size:1.3rem;vertical-align:middle;">
+                <span class="trash-icon">🗑️</span>
+            </button>
+        </form>
+        {% endif %}
+    </div>
+</div>

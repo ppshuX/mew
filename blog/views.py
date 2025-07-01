@@ -10,6 +10,10 @@ from django.http import JsonResponse
 import os, uuid
 from django.conf import settings
 from django.contrib import messages
+import markdown
+from django.utils.safestring import mark_safe
+from django.views.decorators.http import require_POST
+from django.template.loader import render_to_string
 
 # Create your views here.
 @login_required
@@ -148,7 +152,17 @@ def blog_detail(request, pk):
     post = get_object_or_404(BlogPost, pk=pk)
     if post.is_draft and post.author != request.user:
         return redirect('home')
-    return render(request, 'blog/blog_detail.html', {'post':post})
+    # 渲染Markdown为HTML
+    content_html = mark_safe(markdown.markdown(post.content or '', extensions=['fenced_code', 'tables', 'codehilite']))
+    # 构造comments上下文，结构与moments一致
+    comments = []
+    for c in post.comments.all().order_by('-created_at'):
+        comments.append({
+            'obj': c,
+            'liked_by_user': request.user in c.likes.all(),
+            'like_count': c.like_count(),
+        })
+    return render(request, 'blog/blog_detail.html', {'post': post, 'content_html': content_html, 'comments': comments, 'user': request.user})
 
 @login_required
 def blog_edit(request, blog_id=None):
@@ -312,3 +326,48 @@ def blog_delete(request, pk):
         messages.success(request, '博客已删除。')
         return redirect('blog_list')
     return render(request, 'blog/blog_confirm_delete.html', {'post': post})
+
+@require_POST
+def like_blog_comment(request, comment_id):
+    from .models import BlogComment
+    comment = get_object_or_404(BlogComment, id=comment_id)
+    user = request.user
+    if user in comment.likes.all():
+        comment.likes.remove(user)
+        liked = False
+    else:
+        comment.likes.add(user)
+        liked = True
+    comment.save()
+    return JsonResponse({
+        'liked': liked,
+        'like_count': comment.like_count(),
+    })
+
+@require_POST
+def delete_blog_comment(request, comment_id):
+    from .models import BlogComment
+    comment = get_object_or_404(BlogComment, id=comment_id)
+    user = request.user
+    if comment.author == user or user.is_superuser:
+        comment.delete()
+        return JsonResponse({'success': True})
+    else:
+        return JsonResponse({'success': False, 'error': '无权限'}, status=403)
+
+@require_POST
+@login_required
+def add_blog_comment(request, pk):
+    from .models import BlogPost, BlogComment
+    post = get_object_or_404(BlogPost, pk=pk)
+    content = request.POST.get('comment', '').strip()
+    if not content:
+        return JsonResponse({'success': False, 'error': '评论内容不能为空'}, status=400)
+    comment = BlogComment.objects.create(post=post, author=request.user, content=content)
+    c = {
+        'obj': comment,
+        'liked_by_user': request.user in comment.likes.all(),
+        'like_count': comment.like_count(),
+    }
+    html = render_to_string('blog/_comment_item.html', {'c': c, 'user': request.user}, request=request)
+    return JsonResponse({'success': True, 'html': html, 'comment_id': comment.id})

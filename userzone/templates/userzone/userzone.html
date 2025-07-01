@@ -53,7 +53,8 @@
                 <div class="uz-divider"></div>
                 <!-- 最近访客 -->
                 <div class="uz-visitors-section w-100 px-3 pb-3">
-                    <div class="uz-visitors-title mb-2">最近来访 <span class="uz-visitors-count">({{ recent_visitors|length}})</span></div>
+                    <div class="uz-visitors-title mb-2">最近来访 
+                        <span class="uz-visitors-count">({{recent_visitors|length}})</span></div>
                     <div class="uz-visitors-grid d-flex flex-wrap gap-2 justify-content-start">
                         {% for v in recent_visitors %}
                         <img src="{{ v.avatar.url }}" title="{{ v.nickname }}" class="uz-visitor-avatar"

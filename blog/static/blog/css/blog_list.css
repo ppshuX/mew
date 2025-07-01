@@ -1,0 +1,123 @@
+/* 博客专栏页面细节微调 */
+.moments-content-outer {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 16px 40px 16px;
+    background: rgba(255, 255, 255, 0.96);
+    border-radius: 18px;
+    box-shadow: 0 4px 24px rgba(168, 106, 227, 0.10), 0 1.5px 8px rgba(252, 176, 196, 0.10);
+}
+
+.publish-title {
+    font-family: 'ZCOOL KuaiLe', 'FZLanTingHeiS-R-GB', 'STXingkai', 'Arial', cursive, sans-serif;
+    font-size: 2.4rem;
+    font-weight: 700;
+    color: #a86ae3;
+    letter-spacing: 2px;
+    text-align: center;
+    margin-bottom: 18px;
+    position: relative;
+}
+
+.publish-title::after {
+    content: '';
+    display: block;
+    width: 80px;
+    height: 3px;
+    margin: 12px auto 0 auto;
+    background: linear-gradient(90deg, #e0d7f7 0%, #f3eaff 100%);
+    border-radius: 2px;
+    opacity: 0.5;
+}
+
+.publish-btn {
+    border-radius: 24px;
+    background: linear-gradient(90deg, #a86ae3 0%, #fcb0c4 100%);
+    border: none;
+    padding: 10px 38px;
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(168, 106, 227, 0.08);
+    transition: background 0.2s, color 0.2s;
+}
+
+.publish-btn:hover {
+    background: linear-gradient(90deg, #fcb0c4 0%, #a86ae3 100%);
+    color: #fff;
+}
+
+/* 让卡片间距更舒适 */
+.moments-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 40px 40px;
+    justify-content: center;
+    /* 居中显示所有卡片 */
+    margin-bottom: 32px;
+}
+
+.blog-card {
+    width: 320px;
+    height: 380px;
+    margin-bottom: 0;
+    box-sizing: border-box;
+    transition: transform 0.12s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.12s;
+}
+
+.blog-card:hover {
+    transform: scale(1.025);
+    /* 悬浮放大效果减弱 */
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.13);
+    border-color: #e0e0e0;
+}
+
+.blog-cover {
+    min-height: 160px;
+    max-height: 180px;
+    height: 180px;
+}
+
+.blog-content {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 20px;
+}
+
+.read-more-btn {
+    margin-top: 12px;
+    background: linear-gradient(90deg, #6b8cff 0%, #8fbcff 100%);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 24px;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: background 0.2s, color 0.2s;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(80, 120, 200, 0.08);
+}
+
+.read-more-btn:hover {
+    background: linear-gradient(90deg, #5a7be6 0%, #7fa8e6 100%);
+    color: #fff;
+}
+
+.d-flex.justify-content-end.mb-4 {
+    position: relative;
+    margin-bottom: 32px;
+}
+
+.d-flex.justify-content-end.mb-4::after {
+    content: '';
+    display: block;
+    width: 100%;
+    max-width: 600px;
+    height: 2px;
+    margin: 18px auto 0 auto;
+    background: linear-gradient(90deg, #e0d7f7 0%, #f3eaff 100%);
+    border-radius: 2px;
+    opacity: 0.4;
+}

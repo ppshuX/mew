@@ -1,11 +1,12 @@
 {% extends "base.html" %}
 {% load static %}
+{% load humanize %}
 
 {% block title %}{{ post.title }}{% endblock %}
 {% block body_bg %}background-color: #f5f6f7;{% endblock %}
 
 {% block content %}
-<div class="blog-detail-container">
+<div class="blog-detail-container" style="border-radius:18px;">
     <div class="blog-detail-card">
         <!-- 博客标题区域 -->
         <div class="blog-header">
@@ -45,7 +46,7 @@
         <!-- 博客内容 -->
         <div class="blog-content-section">
             <div class="blog-content-text">
-                {{ post.content|safe }}
+                {{ content_html|safe }}
             </div>
         </div>
 
@@ -69,15 +70,9 @@
             <a href="{% url 'edit_blog' post.id %}" class="edit-btn">编辑博客</a>
             <form method="post" action="{% url 'blog_delete' post.id %}" style="display:inline;">
                 {% csrf_token %}
-                <button type="submit" class="delete-btn" title="删除博客"
-                    style="background:none;border:none;cursor:pointer;vertical-align:middle;margin-left:18px;"
-                    onclick="return confirm('确定要删除这篇博客吗？');">
-                    <svg t="1719910000000" class="icon" viewBox="0 0 1024 1024" version="1.1"
-                        xmlns="http://www.w3.org/2000/svg" p-id="1234" width="22" height="22">
-                        <path
-                            d="M832 256h-640c-17.6 0-32 14.4-32 32v32c0 17.6 14.4 32 32 32h32v480c0 35.2 28.8 64 64 64h416c35.2 0 64-28.8 64-64v-480h32c17.6 0 32-14.4 32-32v-32c0-17.6-14.4-32-32-32zM768 832c0 17.6-14.4 32-32 32h-416c-17.6 0-32-14.4-32-32v-480h480v480zM896 160h-192v-32c0-35.2-28.8-64-64-64h-160c-35.2 0-64 28.8-64 64v32h-192c-17.6 0-32 14.4-32 32v32c0 17.6 14.4 32 32 32h832c17.6 0 32-14.4 32-32v-32c0-17.6-14.4-32-32-32zM416 128c0-17.6 14.4-32 32-32h128c17.6 0 32 14.4 32 32v32h-192v-32z"
-                            p-id="1235" fill="#d9534f"></path>
-                    </svg>
+                <button type="submit" class="detail-comment-delete-btn trash-btn" title="删除博客"
+                    style="background:#fff;border:1.5px solid #e57373;color:#e57373;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;cursor:pointer;margin-left:18px;transition:background 0.2s, color 0.2s;vertical-align:middle;">
+                    <span class="trash-icon">🗑️</span>
                 </button>
             </form>
         </div>
@@ -86,30 +81,71 @@
 </div>
 
 <!-- 评论区 -->
-<div class="blog-comments-section" style="margin-top:40px;max-width:700px;margin-left:auto;margin-right:auto;">
-    <h3 class="section-title" style="margin-bottom:18px;">评论区</h3>
-    <div class="comments-list">
-        {% for comment in comments %}
-        <div class="comment-box" style="background:#f9f9f9;border-radius:8px;padding:8px 12px;margin-bottom:12px;">
-            <strong>{{ comment.author.username }}</strong>：{{ comment.content|linebreaksbr }}
-            <span style="color:#aaa;font-size:0.95em;float:right;">{{ comment.created_at|date:"Y-m-d H:i" }}</span>
+<div style="max-width:900px;margin:48px auto 0 auto;">
+    <button id="toggle-comments-btn" class="expand-comments-btn show-comments-rect"
+        style="position:absolute;right:-80px;top:32px;z-index:10;" title="收起评论区"><span>收起评论区</span></button>
+    <div style="height:12px;"></div>
+    <div class="detail-comments-footer" id="comments-footer"
+        style="position:static;box-shadow:none;max-width:900px;margin:0 auto 48px auto;display:block;background:#fff;box-shadow:none;border-radius:18px;">
+        <div class="detail-comments-footer-inner" id="comments-inner"
+            style="position:static;max-height:none;height:auto;overflow:visible;padding:0;">
+            <div class="detail-comments-title">全部评论：</div>
+            {% for c in comments %}
+            <div class="detail-comment-box" {% if forloop.counter0 >= 2 %}style="display:none;"{% endif %}>
+                <div class="detail-comment-content">
+                    <strong>
+                        {% if c.obj.author.user_profile.nickname %}
+                        {{ c.obj.author.user_profile.nickname }}
+                        {% else %}
+                        {{ c.obj.author.username }}
+                        {% endif %}
+                    </strong>:
+                    <span>{{ c.obj.content|linebreaksbr }}</span>
+                    <span class="detail-comment-time">{{ c.obj.created_at|naturaltime }}</span>
+                </div>
+                <div class="comment-actions">
+                    <button class="comment-like-btn {% if c.liked_by_user %}liked{% endif %}"
+                        data-comment-id="{{ c.obj.id }}" data-liked="{{ c.liked_by_user|yesno:'true,false' }}"
+                        title="{{ c.liked_by_user|yesno:'取消点赞,点赞' }}">
+                        <span id="comment-like-icon-{{ c.obj.id }}">
+                            {% if c.liked_by_user %}👍{% else %}👍🏻{% endif %}
+                        </span>
+                        <span id="comment-like-text-{{ c.obj.id }}">
+                            {% if c.liked_by_user %}取消点赞{% else %}点赞{% endif %}
+                        </span>
+                        <span id="comment-like-count-{{ c.obj.id }}">{{ c.like_count }}</span>
+                    </button>
+                    {% if c.obj.author == user or user.is_superuser %}
+                    <form method="post" action="{% url 'delete_blog_comment' c.obj.id %}" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="detail-comment-delete-btn trash-btn" title="删除评论"
+                            style="margin-left:12px;font-size:1.3rem;vertical-align:middle;">
+                            <span class="trash-icon">🗑️</span>
+                        </button>
+                    </form>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+            {% if comments|length > 2 %}
+            <div style="text-align:center;margin:18px 0 0 0;">
+                <button id="show-more-comments-btn" class="show-more-comments-btn"
+                    style="margin-right:12px;">展示剩余评论</button>
+                <button id="hide-more-comments-btn" class="show-more-comments-btn" style="display:none;">收起剩余评论</button>
+            </div>
+            {% endif %}
+            {% if comments|length == 0 %}
+            <div style="height:1px;background:#eee;margin:12px 0 8px 0;"></div>
+            <div class="no-comments">还没有评论</div>
+            {% endif %}
+            <form method="post" action="{% url 'add_blog_comment' post.id %}" class="detail-comment-form"
+                id="blog-comment-form" autocomplete="off">
+                {% csrf_token %}
+                <input type="text" name="comment" placeholder="写评论..." required id="blog-comment-input">
+                <button type="submit">发表评论</button>
+            </form>
         </div>
-        {% empty %}
-        <div style="color:#aaa;">暂无评论，快来抢沙发吧！</div>
-        {% endfor %}
     </div>
-    {% if user.is_authenticated %}
-    <form method="post" style="margin-top:18px;">
-        {% csrf_token %}
-        <div class="input-group">
-            <input type="text" name="comment_content" class="form-control" placeholder="写下你的评论..." maxlength="200"
-                required>
-            <button type="submit" class="btn btn-outline-primary">发表评论</button>
-        </div>
-    </form>
-    {% else %}
-    <div style="margin-top:18px;color:#888;">请 <a href="/accounts/login/">登录</a> 后参与评论。</div>
-    {% endif %}
 </div>
 
 <style>
@@ -438,4 +474,7 @@
         }
     }
 </style>
+<link rel="stylesheet" href="{% static 'blog/css/blog_detail.css' %}">
+<script src="{% static 'chat/js/jquery.min.js' %}"></script>
+<script src="{% static 'blog/js/blog_detail.js' %}"></script>
 {% endblock %}

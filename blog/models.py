@@ -42,6 +42,10 @@ class BlogComment(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
+    likes = models.ManyToManyField(User, related_name='liked_blog_comments', blank=True)
 
     def __str__(self):
         return f"{self.author.username}: {self.content[:20]}"
+
+    def like_count(self):
+        return self.likes.count()
