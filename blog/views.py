@@ -9,6 +9,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 import os, uuid
 from django.conf import settings
+from django.contrib import messages
 
 # Create your views here.
 @login_required
@@ -58,7 +59,8 @@ def blog_create(request):
                 # 同步多图到朋友圈
                 for img in post.images.all():
                     MomentsImage.objects.create(post=moments_post, image=img.image)
-                return redirect('moments:post_detail', post_id=moments_post.pk)
+                # 跳转到博客详情页面，而不是动态详情页面
+                return redirect('blog_detail', pk=post.pk)
             elif publish_type == 'plaza':
                 plaza_post = PlazaPost.objects.create(
                     author=request.user,
@@ -69,7 +71,8 @@ def blog_create(request):
                 # 同步多图到广场
                 for img in post.images.all():
                     PlazaPostImage.objects.create(post=plaza_post, image=img.image)
-                return redirect('plaza:detail', post_id=plaza_post.pk)
+                # 跳转到博客详情页面，而不是动态详情页面
+                return redirect('blog_detail', pk=post.pk)
             else:
                 moments_post = MomentsPost.objects.create(
                     author=request.user,
@@ -78,7 +81,8 @@ def blog_create(request):
                     category=category,
                     is_private=True
                 )
-                return redirect('moments:post_detail', post_id=moments_post.pk)
+                # 跳转到博客详情页面，而不是动态详情页面
+                return redirect('blog_detail', pk=post.pk)
         else:
             # 这是普通表单，使用BlogPostForm
             form = BlogPostForm(request.POST, request.FILES)
@@ -112,7 +116,8 @@ def blog_create(request):
                     # 同步多图到朋友圈
                     for img in post.images.all():
                         MomentsImage.objects.create(post=moments_post, image=img.image)
-                    return redirect('moments:post_detail', post_id=moments_post.pk)
+                    # 跳转到博客详情页面，而不是动态详情页面
+                    return redirect('blog_detail', pk=post.pk)
                 elif publish_type == 'plaza':
                     plaza_post = PlazaPost.objects.create(
                         author=request.user,
@@ -123,7 +128,8 @@ def blog_create(request):
                     # 同步多图到广场
                     for img in post.images.all():
                         PlazaPostImage.objects.create(post=plaza_post, image=img.image)
-                    return redirect('plaza:detail', post_id=plaza_post.pk)
+                    # 跳转到博客详情页面，而不是动态详情页面
+                    return redirect('blog_detail', pk=post.pk)
                 else:
                     moments_post = MomentsPost.objects.create(
                         author=request.user,
@@ -132,7 +138,8 @@ def blog_create(request):
                         category=category,
                         is_private=True
                     )
-                    return redirect('moments:post_detail', post_id=moments_post.pk)
+                    # 跳转到博客详情页面，而不是动态详情页面
+                    return redirect('blog_detail', pk=post.pk)
     else:
         form = BlogPostForm()
     return render(request, 'blog/blog_form.html', {'form': form})
@@ -232,6 +239,16 @@ def draft_list(request):
     drafts = BlogPost.objects.filter(author=request.user, is_draft=True).order_by('-last_saved_time')
     return render(request, 'blog/draft_list.html', {'drafts': drafts})
 
+@login_required
+def blog_list(request):
+    """博客列表页面"""
+    blogs = BlogPost.objects.filter(
+        is_draft=False,
+        is_blog=True
+    ).order_by('-created_at')
+    
+    return render(request, 'blog/blog_list.html', {'blogs': blogs})
+
 CATEGORY_CHOICES = [
     ('daily', '日常'),
     ('study', '学习'),
@@ -283,3 +300,15 @@ def create(request):
         if len(content) > 30000:
             return JsonResponse({'error': '内容过长，最多30000字符。'}, status=400)
         # ...原有保存逻辑...
+
+@login_required
+def blog_delete(request, pk):
+    post = get_object_or_404(BlogPost, pk=pk)
+    if post.author != request.user:
+        messages.error(request, '你没有权限删除这篇博客。')
+        return redirect('blog_detail', pk=pk)
+    if request.method == 'POST':
+        post.delete()
+        messages.success(request, '博客已删除。')
+        return redirect('blog_list')
+    return render(request, 'blog/blog_confirm_delete.html', {'post': post})

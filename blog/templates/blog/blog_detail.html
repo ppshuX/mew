@@ -65,11 +65,51 @@
 
         <!-- 操作按钮 -->
         {% if post.author == request.user %}
-        <div class="blog-actions">
+        <div class="blog-actions" style="text-align:center;margin-bottom:30px;">
             <a href="{% url 'edit_blog' post.id %}" class="edit-btn">编辑博客</a>
+            <form method="post" action="{% url 'blog_delete' post.id %}" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="delete-btn" title="删除博客"
+                    style="background:none;border:none;cursor:pointer;vertical-align:middle;margin-left:18px;"
+                    onclick="return confirm('确定要删除这篇博客吗？');">
+                    <svg t="1719910000000" class="icon" viewBox="0 0 1024 1024" version="1.1"
+                        xmlns="http://www.w3.org/2000/svg" p-id="1234" width="22" height="22">
+                        <path
+                            d="M832 256h-640c-17.6 0-32 14.4-32 32v32c0 17.6 14.4 32 32 32h32v480c0 35.2 28.8 64 64 64h416c35.2 0 64-28.8 64-64v-480h32c17.6 0 32-14.4 32-32v-32c0-17.6-14.4-32-32-32zM768 832c0 17.6-14.4 32-32 32h-416c-17.6 0-32-14.4-32-32v-480h480v480zM896 160h-192v-32c0-35.2-28.8-64-64-64h-160c-35.2 0-64 28.8-64 64v32h-192c-17.6 0-32 14.4-32 32v32c0 17.6 14.4 32 32 32h832c17.6 0 32-14.4 32-32v-32c0-17.6-14.4-32-32-32zM416 128c0-17.6 14.4-32 32-32h128c17.6 0 32 14.4 32 32v32h-192v-32z"
+                            p-id="1235" fill="#d9534f"></path>
+                    </svg>
+                </button>
+            </form>
         </div>
         {% endif %}
     </div>
+</div>
+
+<!-- 评论区 -->
+<div class="blog-comments-section" style="margin-top:40px;max-width:700px;margin-left:auto;margin-right:auto;">
+    <h3 class="section-title" style="margin-bottom:18px;">评论区</h3>
+    <div class="comments-list">
+        {% for comment in comments %}
+        <div class="comment-box" style="background:#f9f9f9;border-radius:8px;padding:8px 12px;margin-bottom:12px;">
+            <strong>{{ comment.author.username }}</strong>：{{ comment.content|linebreaksbr }}
+            <span style="color:#aaa;font-size:0.95em;float:right;">{{ comment.created_at|date:"Y-m-d H:i" }}</span>
+        </div>
+        {% empty %}
+        <div style="color:#aaa;">暂无评论，快来抢沙发吧！</div>
+        {% endfor %}
+    </div>
+    {% if user.is_authenticated %}
+    <form method="post" style="margin-top:18px;">
+        {% csrf_token %}
+        <div class="input-group">
+            <input type="text" name="comment_content" class="form-control" placeholder="写下你的评论..." maxlength="200"
+                required>
+            <button type="submit" class="btn btn-outline-primary">发表评论</button>
+        </div>
+    </form>
+    {% else %}
+    <div style="margin-top:18px;color:#888;">请 <a href="/accounts/login/">登录</a> 后参与评论。</div>
+    {% endif %}
 </div>
 
 <style>

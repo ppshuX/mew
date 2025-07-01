@@ -20,6 +20,7 @@
         <!-- 顶部区域 -->
         <form id="blog-form" method="post" enctype="multipart/form-data">
             {% csrf_token %}
+            <textarea name="blog_content" id="blog-content-hidden" style="display:none;"></textarea>
             <div class="row mb-3 align-items-end">
                 <div class="col-md-7">
                     <label class="mew-form-label">博客标题 <span style="color: #ff6bcb;">*</span></label>
@@ -39,15 +40,11 @@
             <!-- 编辑器区域 -->
             <div class="mb-4" style="max-width:900px;margin:0 auto;">
                 <div class="d-flex mb-2">
-                    <button type="button" id="tab-edit" class="btn btn-sm btn-primary me-2 active">富文本编辑</button>
-                    <button type="button" id="tab-markdown" class="btn btn-sm btn-outline-info">Markdown编辑</button>
+                    <button type="button" id="tab-markdown"
+                        class="btn btn-sm btn-outline-info active">Markdown编辑</button>
                     <button type="button" id="tab-preview" class="btn btn-sm btn-outline-secondary">预览</button>
                 </div>
-                <div id="editor-area">
-                    <textarea name="blog_content" id="blog-content-textarea" class="form-control" rows="12"
-                        required>{{ blog.content|default:'' }}</textarea>
-                </div>
-                <div id="markdown-area" style="display:none;">
+                <div id="markdown-area">
                     <div id="toastui-editor"></div>
                 </div>
                 <div id="blog-preview-area"
@@ -56,7 +53,7 @@
             </div>
             <!-- 辅助字段区 -->
             <div class="row mb-4">
-                <div class="col-md-4 mb-3 mb-md-0">
+                <div class="col-md-3 mb-3 mb-md-0">
                     <label class="mew-form-label">封面图</label>
                     <input type="file" name="blog_cover" class="form-control" accept="image/*"
                         onchange="previewCover(this)">
@@ -64,7 +61,7 @@
                         src="{% if blog.cover_image %}{{ blog.cover_image.url }}{% else %}#{% endif %}" alt="封面预览"
                         style="{% if blog.cover_image %}display:block;{% else %}display:none;{% endif %}max-width:100%;margin-top:8px;border-radius:4px;" />
                 </div>
-                <div class="col-md-4 mb-3 mb-md-0">
+                <div class="col-md-3 mb-3 mb-md-0">
                     <label class="mew-form-label">类别</label>
                     <select name="category" class="form-select form-select-sm">
                         <option value="all">全部类别</option>
@@ -74,7 +71,15 @@
                         {% endfor %}
                     </select>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3 mb-3 mb-md-0">
+                    <label class="mew-form-label">发布到</label>
+                    <select name="publish_type" class="form-select form-select-sm">
+                        <option value="private" {% if blog.publish_type == 'private' %}selected{% endif %}>私密动态</option>
+                        <option value="moments" {% if blog.publish_type == 'moments' %}selected{% endif %}>朋友圈</option>
+                        <option value="plaza" {% if blog.publish_type == 'plaza' %}selected{% endif %}>广场</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
                     <label class="mew-form-label">摘要（可选）</label>
                     <textarea name="blog_summary" class="form-control" rows="2" maxlength="200"
                         placeholder="一句话介绍你的博客">{{ blog.blog_summary|default:'' }}</textarea>

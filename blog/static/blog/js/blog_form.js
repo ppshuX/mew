@@ -1,9 +1,13 @@
 // blog_form.js
 // 只保留高级博客编辑页面相关逻辑
 
+// 在文件顶部声明全局 toastEditor
+window.toastEditor = null;
+
+let textarea;
 document.addEventListener('DOMContentLoaded', function () {
     // 字数统计
-    const textarea = document.querySelector('.mew-form-textarea');
+    textarea = document.querySelector('.mew-form-textarea');
     const maxLen = 5000;
     if (textarea) {
         const counter = document.createElement('div');
@@ -34,43 +38,57 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     }
-});
 
-function switchToMarkdown() {
-    tabMarkdown.classList.add('active');
-    tabEdit.classList.remove('active');
-    tabPreview.classList.remove('active');
-    editorArea.style.display = 'none';
-    markdownArea.style.display = '';
-    previewArea.style.display = 'none';
-    currentMode = 'markdown';
-
-    // 显式设置容器高度，防止高度为0
-    document.getElementById('toastui-editor').style.minHeight = '400px';
+    // 表单提交校验
+    var blogForm = document.getElementById('blog-form');
+    if (blogForm) {
+        blogForm.addEventListener('submit', function (e) {
+            var content = '';
+            var markdownArea = document.getElementById('markdown-area');
+            var editorArea = document.getElementById('editor-area');
+            if (window.toastEditor) {
+                content = window.toastEditor.getMarkdown().trim();
+            }
+            // 同步内容到隐藏 textarea
+            var hiddenTextarea = document.getElementById('blog-content-hidden');
+            if (hiddenTextarea) {
+                hiddenTextarea.value = content;
+            }
+            if (!content) {
+                e.preventDefault();
+                alert('博客内容不能为空！');
+                return false;
+            }
+        });
+    }
 
     // 初始化 ToastUI Editor
-    if (!toastEditor) {
-        toastEditor = new toastui.Editor({
-            el: document.querySelector('#toastui-editor'),
-            height: '400px',
-            initialEditType: 'markdown',
-            previewStyle: 'vertical',
-            language: 'zh-CN',
-            toolbarItems: [
-                'heading', 'bold', 'italic', 'strike',
-                'divider', 'hr', 'quote',
-                'ul', 'ol', 'task', 'indent', 'outdent',
-                'table', 'image', 'link',
-                'code', 'codeblock',
-                'scrollSync', 'fullScreen', 'preview'
-            ],
-            placeholder: '请在此输入Markdown内容...',
-        });
-        // 如果有富文本内容，尝试转换
-        if (editorInstance) {
-            const richContent = editorInstance.getData();
-            const markdownText = convertHtmlToMarkdown(richContent);
-            toastEditor.setMarkdown(markdownText);
+    window.toastEditor = new window.toastui.Editor({
+        el: document.querySelector('#toastui-editor'),
+        height: '400px',
+        initialEditType: 'markdown',
+        previewStyle: 'vertical',
+        language: 'zh-CN',
+        hooks: {
+            addImageBlobHook: function (blob, callback) {
+                const formData = new FormData();
+                formData.append('image', blob);
+                fetch('/blog/api/upload_blog_image/', {
+                    method: 'POST',
+                    body: formData,
+                    credentials: 'include'
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.url) {
+                            callback(data.url, blob.name);
+                        } else {
+                            alert('图片上传失败');
+                        }
+                    })
+                    .catch(() => alert('图片上传失败'));
+                return false;
+            }
         }
-    }
-}
+    });
+});
