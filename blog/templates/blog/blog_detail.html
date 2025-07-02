@@ -52,6 +52,23 @@
                     </div>
                 </div>
 
+                <!-- 点赞栏 -->
+                <div class="detail-like-bar-wrapper" style="margin: 32px 0 0 0;">
+                    <div class="detail-like-bar">
+                        <span style="font-size:1.05rem;color:#a86ae3;font-weight:600;margin-right:4px;">喜爱数：</span>
+                        <span class="detail-like-count" id="like-count-{{ post.id }}">{{ like_count }}</span>
+                        <form method="post" action="{% url 'like_blog_post' post.id %}" style="display:inline;">
+                            {% csrf_token %}
+                            <button class="detail-like-btn" id="like-btn-{{ post.id }}" data-post-id="{{ post.id }}"
+                                data-liked="{{ is_liked|yesno:'true,false' }}">
+                                <span class="like-icon" id="like-icon-{{ post.id }}">
+                                    {% if is_liked %}❤️{% else %}🤍{% endif %}
+                                </span>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
                 <!-- 博客图片 -->
                 {% if post.images.all %}
                 <div class="blog-images-section">
@@ -138,10 +155,12 @@
                 <button id="hide-more-comments-btn" class="show-more-comments-btn" style="display:none;">收起剩余评论</button>
             </div>
             {% endif %}
+
             {% if comments|length == 0 %}
             <div style="height:1px;background:#eee;margin:12px 0 8px 0;"></div>
             <div class="no-comments">还没有评论</div>
             {% endif %}
+
             <form method="post" action="{% url 'add_blog_comment' post.id %}" class="detail-comment-form"
                 id="blog-comment-form" autocomplete="off">
                 {% csrf_token %}

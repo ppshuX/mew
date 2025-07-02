@@ -162,7 +162,16 @@ def blog_detail(request, pk):
             'liked_by_user': request.user in c.likes.all(),
             'like_count': c.like_count(),
         })
-    return render(request, 'blog/blog_detail.html', {'post': post, 'content_html': content_html, 'comments': comments, 'user': request.user})
+    is_liked = request.user.is_authenticated and (request.user in post.likes.all())
+    like_count = post.like_count()
+    return render(request, 'blog/blog_detail.html', {
+        'post': post,
+        'content_html': content_html,
+        'comments': comments,
+        'user': request.user,
+        'is_liked': is_liked,
+        'like_count': like_count,
+    })
 
 @login_required
 def blog_edit(request, blog_id=None):
@@ -377,3 +386,21 @@ def add_blog_comment(request, pk):
     }
     html = render_to_string('blog/_comment_item.html', {'c': c, 'user': request.user}, request=request)
     return JsonResponse({'success': True, 'html': html, 'comment_id': comment.id})
+
+@require_POST
+@login_required
+def like_blog_post(request, post_id):
+    from .models import BlogPost
+    post = get_object_or_404(BlogPost, id=post_id)
+    user = request.user
+    if user in post.likes.all():
+        post.likes.remove(user)
+        liked = False
+    else:
+        post.likes.add(user)
+        liked = True
+    post.save()
+    return JsonResponse({
+        'liked': liked,
+        'like_count': post.like_count(),
+    })

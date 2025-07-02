@@ -16,13 +16,13 @@ class BlogPost(models.Model):
     blog_tags = models.CharField(max_length=200, blank=True, null=True, verbose_name='标签')
     blog_summary = models.CharField(max_length=200, blank=True, null=True, verbose_name='摘要')
     publish_type = models.CharField(max_length=20, default='private', verbose_name='发布到')
+    likes = models.ManyToManyField(User, related_name='blog_liked_posts', blank=True)
 
     def __str__(self):
         return self.title
     
     def like_count(self):
-        """返回点赞数，博客暂时返回0"""
-        return 0
+        return self.likes.count()
     
     def comment_count(self):
         """返回评论数，博客暂时返回0"""

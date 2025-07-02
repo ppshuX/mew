@@ -190,4 +190,38 @@ window.addEventListener('DOMContentLoaded', function () {
             }
         });
     }
+
+    // 博客点赞功能
+    var likeBtn = document.getElementById('like-btn-' + (window.postId || (window.location.pathname.match(/\d+/) || [])[0]));
+    if (likeBtn) {
+        likeBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            var postId = this.dataset.postId;
+            var csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
+            var likeCountSpan = document.getElementById('like-count-' + postId);
+            var likeIcon = document.getElementById('like-icon-' + postId);
+            fetch(`/blog/${postId}/like/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': csrfToken,
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+                .then(response => response.json())
+                .then(data => {
+                    this.dataset.liked = data.liked ? 'true' : 'false';
+                    likeCountSpan.textContent = data.like_count;
+                    if (data.liked) {
+                        likeIcon.textContent = '❤️';
+                        likeCountSpan.classList.remove('text-muted');
+                        likeCountSpan.classList.add('text-danger');
+                    } else {
+                        likeIcon.textContent = '🤍';
+                        likeCountSpan.classList.remove('text-danger');
+                        likeCountSpan.classList.add('text-muted');
+                    }
+                })
+                .catch(error => console.error('点赞失败:', error));
+        });
+    }
 }); 
