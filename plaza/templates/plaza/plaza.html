@@ -24,8 +24,7 @@
     <div class="moments-list">
         {% for post in posts %}
         {% if post.content_type == 'blog' %}
-        <!-- 博客卡片 -->
-        <div class="blog-card" onclick="window.location.href='{% url 'blog_detail' post.id %}'">
+        <div class="blog-card" onclick="window.location.href='{% url 'blog:detail' post.id %}'">
             <div class="blog-badge">📓 博客</div>
             <div class="author-row">
                 {% if post.author.user_profile.avatar and post.author.user_profile.avatar.url != '/media/avatars/default.jpg' %}
@@ -57,13 +56,12 @@
                 <p class="blog-summary">{{ post.blog_summary }}</p>
                 {% endif %}
                 <button class="read-more-btn"
-                    onclick="event.stopPropagation(); window.location.href='{% url 'blog_detail' post.id %}'">
+                    onclick="event.stopPropagation(); window.location.href='{% url 'blog:detail' post.id %}'">
                     阅读全文
                 </button>
             </div>
         </div>
         {% else %}
-        <!-- 普通动态卡片 -->
         <div class="moment-card" onclick="window.location.href='{% url 'plaza:detail' post.id %}'">
             <div class="author-row">
                 {% if post.author.user_profile.avatar and post.author.user_profile.avatar.url != '/media/avatars/default.jpg' %}
@@ -116,8 +114,9 @@
                     {% for comment in comment_preview %}
                     <div class="comment">
                         <strong>{{comment.author.user_profile.nickname|default:comment.author.username}}
-                            
-                        </strong>: {{comment.content }}</div>
+
+                        </strong>: {{comment.content }}
+                    </div>
                     {% endfor %}
                     {% if post.plaza_comments.count > 2 %}
                     <div class="view-more">查看更多评论...</div>
