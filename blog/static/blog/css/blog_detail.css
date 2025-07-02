@@ -104,10 +104,49 @@ body {
 .detail-like-btn {
     border: none;
     background: none;
-    font-size: 1.5rem;
-    cursor: pointer;
     color: #a86ae3;
-    padding: 0 6px;
+    cursor: pointer;
+    font-size: 1.08rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 18px;
+    padding: 4px 14px 4px 10px;
+    margin-left: 12px;
+    margin-right: 0;
+    transition: background 0.2s, color 0.2s;
+    gap: 6px;
+    font-weight: 600;
+    min-width: 90px;
+    height: 32px;
+    box-shadow: 0 1px 4px rgba(168, 106, 227, 0.06);
+}
+
+.detail-like-btn:hover {
+    background: #f3eaff;
+    color: #fcb0c4;
+}
+
+.detail-like-btn.liked {
+    background: #f3eaff;
+    color: #fcb0c4;
+    box-shadow: 0 2px 8px rgba(168, 106, 227, 0.15);
+}
+
+.detail-like-btn.liked:hover {
+    background: #e8d5ff;
+    color: #a86ae3;
+}
+
+.detail-like-icon {
+    font-size: 1.18rem;
+    margin-right: 2px;
+}
+
+.detail-like-text {
+    margin: 0 2px;
+    font-size: 1.08rem;
+    white-space: nowrap;
 }
 
 span.detail-like-count {
@@ -544,4 +583,19 @@ span.detail-like-count {
 .expand-comments-btn:hover {
     background: linear-gradient(90deg, #e0d7f7 0%, #f3eaff 100%);
     color: #fff;
+}
+
+.blog-list-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.blog-card {
+    width: 100%;
+    max-width: 520px;
+    margin-bottom: 32px;
 }

@@ -273,9 +273,9 @@ def blog_list(request):
     """博客列表页面"""
     blogs = BlogPost.objects.filter(
         is_draft=False,
-        is_blog=True
+        is_blog=True,
+        author=request.user
     ).order_by('-created_at')
-    
     return render(request, 'blog/blog_list.html', {'blogs': blogs})
 
 CATEGORY_CHOICES = [

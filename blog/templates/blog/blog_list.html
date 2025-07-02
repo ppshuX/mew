@@ -11,6 +11,7 @@
     <div class="d-flex justify-content-end mb-4">
         <a href="{% url 'blog_new' %}" class="btn btn-primary publish-btn">写博客</a>
     </div>
+
     <div class="moments-list">
         {% for blog in blogs %}
         <div class="blog-card" onclick="window.location.href='{% url 'blog_detail' blog.id %}'">
@@ -18,14 +19,13 @@
             <div class="author-row">
                 {% if blog.author.user_profile.avatar and blog.author.user_profile.avatar.url != '/media/avatars/default.jpg' %}
                 <img class="avatar-img" src="{{ blog.author.user_profile.avatar.url }}" alt="头像"
-                    style="width:36px;height:36px;border-radius:50%;object-fit:cover;vertical-align:middle;">
+                     style="width:36px;height:36px;border-radius:50%;object-fit:cover;vertical-align:middle;">
                 {% else %}
-                <span class="avatar-circle">{{ blog.author.username|first|upper }}</span>
+                <span class="author-avatar-circle">{{ blog.author.username|first|upper }}</span>
                 {% endif %}
-                <span class="author-divider">|</span>
-                <span class="author-name">{{ blog.author.user_profile.nickname|default:blog.author.username }}</span>
-                <span class="timestamp">{{ blog.created_at|naturaltime }}</span>
+                <span class="author-nickname">{{ blog.author.user_profile.nickname|default:blog.author.username }}</span>
             </div>
+
             <div class="blog-cover">
                 {% if blog.cover_image %}
                 <img src="{{ blog.cover_image.url }}" alt="博客封面" class="blog-cover-img">
@@ -35,21 +35,24 @@
                 </div>
                 {% endif %}
             </div>
+
             <div class="blog-content">
-                <h3 class="blog-title">{{ blog.title|default:"（无标题）" }}</h3>
+                <h3 class="blog-title">{{ blog.title|default:"(无标题)" }}</h3>
                 {% if blog.blog_summary %}
-                <p class="blog-summary">{{ blog.blog_summary }}</p>
+                <p class="blog-summary">{{ blog.blog_summary|default_if_none:"" }}</p>
                 {% endif %}
                 <button class="read-more-btn"
-                    onclick="event.stopPropagation(); window.location.href='{% url 'blog_detail' blog.id %}'">阅读全文</button>
+                        onclick="event.stopPropagation(); window.location.href='{% url 'blog_detail' blog.id %}'">
+                    阅读全文
+                </button>
             </div>
         </div>
+        {% empty %}
+        <div class="no-blogs">你还没有发表过博客。</div>
         {% endfor %}
     </div>
-    {% if blogs|length == 0 %}
-    <div class="alert alert-info mt-4">暂无博客，快来发布第一篇吧！</div>
-    {% endif %}
 </div>
+
 <link rel="stylesheet" href="{% static 'plaza/css/plaza.css' %}">
 <link rel="stylesheet" href="{% static 'blog/css/blog_list.css' %}">
 {% endblock %}

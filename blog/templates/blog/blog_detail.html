@@ -57,15 +57,12 @@
                     <div class="detail-like-bar">
                         <span style="font-size:1.05rem;color:#a86ae3;font-weight:600;margin-right:4px;">喜爱数：</span>
                         <span class="detail-like-count" id="like-count-{{ post.id }}">{{ like_count }}</span>
-                        <form method="post" action="{% url 'like_blog_post' post.id %}" style="display:inline;">
-                            {% csrf_token %}
-                            <button class="detail-like-btn" id="like-btn-{{ post.id }}" data-post-id="{{ post.id }}"
-                                data-liked="{{ is_liked|yesno:'true,false' }}">
-                                <span class="like-icon" id="like-icon-{{ post.id }}">
-                                    {% if is_liked %}❤️{% else %}🤍{% endif %}
-                                </span>
-                            </button>
-                        </form>
+                        <button id="like-btn-{{ post.id }}" class="detail-like-btn{% if is_liked %} liked{% endif %}"
+                            data-post-id="{{ post.id }}" data-liked="{{ is_liked|yesno:'true,false' }}" type="button">
+                            <span class="like-icon" id="like-icon-{{ post.id }}">
+                                {% if is_liked %}❤️{% else %}🤍{% endif %}
+                            </span>
+                        </button>
                     </div>
                 </div>
 
@@ -111,6 +108,7 @@
         <div class="detail-comments-footer-inner" id="comments-inner"
             style="position:static;max-height:none;height:auto;overflow:visible;padding:0;">
             <div class="detail-comments-title">全部评论：</div>
+
             {% for c in comments %}
             <div class="detail-comment-box" {% if forloop.counter0 >= 2 %}style="display:none;"{% endif %}>
                 <div class="detail-comment-content">
@@ -129,11 +127,9 @@
                         data-comment-id="{{ c.obj.id }}" data-liked="{{ c.liked_by_user|yesno:'true,false' }}"
                         title="{{ c.liked_by_user|yesno:'取消点赞,点赞' }}">
                         <span id="comment-like-icon-{{ c.obj.id }}">
-                            {% if c.liked_by_user %}👍{% else %}👍🏻{% endif %}
-                        </span>
+                            {% if c.liked_by_user %}👍🏻{% else %}👍{% endif %}</span>
                         <span id="comment-like-text-{{ c.obj.id }}">
-                            {% if c.liked_by_user %}取消点赞{% else %}点赞{% endif %}
-                        </span>
+                            {% if c.liked_by_user %}取消点赞{% else %}点赞{% endif %}</span>
                         <span id="comment-like-count-{{ c.obj.id }}">{{ c.like_count }}</span>
                     </button>
                     {% if c.obj.author == user or user.is_superuser %}
@@ -148,6 +144,7 @@
                 </div>
             </div>
             {% endfor %}
+
             {% if comments|length > 2 %}
             <div style="text-align:center;margin:18px 0 0 0;">
                 <button id="show-more-comments-btn" class="show-more-comments-btn"
@@ -157,7 +154,6 @@
             {% endif %}
 
             {% if comments|length == 0 %}
-            <div style="height:1px;background:#eee;margin:12px 0 8px 0;"></div>
             <div class="no-comments">还没有评论</div>
             {% endif %}
 
