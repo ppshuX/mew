@@ -6,70 +6,78 @@
 {% block body_bg %}background-color: #f5f6f7;{% endblock %}
 
 {% block content %}
-<div class="blog-detail-container" style="border-radius:18px;">
-    <div class="blog-detail-card">
-        <!-- 博客标题区域 -->
-        <div class="blog-header">
-            <h1 class="blog-title">{{ post.title }}</h1>
-            <div class="blog-meta">
-                <div class="author-info">
-                    {% if post.author.user_profile.avatar and post.author.user_profile.avatar.url != '/media/avatars/default.jpg' %}
-                    <img class="author-avatar" src="{{ post.author.user_profile.avatar.url }}" alt="头像">
-                    {% else %}
-                    <span class="author-avatar-circle">{{ post.author.username|first|upper }}</span>
-                    {% endif %}
-                    <span class="author-name">{{ post.author.username }}</span>
+<div class="blog-detail-header-flex" style="display:flex;align-items:center;justify-content:center;margin-bottom:0;">
+    <div style="flex:1;max-width:900px;">
+        <div class="blog-detail-container" style="border-radius:18px;margin-top:0;position:relative;">
+            <button class="back-home-btn" onclick="window.history.back()" title="返回">
+                <i class="fas fa-home"></i>
+            </button>
+            <div style="width:16px;"></div>
+            <div class="blog-detail-card">
+                <!-- 博客标题区域 -->
+                <div class="blog-header">
+                    <h1 class="blog-title">{{ post.title }}</h1>
+                    <div class="blog-meta">
+                        <div class="author-info">
+                            {% if post.author.user_profile.avatar and post.author.user_profile.avatar.url != '/media/avatars/default.jpg' %}
+                            <img class="author-avatar" src="{{ post.author.user_profile.avatar.url }}" alt="头像">
+                            {% else %}
+                            <span class="author-avatar-circle">{{ post.author.username|first|upper }}</span>
+                            {% endif %}
+                            <span class="author-name">{{ post.author.username }}</span>
+                        </div>
+                        <div class="blog-info">
+                            <span class="publish-date">{{ post.created_at|date:"Y年m月d日 H:i" }}</span>
+                            {% if post.blog_tags %}
+                            <span class="blog-tags">标签：{{ post.blog_tags }}</span>
+                            {% endif %}
+                        </div>
+                    </div>
                 </div>
-                <div class="blog-info">
-                    <span class="publish-date">{{ post.created_at|date:"Y年m月d日 H:i" }}</span>
-                    {% if post.blog_tags %}
-                    <span class="blog-tags">标签：{{ post.blog_tags }}</span>
-                    {% endif %}
+
+                <!-- 博客摘要 -->
+                {% if post.blog_summary %}
+                <div class="blog-summary-section">
+                    <p class="blog-summary-text">{{ post.blog_summary }}</p>
                 </div>
+                {% endif %}
+
+                <!-- 博客内容 -->
+                <div class="blog-content-section">
+                    <div class="blog-content-text">
+                        {{ content_html|safe }}
+                    </div>
+                </div>
+
+                <!-- 博客图片 -->
+                {% if post.images.all %}
+                <div class="blog-images-section">
+                    <h3 class="section-title">配图</h3>
+                    <div class="blog-images-grid">
+                        {% for img in post.images.all %}
+                        <div class="blog-image-item">
+                            <img src="{{ img.image.url }}" alt="配图" class="blog-image">
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- 操作按钮 -->
+                {% if post.author == request.user %}
+                <div class="blog-actions" style="text-align:center;margin-bottom:30px;">
+                    <a href="{% url 'edit_blog' post.id %}" class="edit-btn">编辑博客</a>
+                    <form method="post" action="{% url 'blog_delete' post.id %}" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="detail-comment-delete-btn trash-btn" title="删除博客"
+                            style="background:#fff;border:1.5px solid #e57373;color:#e57373;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;cursor:pointer;margin-left:18px;transition:background 0.2s, color 0.2s;vertical-align:middle;">
+                            <span class="trash-icon">🗑️</span>
+                        </button>
+                    </form>
+                </div>
+                {% endif %}
             </div>
         </div>
-
-        <!-- 博客摘要 -->
-        {% if post.blog_summary %}
-        <div class="blog-summary-section">
-            <p class="blog-summary-text">{{ post.blog_summary }}</p>
-        </div>
-        {% endif %}
-
-        <!-- 博客内容 -->
-        <div class="blog-content-section">
-            <div class="blog-content-text">
-                {{ content_html|safe }}
-            </div>
-        </div>
-
-        <!-- 博客图片 -->
-        {% if post.images.all %}
-        <div class="blog-images-section">
-            <h3 class="section-title">配图</h3>
-            <div class="blog-images-grid">
-                {% for img in post.images.all %}
-                <div class="blog-image-item">
-                    <img src="{{ img.image.url }}" alt="配图" class="blog-image">
-                </div>
-                {% endfor %}
-            </div>
-        </div>
-        {% endif %}
-
-        <!-- 操作按钮 -->
-        {% if post.author == request.user %}
-        <div class="blog-actions" style="text-align:center;margin-bottom:30px;">
-            <a href="{% url 'edit_blog' post.id %}" class="edit-btn">编辑博客</a>
-            <form method="post" action="{% url 'blog_delete' post.id %}" style="display:inline;">
-                {% csrf_token %}
-                <button type="submit" class="detail-comment-delete-btn trash-btn" title="删除博客"
-                    style="background:#fff;border:1.5px solid #e57373;color:#e57373;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;cursor:pointer;margin-left:18px;transition:background 0.2s, color 0.2s;vertical-align:middle;">
-                    <span class="trash-icon">🗑️</span>
-                </button>
-            </form>
-        </div>
-        {% endif %}
     </div>
 </div>
 
@@ -474,8 +482,36 @@
         opacity: 0.95;
         margin-left: 8px;
     }
+
+    .back-home-btn {
+        position: absolute;
+        top: 18px;
+        left: 18px;
+        background: #fff;
+        color: #a78bfa;
+        border: none;
+        border-radius: 50%;
+        width: 44px;
+        height: 44px;
+        box-shadow: 0 2px 8px rgba(168, 106, 227, 0.10);
+        font-size: 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.2s, color 0.2s;
+        z-index: 10;
+    }
+
+    .back-home-btn:hover {
+        background: #ede7f6;
+        color: #7c4dff;
+    }
 </style>
 <link rel="stylesheet" href="{% static 'blog/css/blog_detail.css' %}">
 <script src="{% static 'chat/js/jquery.min.js' %}"></script>
 <script src="{% static 'blog/js/blog_detail.js' %}"></script>
+
+<!-- highlight.js 自动高亮代码块 -->
+<script src="https://cdn.bootcdn.net/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
 {% endblock %}
