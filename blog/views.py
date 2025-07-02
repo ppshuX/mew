@@ -173,11 +173,12 @@ def blog_edit(request, blog_id=None):
     if request.method == 'POST':
         is_draft = str(request.POST.get('is_draft', '')).lower() in ['true', '1']
         title = request.POST.get('blog_title')
-        content = request.POST.get('blog_content')
+        content = request.POST.get('blog_content') or ''
         category = request.POST.get('category', 'daily')
         blog_tags = request.POST.get('blog_tags')
         blog_summary = request.POST.get('blog_summary')
         publish_type = request.POST.get('publish_type', 'private')
+        cover_image = request.FILES.get('blog_cover')
         
         if blog:
             # 更新现有博客
@@ -187,6 +188,8 @@ def blog_edit(request, blog_id=None):
             blog.blog_tags = blog_tags
             blog.blog_summary = blog_summary
             blog.publish_type = publish_type
+            if cover_image:
+                blog.cover_image = cover_image
             blog.is_draft = is_draft
             blog.save()
         else:
@@ -199,6 +202,7 @@ def blog_edit(request, blog_id=None):
                 blog_tags=blog_tags,
                 blog_summary=blog_summary,
                 publish_type=publish_type,
+                cover_image=cover_image,
                 is_draft=is_draft,
                 is_blog=True,
             )
@@ -207,7 +211,9 @@ def blog_edit(request, blog_id=None):
             return redirect('draft_list')
         else:
             return redirect('blog_detail', pk=blog.id)
-    
+    # GET请求时，确保blog.content为None时也能正常显示
+    if blog and blog.content is None:
+        blog.content = ''
     context = {
         'blog': blog,
         'category_choices': CATEGORY_CHOICES,

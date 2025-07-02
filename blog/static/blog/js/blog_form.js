@@ -39,36 +39,19 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // 表单提交校验
-    var blogForm = document.getElementById('blog-form');
-    if (blogForm) {
-        blogForm.addEventListener('submit', function (e) {
-            var content = '';
-            var markdownArea = document.getElementById('markdown-area');
-            var editorArea = document.getElementById('editor-area');
-            if (window.toastEditor) {
-                content = window.toastEditor.getMarkdown().trim();
-            }
-            // 同步内容到隐藏 textarea
-            var hiddenTextarea = document.getElementById('blog-content-hidden');
-            if (hiddenTextarea) {
-                hiddenTextarea.value = content;
-            }
-            if (!content) {
-                e.preventDefault();
-                alert('博客内容不能为空！');
-                return false;
-            }
-        });
-    }
-
     // 初始化 ToastUI Editor
+    var initContent = document.getElementById('init-content');
+    var initialValue = '';
+    if (initContent && initContent.value.trim()) {
+        initialValue = initContent.value;
+    }
     window.toastEditor = new window.toastui.Editor({
         el: document.querySelector('#toastui-editor'),
         height: '400px',
         initialEditType: 'markdown',
         previewStyle: 'vertical',
         language: 'zh-CN',
+        initialValue: initialValue,
         hooks: {
             addImageBlobHook: function (blob, callback) {
                 const formData = new FormData();
@@ -91,4 +74,46 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
     });
+
+    // 实时同步编辑器内容到隐藏域
+    window.toastEditor.on('change', function () {
+        var hiddenTextarea = document.getElementById('blog-content-hidden');
+        if (hiddenTextarea) {
+            hiddenTextarea.value = window.toastEditor.getMarkdown();
+        }
+    });
+
+    var saveDraftBtn = document.getElementById('save-draft-btn');
+    if (saveDraftBtn) {
+        saveDraftBtn.onclick = function (e) {
+            e.preventDefault();
+            // 设置草稿标志
+            var form = document.getElementById('blog-form');
+            let hidden = form.querySelector('input[name="is_draft"]');
+            if (!hidden) {
+                hidden = document.createElement('input');
+                hidden.type = 'hidden';
+                hidden.name = 'is_draft';
+                form.appendChild(hidden);
+            }
+            hidden.value = 'true';
+            form.requestSubmit();
+        };
+    }
+
+    // 表单提交时再同步一次（双保险）
+    var blogForm = document.getElementById('blog-form');
+    if (blogForm) {
+        blogForm.addEventListener('submit', function (e) {
+            var hiddenTextarea = document.getElementById('blog-content-hidden');
+            if (window.toastEditor && hiddenTextarea) {
+                hiddenTextarea.value = window.toastEditor.getMarkdown().trim();
+            }
+            // 强制同步关键词字段
+            var tagsInput = document.querySelector('input[name="blog_tags"]');
+            if (tagsInput) {
+                tagsInput.value = tagsInput.value.trim();
+            }
+        });
+    }
 });

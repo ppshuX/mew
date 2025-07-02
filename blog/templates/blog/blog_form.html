@@ -25,6 +25,8 @@
         <form id="blog-form" method="post" enctype="multipart/form-data">
             {% csrf_token %}
             <textarea name="blog_content" id="blog-content-hidden" style="display:none;"></textarea>
+            <!-- 新增：隐藏初始内容 -->
+            <textarea id="init-content" style="display:none;">{{ blog.content|default:''|safe }}</textarea>
             <!-- 标题输入框 -->
             <div class="mb-4" style="max-width:900px;margin:0 auto;">
                 <label class="mew-form-label">标题</label>
