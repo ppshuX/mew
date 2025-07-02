@@ -183,8 +183,12 @@ window.addEventListener('DOMContentLoaded', function () {
                     headers: { 'X-Requested-With': 'XMLHttpRequest' }
                 }).then(res => {
                     if (res.ok) {
-                        commentBox.classList.add('hide');
-                        setTimeout(() => commentBox.remove(), 400);
+                        if (commentBox && commentBox.classList) {
+                            commentBox.classList.add('hide');
+                            setTimeout(() => commentBox.remove(), 400);
+                        } else {
+                            window.location.reload();
+                        }
                     }
                 });
             }

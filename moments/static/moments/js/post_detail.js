@@ -236,10 +236,44 @@ window.addEventListener('DOMContentLoaded', function () {
                 headers: { 'X-Requested-With': 'XMLHttpRequest' }
             }).then(res => {
                 if (res.ok) {
-                    commentBox.classList.add('hide');
-                    setTimeout(() => commentBox.remove(), 400);
+                    if (commentBox && commentBox.classList) {
+                        commentBox.classList.add('hide');
+                        setTimeout(() => commentBox.remove(), 400);
+                    } else {
+                        window.location.reload();
+                    }
                 }
             });
         });
     });
+
+    // 删除动态后自动跳转到列表页
+    const deleteForm = document.getElementById('delete-post-form');
+    if (deleteForm) {
+        deleteForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+            if (confirm('确定要删除这条动态吗？')) {
+                fetch(this.action, {
+                    method: 'POST',
+                    body: new FormData(this),
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                }).then(async res => {
+                    // 优先处理JsonResponse
+                    try {
+                        const data = await res.json();
+                        if (data.redirect_url) {
+                            window.location.href = data.redirect_url;
+                            return;
+                        }
+                    } catch (e) { }
+                    // 兼容后端redirect
+                    if (res.redirected) {
+                        window.location.href = res.url;
+                    } else {
+                        window.location.href = '/moments/';
+                    }
+                });
+            }
+        });
+    }
 });

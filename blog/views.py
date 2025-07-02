@@ -234,7 +234,8 @@ def blog_delete(request, pk):
         post.delete()
         messages.success(request, '博客已删除。')
         return redirect('blog_list')
-    return render(request, 'blog/blog_confirm_delete.html', {'post': post})
+    else:
+        return redirect('blog_detail', pk=pk)
 
 @require_POST
 def like_blog_comment(request, comment_id):

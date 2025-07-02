@@ -84,7 +84,8 @@
                 {% if post.author == request.user %}
                 <div class="blog-actions" style="text-align:center;margin-bottom:30px;">
                     <a href="{% url 'edit_blog' post.id %}" class="edit-btn">编辑博客</a>
-                    <form method="post" action="{% url 'blog_delete' post.id %}" style="display:inline;">
+                    <form method="post" action="{% url 'blog_delete' post.id %}" style="display:inline;"
+                        onsubmit="return confirm('确定要删除这篇博客吗？');">
                         {% csrf_token %}
                         <button type="submit" class="detail-comment-delete-btn trash-btn" title="删除博客"
                             style="background:#fff;border:1.5px solid #e57373;color:#e57373;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;cursor:pointer;margin-left:18px;transition:background 0.2s, color 0.2s;vertical-align:middle;">

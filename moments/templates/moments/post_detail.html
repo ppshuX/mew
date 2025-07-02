@@ -280,14 +280,11 @@
                 </div>
             </div>
             {% if request.user == post.author or request.user.is_superuser %}
-            <form method="post" action="{% url 'moments:delete_post' post.id %}" style="display:inline;"
-                onsubmit="return confirm('确定要删除这条动态吗？');">
-                {% csrf_token %}
-                <button type="submit" class="detail-comment-delete-btn trash-btn" title="删除动态"
-                    style="margin-left:12px;font-size:1.3rem;vertical-align:middle;">
-                    <span class="trash-icon">🗑️</span>
-                </button>
-            </form>
+            <a href="{% url 'moments:delete_post' post.id %}" class="edit-btn"
+                style="margin-left:12px;color:#e57373;border:1.5px solid #e57373;border-radius:50%;width:28px;height:28px;display:inline-flex;align-items:center;justify-content:center;font-size:1.1rem;vertical-align:middle;"
+                title="删除动态">
+                <span class="trash-icon">🗑️</span>
+            </a>
             {% endif %}
         </div>
     </div>

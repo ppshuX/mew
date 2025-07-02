@@ -131,10 +131,12 @@ def like_comment(request, comment_id):
 @login_required
 def delete_post(request, post_id):
     post = get_object_or_404(Post, id=post_id)
-    if request.user == post.author or request.user.is_superuser:
+    if post.author != request.user:
+        messages.error(request, '你没有权限删除该动态。')
+        return redirect('plaza:detail', post_id=post_id)
+    if request.method == 'POST':
         post.delete()
-        messages.success(request, '动态已删除')
+        messages.success(request, '动态已删除。')
         return redirect('plaza:list')
     else:
-        messages.error(request, '你没有权限删除该动态')
-        return redirect('plaza:detail', post_id=post_id)
+        return render(request, 'plaza/plaza_confirm_delete.html', {'post': post})

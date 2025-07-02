@@ -10,6 +10,7 @@ from .forms import CustomRegisterForm
 from django.contrib import messages
 from itertools import chain
 from operator import attrgetter
+from django.urls import reverse
 
 # Create your views here.
 @login_required
@@ -141,10 +142,12 @@ def like_comment(request, comment_id):
 @login_required
 def delete_post(request, post_id):
     post = get_object_or_404(Post, id=post_id)
-    if request.user == post.author or request.user.is_superuser:
+    if post.author != request.user:
+        messages.error(request, '你没有权限删除该动态。')
+        return redirect('moments:post_detail', post_id=post_id)
+    if request.method == 'POST':
         post.delete()
-        messages.success(request, '动态已删除')
+        messages.success(request, '动态已删除。')
         return redirect('moments:list')
     else:
-        messages.error(request, '你没有权限删除该动态')
-        return redirect('moments:post_detail', post_id=post_id)
+        return render(request, 'moments/moments_confirm_delete.html', {'post': post})

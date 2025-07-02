@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}删除动态{% endblock %}
+{% block content %}
+<div class="container" style="max-width:600px;margin:60px auto;">
+    <h2>确定要删除这条动态吗？</h2>
+    <div class="alert alert-warning mt-4 mb-4">
+        <strong>{{ post.content|truncatechars:30 }}</strong>
+    </div>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">确认删除</button>
+        <a href="{% url 'moments:post_detail' post.id %}" class="btn btn-secondary">取消</a>
+    </form>
+</div>
+{% endblock %}

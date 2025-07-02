@@ -242,4 +242,26 @@ window.addEventListener('DOMContentLoaded', function () {
             });
         });
     });
+
+    // 删除动态后自动跳转到列表页
+    const deleteForm = document.getElementById('delete-post-form');
+    if (deleteForm) {
+        deleteForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+            if (confirm('确定要删除这条动态吗？')) {
+                fetch(this.action, {
+                    method: 'POST',
+                    body: new FormData(this),
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                }).then(res => {
+                    if (res.redirected) {
+                        window.location.href = res.url;
+                    } else {
+                        // 兜底：强制跳转到列表页
+                        window.location.href = '/plaza/';
+                    }
+                });
+            }
+        });
+    }
 }); 
