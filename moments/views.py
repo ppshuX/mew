@@ -25,9 +25,9 @@ def  moments_list(request):
     posts = Post.objects.filter(is_private=False).order_by('-created_at')
     # 获取博客动态（发布到朋友圈的博客）
     blog_posts = BlogPost.objects.filter(
-        publish_type='moments', 
         is_draft=False,
-        is_blog=True
+        is_blog=True,
+        publish_type__icontains='moments'
     ).order_by('-created_at')
     
     # 合并两种类型的内容并按时间排序
@@ -36,12 +36,12 @@ def  moments_list(request):
     
     # ⭐ 添加判断：当前用户是否点赞了每个 post
     for item in all_content:
-        if hasattr(item, 'likes'):  # 普通动态
+        if isinstance(item, BlogPost):
+            item.is_liked = False
+            item.content_type = 'blog'
+        else:
             item.is_liked = request.user in item.likes.all()
             item.content_type = 'post'
-        else:  # 博客
-            item.is_liked = False  # 博客暂时不支持点赞
-            item.content_type = 'blog'
 
     return render(request, 'moments/moments.html',{'posts': all_content})
 

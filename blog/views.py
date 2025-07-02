@@ -21,7 +21,7 @@ def blog_create(request):
     if request.method == 'POST':
         is_draft = str(request.POST.get('is_draft', '')).lower() in ['true', '1']
         publish_to = request.POST.getlist('publish_to')
-        # 博客专栏（必选）
+        publish_type = ','.join(sorted(set([x for x in publish_to if x in ['blog', 'moments', 'plaza', 'private']])))
         post = BlogPost(
             author=request.user,
             title=request.POST.get('blog_title'),
@@ -32,79 +32,15 @@ def blog_create(request):
             blog_tags=request.POST.get('blog_tags'),
             blog_summary=request.POST.get('blog_summary'),
             is_draft=is_draft,
-            publish_type='blog',
+            publish_type=publish_type or 'blog',
         )
         post.save()
         for img in request.FILES.getlist('images'):
             BlogImage.objects.create(post=post, image=img)
-        # 同步到朋友圈
-        if 'moments' in publish_to:
-            moments_blog = BlogPost.objects.create(
-                author=request.user,
-                title=post.title,
-                content=post.content,
-                cover_image=post.cover_image,
-                category=post.category,
-                is_blog=True,
-                blog_tags=post.blog_tags,
-                blog_summary=post.blog_summary,
-                is_draft=is_draft,
-                publish_type='moments',
-            )
-            for img in post.images.all():
-                BlogImage.objects.create(post=moments_blog, image=img.image)
-        # 同步到广场
-        if 'plaza' in publish_to:
-            plaza_blog = BlogPost.objects.create(
-                author=request.user,
-                title=post.title,
-                content=post.content,
-                cover_image=post.cover_image,
-                category=post.category,
-                is_blog=True,
-                blog_tags=post.blog_tags,
-                blog_summary=post.blog_summary,
-                is_draft=is_draft,
-                publish_type='plaza',
-            )
-            for img in post.images.all():
-                BlogImage.objects.create(post=plaza_blog, image=img.image)
-        # 朋友圈动态表和广场动态表依然同步
-        if 'moments' in publish_to:
-            moments_post = MomentsPost.objects.create(
-                author=request.user,
-                content=f"【{post.title}】\n\n{post.content}",
-                image=post.cover_image,
-                category=post.category,
-                is_private=False
-            )
-            for img in post.images.all():
-                MomentsImage.objects.create(post=moments_post, image=img.image)
-        if 'plaza' in publish_to:
-            plaza_post = PlazaPost.objects.create(
-                author=request.user,
-                content=f"【{post.title}】\n\n{post.content}",
-                image=post.cover_image,
-                category=post.category
-            )
-            for img in post.images.all():
-                PlazaPostImage.objects.create(post=plaza_post, image=img.image)
-        if 'private' in publish_to:
-            moments_post = MomentsPost.objects.create(
-                author=request.user,
-                content=f"【{post.title}】\n\n{post.content}",
-                image=post.cover_image,
-                category=post.category,
-                is_private=True
-            )
-            for img in post.images.all():
-                MomentsImage.objects.create(post=moments_post, image=img.image)
-        if is_draft:
-            return redirect('draft_list')
-        return redirect('blog_detail', pk=post.pk)
+        return redirect('blog_detail', pk=post.id)
     else:
         form = BlogPostForm()
-    return render(request, 'blog/blog_form.html', {'form': form})
+        return render(request, 'blog/blog_form.html', {'form': form})
 
 def blog_detail(request, pk):
     post = get_object_or_404(BlogPost, pk=pk)
