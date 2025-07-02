@@ -9,7 +9,7 @@
 <div class="blog-detail-header-flex" style="display:flex;align-items:center;justify-content:center;margin-bottom:0;">
     <div style="flex:1;max-width:900px;">
         <div class="blog-detail-container" style="border-radius:18px;margin-top:0;position:relative;">
-            <button class="back-home-btn" onclick="window.history.back()" title="返回">
+            <button class="back-home-btn" onclick="window.location.href='{% url 'blog_list' %}'" title="返回博客专栏">
                 <i class="fas fa-home"></i>
             </button>
             <div style="width:16px;"></div>
