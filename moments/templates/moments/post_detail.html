@@ -224,16 +224,18 @@
         </a>
         <div class="detail-card detail-main" id="detail-main">
             <div class="author-row" style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
-                <div class="avatar-border" style="margin-right:0;">
-                    {% if post.author.user_profile.avatar and post.author.user_profile.avatar.url != '/media/avatars/default.jpg' %}
-                    <img src="{{ post.author.user_profile.avatar.url }}"
-                        style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;">
-                    {% else %}
-                    <div style="font-size:1.3rem;font-weight:600;color:#a86ae3;">
-                        {{ post.author.username|first|upper }}
+                <a href="{% url 'userzone:detail' username=post.author.username %}" style="display:contents;">
+                    <div class="avatar-border" style="margin-right:0;">
+                        {% if post.author.user_profile.avatar and post.author.user_profile.avatar.url != '/media/avatars/default.jpg' %}
+                        <img src="{{ post.author.user_profile.avatar.url }}"
+                            style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;">
+                        {% else %}
+                        <div style="font-size:1.3rem;font-weight:600;color:#a86ae3;">
+                            {{ post.author.username|first|upper }}
+                        </div>
+                        {% endif %}
                     </div>
-                    {% endif %}
-                </div>
+                </a>
                 <span class="author-divider" style="color:#d1b3f7;font-size:1.2rem;font-weight:bold;">|</span>
                 <span class="author-name" style="font-weight:bold;font-size:1.05rem;color:#7a3ee5;">
                     {{ post.author.user_profile.nickname|default:post.author.username }}
@@ -298,7 +300,7 @@
             style="position:static;max-height:none;height:auto;overflow:visible;padding:0;">
             <div class="detail-comments-title">全部评论：</div>
             {% for c in comments %}
-            <div class="detail-comment-box" {% if forloop.counter0 >= 2 %}style="display:none;"{% endif %}>
+            <div class="detail-comment-box" {% if forloop.counter0>= 2 %}style="display:none;"{% endif %}>
                 <div class="detail-comment-content">
                     <strong>{{ c.obj.author.user_profile.nickname|default:c.obj.author.username }}</strong>:
                     <span>{{ c.obj.content|linebreaksbr }}</span>
