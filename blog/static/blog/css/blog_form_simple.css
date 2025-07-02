@@ -234,6 +234,63 @@
     box-shadow: 0 1px 6px 0 rgba(80, 120, 200, 0.08);
 }
 
+/* 全屏编辑功能样式 */
+.editor-wrapper {
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.editor-wrapper.fullscreen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 9999;
+    background-color: white;
+    padding: 20px;
+    overflow: auto;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+.editor-wrapper.fullscreen .mew-form-textarea {
+    height: calc(100vh - 80px) !important;
+    border-radius: 0;
+    font-size: 1.1rem;
+    line-height: 1.6;
+}
+
+/* 全屏按钮样式 */
+#fullscreen-btn {
+    border-color: #ffc107;
+    color: #ffc107;
+    background: transparent;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+    padding: 4px 12px;
+}
+
+#fullscreen-btn:hover {
+    background: #ffc107;
+    color: #fff;
+    border-color: #ffc107;
+}
+
+#fullscreen-btn.fullscreen-active {
+    background: #ffc107;
+    color: #fff;
+    border-color: #ffc107;
+}
+
+#fullscreen-btn.fullscreen-active i {
+    transform: rotate(180deg);
+}
+
+#fullscreen-btn i {
+    transition: transform 0.3s ease;
+}
+
 /* 分栏适配移动端 */
 @media (max-width: 768px) {
     .mew-form-card {
@@ -254,6 +311,15 @@
     .d-flex.justify-content-center {
         flex-direction: column;
         align-items: stretch !important;
+    }
+
+    /* 移动端全屏优化 */
+    .editor-wrapper.fullscreen {
+        padding: 10px;
+    }
+
+    .editor-wrapper.fullscreen .mew-form-textarea {
+        height: calc(100vh - 40px) !important;
     }
 }
 

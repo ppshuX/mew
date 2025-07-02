@@ -116,4 +116,74 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     }
+
+    // 全屏编辑功能
+    var fullscreenBtn = document.getElementById('fullscreen-btn');
+    var editorWrapper = document.getElementById('editor-wrapper');
+    var exitFullscreenBtn = document.getElementById('exit-fullscreen-btn');
+
+    if (fullscreenBtn && editorWrapper) {
+        fullscreenBtn.addEventListener('click', function () {
+            editorWrapper.classList.toggle('fullscreen');
+            fullscreenBtn.classList.toggle('fullscreen-active');
+
+            // 更新按钮图标和文本
+            var icon = fullscreenBtn.querySelector('i');
+            var text = fullscreenBtn.textContent.trim();
+
+            if (editorWrapper.classList.contains('fullscreen')) {
+                icon.className = 'fas fa-compress';
+                fullscreenBtn.innerHTML = '<i class="fas fa-compress"></i> 退出全屏';
+                if (exitFullscreenBtn) exitFullscreenBtn.style.display = 'flex';
+            } else {
+                icon.className = 'fas fa-expand';
+                fullscreenBtn.innerHTML = '<i class="fas fa-expand"></i> 全屏编辑';
+                if (exitFullscreenBtn) exitFullscreenBtn.style.display = 'none';
+            }
+
+            // 刷新编辑器以适配新尺寸
+            if (window.toastEditor) {
+                setTimeout(function () {
+                    window.toastEditor.resize();
+                }, 100);
+            }
+        });
+    }
+
+    // 新增：点击退出全屏按钮
+    if (exitFullscreenBtn && editorWrapper) {
+        exitFullscreenBtn.addEventListener('click', function () {
+            if (editorWrapper.classList.contains('fullscreen')) {
+                editorWrapper.classList.remove('fullscreen');
+                if (fullscreenBtn) fullscreenBtn.classList.remove('fullscreen-active');
+                if (fullscreenBtn) fullscreenBtn.innerHTML = '<i class="fas fa-expand"></i> 全屏编辑';
+                exitFullscreenBtn.style.display = 'none';
+                if (window.toastEditor) {
+                    setTimeout(function () {
+                        window.toastEditor.resize();
+                    }, 100);
+                }
+            }
+        });
+    }
+
+    // 支持 ESC 键退出全屏
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && editorWrapper && editorWrapper.classList.contains('fullscreen')) {
+            editorWrapper.classList.remove('fullscreen');
+            fullscreenBtn.classList.remove('fullscreen-active');
+
+            var icon = fullscreenBtn.querySelector('i');
+            icon.className = 'fas fa-expand';
+            fullscreenBtn.innerHTML = '<i class="fas fa-expand"></i> 全屏编辑';
+            if (exitFullscreenBtn) exitFullscreenBtn.style.display = 'none';
+
+            // 刷新编辑器以适配新尺寸
+            if (window.toastEditor) {
+                setTimeout(function () {
+                    window.toastEditor.resize();
+                }, 100);
+            }
+        }
+    });
 });

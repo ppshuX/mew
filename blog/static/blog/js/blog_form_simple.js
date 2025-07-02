@@ -58,4 +58,84 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
     }
+
+    // 全屏编辑功能
+    var fullscreenBtn = document.getElementById('fullscreen-btn');
+    var editorWrapper = document.getElementById('editor-wrapper');
+    var textarea = document.querySelector('.mew-form-textarea');
+
+    if (fullscreenBtn && editorWrapper && textarea) {
+        fullscreenBtn.addEventListener('click', function () {
+            editorWrapper.classList.toggle('fullscreen');
+            fullscreenBtn.classList.toggle('fullscreen-active');
+
+            // 更新按钮图标和文本
+            if (editorWrapper.classList.contains('fullscreen')) {
+                fullscreenBtn.innerHTML = '<i class="fas fa-compress"></i> 退出全屏';
+                // 全屏时聚焦到文本框
+                setTimeout(function () {
+                    textarea.focus();
+                }, 100);
+            } else {
+                fullscreenBtn.innerHTML = '<i class="fas fa-expand"></i> 全屏编辑';
+            }
+        });
+    }
+
+    // 支持 ESC 键退出全屏
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && editorWrapper && editorWrapper.classList.contains('fullscreen')) {
+            editorWrapper.classList.remove('fullscreen');
+            fullscreenBtn.classList.remove('fullscreen-active');
+            fullscreenBtn.innerHTML = '<i class="fas fa-expand"></i> 全屏编辑';
+        }
+    });
+
+    // 字数统计功能
+    if (textarea) {
+        const maxLen = 5000;
+        const counter = document.createElement('div');
+        counter.style.textAlign = 'right';
+        counter.style.fontSize = '0.9rem';
+        counter.style.marginTop = '4px';
+        counter.style.color = '#aaa';
+        counter.innerHTML = `0 / ${maxLen}`;
+        textarea.parentNode.appendChild(counter);
+
+        const warning = document.createElement('div');
+        warning.style.color = '#ff4d4f';
+        warning.style.fontSize = '0.9rem';
+        warning.style.marginTop = '2px';
+        warning.style.display = 'none';
+        warning.textContent = '字数已超出最大限制！';
+        textarea.parentNode.appendChild(warning);
+
+        textarea.addEventListener('input', function () {
+            const len = textarea.value.length;
+            counter.innerHTML = `${len} / ${maxLen}`;
+            if (len > maxLen) {
+                warning.style.display = 'block';
+                counter.style.color = '#ff4d4f';
+            } else {
+                warning.style.display = 'none';
+                counter.style.color = '#aaa';
+            }
+        });
+    }
+
+    // 图片预览功能
+    const imageInput = document.querySelector('input[name="images"]');
+    if (imageInput) {
+        imageInput.addEventListener('change', function (e) {
+            const files = e.target.files;
+            if (files.length > 9) {
+                alert('最多只能选择9张图片');
+                e.target.value = '';
+                return;
+            }
+
+            // 这里可以添加图片预览功能
+            console.log(`选择了 ${files.length} 张图片`);
+        });
+    }
 }); 

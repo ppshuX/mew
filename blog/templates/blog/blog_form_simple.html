@@ -19,9 +19,16 @@
                 <input type="text" name="title" class="mew-form-input" maxlength="100" placeholder="动态标题（可不填）">
             </div>
             <div class="mb-4">
-                <label class="mew-form-label">内容 <span style="color: #ff6bcb;">*</span></label>
-                <textarea name="content" class="mew-form-textarea" rows="6" maxlength="5000" placeholder="写下你的动态内容……"
-                    required></textarea>
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <label class="mew-form-label">内容 <span style="color: #ff6bcb;">*</span></label>
+                    <button type="button" id="fullscreen-btn" class="btn btn-sm btn-outline-warning">
+                        <i class="fas fa-expand"></i> 全屏编辑
+                    </button>
+                </div>
+                <div id="editor-wrapper" class="editor-wrapper">
+                    <textarea name="content" class="mew-form-textarea" rows="6" maxlength="5000"
+                        placeholder="写下你的动态内容……" required></textarea>
+                </div>
             </div>
             <div class="mb-4">
                 <label class="mew-form-label">类别</label>

@@ -517,6 +517,70 @@
     color: white;
 }
 
+/* 全屏编辑功能样式 */
+.editor-wrapper {
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.editor-wrapper.fullscreen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 9999;
+    background-color: white;
+    padding: 20px;
+    overflow: auto;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+.editor-wrapper.fullscreen #toastui-editor {
+    height: calc(100vh - 40px) !important;
+    border-radius: 0;
+}
+
+.editor-wrapper.fullscreen #blog-preview-area {
+    height: calc(100vh - 40px);
+    overflow-y: auto;
+}
+
+/* 全屏按钮样式 */
+#fullscreen-btn {
+    border-color: #ffc107;
+    color: #ffc107;
+    background: transparent;
+    transition: all 0.3s ease;
+}
+
+#fullscreen-btn:hover {
+    background: #ffc107;
+    color: #fff;
+    border-color: #ffc107;
+}
+
+#fullscreen-btn.fullscreen-active {
+    background: #ffc107;
+    color: #fff;
+    border-color: #ffc107;
+}
+
+#fullscreen-btn.fullscreen-active i {
+    transform: rotate(180deg);
+}
+
+/* 全屏状态下的按钮图标 */
+#fullscreen-btn i {
+    transition: transform 0.3s ease;
+}
+
+/* 全屏状态下的Tab按钮隐藏 */
+.editor-wrapper.fullscreen .d-flex.mb-2 {
+    display: none !important;
+}
+
 /* 响应式设计 */
 @media (max-width: 768px) {
     #blog-preview-area {
@@ -540,6 +604,19 @@
 
     .toastui-editor-md-vertical-style .toastui-editor-md-preview {
         display: none !important;
+    }
+
+    /* 移动端全屏优化 */
+    .editor-wrapper.fullscreen {
+        padding: 10px;
+    }
+
+    .editor-wrapper.fullscreen #toastui-editor {
+        height: calc(100vh - 20px) !important;
+    }
+
+    .editor-wrapper.fullscreen #blog-preview-area {
+        height: calc(100vh - 20px);
     }
 }
 
@@ -592,4 +669,33 @@ input[type='file'].form-control::file-selector-button {
 input[type='file'].form-control::file-selector-button:hover {
     background: #e6edff;
     color: #4a6fdc;
+}
+
+.exit-fullscreen-btn {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    z-index: 10001;
+    background: #ffc107;
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    font-size: 1.3rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+}
+
+.exit-fullscreen-btn:hover {
+    background: #ff9800;
+    color: #fff;
+}
+
+.editor-wrapper.fullscreen .exit-fullscreen-btn {
+    display: flex !important;
 }

@@ -51,14 +51,23 @@
             <div class="d-flex mb-2" style="margin-top:32px;">
                 <button type="button" id="tab-markdown" class="btn btn-sm btn-outline-info active">Markdown编辑</button>
                 <button type="button" id="tab-preview" class="btn btn-sm btn-outline-secondary">预览</button>
+                <button type="button" id="fullscreen-btn" class="btn btn-sm btn-outline-warning ms-auto">
+                    <i class="fas fa-expand"></i> 全屏编辑
+                </button>
             </div>
             <!-- 编辑器区域 -->
             <div class="mb-4" style="max-width:900px;margin:0 auto;">
-                <div id="markdown-area">
-                    <div id="toastui-editor"></div>
-                </div>
-                <div id="blog-preview-area"
-                    style="display:none;min-height:300px;border:1px solid #eee;background:#fafbfc;padding:18px 20px;border-radius:6px;">
+                <div id="editor-wrapper" class="editor-wrapper">
+                    <button type="button" id="exit-fullscreen-btn" class="exit-fullscreen-btn" style="display:none;"
+                        title="退出全屏">
+                        <i class="fas fa-times"></i>
+                    </button>
+                    <div id="markdown-area">
+                        <div id="toastui-editor"></div>
+                    </div>
+                    <div id="blog-preview-area"
+                        style="display:none;min-height:300px;border:1px solid #eee;background:#fafbfc;padding:18px 20px;border-radius:6px;">
+                    </div>
                 </div>
             </div>
             <!-- 辅助字段区 -->
@@ -223,6 +232,14 @@
             const richContent = editorInstance.getData();
             const markdownText = convertHtmlToMarkdown(richContent);
             toastEditor.setMarkdown(markdownText);
+        }
+
+        // 如果处于全屏模式，刷新编辑器以适配尺寸
+        const editorWrapper = document.getElementById('editor-wrapper');
+        if (editorWrapper && editorWrapper.classList.contains('fullscreen') && toastEditor) {
+            setTimeout(function () {
+                toastEditor.refresh();
+            }, 100);
         }
     }
 
