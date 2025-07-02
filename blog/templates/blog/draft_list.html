@@ -16,7 +16,13 @@
                 {{ d.get_summary|linebreaksbr }}
             </div>
         </div>
-        <small class="text-muted text-end">{{ d.last_saved_time|date:"Y-m-d H:i" }}</small>
+        <div class="d-flex flex-column align-items-end">
+            <small class="text-muted text-end">{{ d.last_saved_time|date:"Y-m-d H:i" }}</small>
+            <form method="post" action="{% url 'blog_delete' d.id %}" style="margin-top:8px;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('确定要删除这个草稿吗？');">删除</button>
+            </form>
+        </div>
     </li>
     {% endfor %}
 </ul>
