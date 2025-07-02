@@ -300,7 +300,7 @@
             style="position:static;max-height:none;height:auto;overflow:visible;padding:0;">
             <div class="detail-comments-title">全部评论：</div>
             {% for c in comments %}
-            <div class="detail-comment-box" {% if forloop.counter0>= 2 %}style="display:none;"{% endif %}>
+            <div class="detail-comment-box" {% if forloop.counter0 >= 2 %}style="display:none;"{% endif %}>
                 <div class="detail-comment-content">
                     <strong>{{ c.obj.author.user_profile.nickname|default:c.obj.author.username }}</strong>:
                     <span>{{ c.obj.content|linebreaksbr }}</span>

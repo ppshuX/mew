@@ -53,12 +53,21 @@
                 <div class="uz-divider"></div>
                 <!-- 最近访客 -->
                 <div class="uz-visitors-section w-100 px-3 pb-3">
-                    <div class="uz-visitors-title mb-2">最近来访 
-                        <span class="uz-visitors-count">({{recent_visitors|length}})</span></div>
+                    <div class="uz-visitors-title mb-2">最近来访
+                        <span class="uz-visitors-count">({{recent_visitors|length}})</span>
+                    </div>
                     <div class="uz-visitors-grid d-flex flex-wrap gap-2 justify-content-start">
                         {% for v in recent_visitors %}
-                        <img src="{{ v.avatar.url }}" title="{{ v.nickname }}" class="uz-visitor-avatar"
-                            alt="{{ v.nickname }}">
+                        <a href="{% url 'userzone:detail' username=v.user.username %}" title="{{ v.nickname|default:v.user.username }}" style="display:inline-block;">
+                            {% if v.avatar and v.avatar.url and v.avatar.url != '/media/avatars/default.jpg' %}
+                            <img src="{{ v.avatar.url }}" class="uz-visitor-avatar"
+                                alt="{{ v.nickname|default:v.user.username }}">
+                            {% else %}
+                            <span class="uz-visitor-avatar" style="background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%); display: flex; align-items: center; justify-content: center; font-weight: bold; color: #a86ae3; font-size: 1.2rem; border: 3px solid #f3eaff; box-shadow: 0 0 8px #f3eaff;">
+                                {{ v.nickname|default:v.user.username|first|upper }}
+                            </span>
+                            {% endif %}
+                        </a>
                         {% empty %}
                         <span class="uz-no-visitor">暂无访客</span>
                         {% endfor %}

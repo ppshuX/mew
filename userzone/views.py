@@ -4,6 +4,8 @@ from user_profile.models import UserProfile
 from plaza.models import Post as PlazaPost
 from moments.models import Post as MomentsPost
 from moments.forms import MomentsPostForm
+from userzone.models import UserZoneVisitor
+from django.utils import timezone
 
 def userzone(request, username):
     try:
@@ -14,6 +16,20 @@ def userzone(request, username):
         user_profile = UserProfile.objects.create(user=user)
     
     is_owner = (request.user == user_profile.user)
+    
+    # 记录访客（仅非本人且已登录用户）
+    if request.user.is_authenticated and not is_owner:
+        try:
+            visitor_profile = request.user.user_profile
+            obj, created = UserZoneVisitor.objects.get_or_create(userzone_owner=user_profile, visitor=visitor_profile)
+            obj.visited_at = timezone.now()
+            obj.save()
+        except Exception as e:
+            print('记录访客失败:', e)
+
+    # 获取最近访客（最新30个）
+    recent_visitor_objs = UserZoneVisitor.objects.filter(userzone_owner=user_profile).select_related('visitor').order_by('-visited_at')[:30]
+    recent_visitors = [v.visitor for v in recent_visitor_objs]
     
     # 获取筛选参数
     post_type = request.GET.get('type', 'moments').strip()  # moments, plaza, private
@@ -60,7 +76,7 @@ def userzone(request, username):
         'plaza_posts': plaza_posts,
         'moments_posts': moments_posts,
         'private_posts': private_posts,
-        'recent_visitors': [],  # 需实现
+        'recent_visitors': recent_visitors,
         'form': form,
         'current_type': post_type,
         'current_category': category,
