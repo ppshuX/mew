@@ -34,8 +34,7 @@
                 {% else %}
                 <span class="author-avatar-circle">{{ post.author.username|first|upper }}</span>
                 {% endif %}
-                <span class="author-nickname">{{ post.author.user_profile.nickname|default:post.author.username
-                    }}</span>
+                <span class="author-nickname">{{ post.author.user_profile.nickname|default:post.author.username }}</span>
             </div>
             <div class="blog-cover">
                 {% if post.cover_image %}

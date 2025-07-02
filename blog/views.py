@@ -81,8 +81,8 @@ def blog_edit(request, blog_id=None):
         blog_tags = request.POST.get('blog_tags')
         blog_summary = request.POST.get('blog_summary')
         publish_to = request.POST.getlist('publish_to')
+        publish_type = ','.join(sorted(set([x for x in publish_to if x in ['blog', 'moments', 'plaza', 'private']])))
         cover_image = request.FILES.get('blog_cover')
-        # 更新主博客
         if blog:
             blog.title = title
             blog.content = content
@@ -90,6 +90,7 @@ def blog_edit(request, blog_id=None):
             blog.blog_tags = blog_tags
             blog.blog_summary = blog_summary
             blog.is_draft = is_draft
+            blog.publish_type = publish_type or 'blog'
             if cover_image:
                 blog.cover_image = cover_image
             blog.save()
@@ -101,66 +102,15 @@ def blog_edit(request, blog_id=None):
                 category=category,
                 blog_tags=blog_tags,
                 blog_summary=blog_summary,
-                publish_type='blog',
+                publish_type=publish_type or 'blog',
                 cover_image=cover_image,
                 is_draft=is_draft,
                 is_blog=True,
             )
-        # 同步到朋友圈
-        if 'moments' in publish_to:
-            moments_blog = BlogPost.objects.filter(author=request.user, title=title, publish_type='moments').first()
-            if moments_blog:
-                moments_blog.content = content
-                moments_blog.category = category
-                moments_blog.blog_tags = blog_tags
-                moments_blog.blog_summary = blog_summary
-                moments_blog.is_draft = is_draft
-                if cover_image:
-                    moments_blog.cover_image = cover_image
-                moments_blog.save()
-            else:
-                moments_blog = BlogPost.objects.create(
-                    author=request.user,
-                    title=title,
-                    content=content,
-                    category=category,
-                    blog_tags=blog_tags,
-                    blog_summary=blog_summary,
-                    publish_type='moments',
-                    cover_image=cover_image,
-                    is_draft=is_draft,
-                    is_blog=True,
-                )
-        # 同步到广场
-        if 'plaza' in publish_to:
-            plaza_blog = BlogPost.objects.filter(author=request.user, title=title, publish_type='plaza').first()
-            if plaza_blog:
-                plaza_blog.content = content
-                plaza_blog.category = category
-                plaza_blog.blog_tags = blog_tags
-                plaza_blog.blog_summary = blog_summary
-                plaza_blog.is_draft = is_draft
-                if cover_image:
-                    plaza_blog.cover_image = cover_image
-                plaza_blog.save()
-            else:
-                plaza_blog = BlogPost.objects.create(
-                    author=request.user,
-                    title=title,
-                    content=content,
-                    category=category,
-                    blog_tags=blog_tags,
-                    blog_summary=blog_summary,
-                    publish_type='plaza',
-                    cover_image=cover_image,
-                    is_draft=is_draft,
-                    is_blog=True,
-                )
         if is_draft:
             return redirect('draft_list')
         else:
             return redirect('blog_detail', pk=blog.id)
-    # GET请求时，确保blog.content为None时也能正常显示
     if blog and blog.content is None:
         blog.content = ''
     context = {
@@ -235,39 +185,17 @@ def simple_create(request):
         title = request.POST.get('title')
         content = request.POST.get('content')
         category = request.POST.get('category')
-        publish_type = request.POST.get('publish_type', 'private')
+        publish_to = request.POST.getlist('publish_to')
+        publish_type = ','.join(sorted(set([x for x in publish_to if x in ['blog', 'moments', 'plaza', 'private']])))
         post = BlogPost(
             author=request.user,
             title=title,
             content=content,
             category=category,
             is_blog=False,
-            publish_type=publish_type,
+            publish_type=publish_type or 'private',
         )
         post.save()
-        # 同步到朋友圈
-        if publish_type == 'moments':
-            MomentsPost.objects.create(
-                author=request.user,
-                content=content,
-                category=category,
-                is_private=False
-            )
-        # 同步到广场
-        if publish_type == 'plaza':
-            PlazaPost.objects.create(
-                author=request.user,
-                content=content,
-                category=category
-            )
-        # 同步到私密动态
-        if publish_type == 'private':
-            MomentsPost.objects.create(
-                author=request.user,
-                content=content,
-                category=category,
-                is_private=True
-            )
         return redirect('userzone:detail', request.user.username)
     return render(request, 'blog/blog_form_simple.html', {'category_choices': CATEGORY_CHOICES})
 
