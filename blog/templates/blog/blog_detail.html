@@ -29,13 +29,6 @@
             </div>
         </div>
 
-        <!-- 博客封面图 -->
-        {% if post.cover_image %}
-        <div class="blog-cover-section">
-            <img src="{{ post.cover_image.url }}" alt="博客封面" class="blog-cover-image">
-        </div>
-        {% endif %}
-
         <!-- 博客摘要 -->
         {% if post.blog_summary %}
         <div class="blog-summary-section">
@@ -472,6 +465,14 @@
         .blog-images-grid {
             grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
         }
+    }
+
+    /* 新增：评论时间白色+小号字体 */
+    .detail-comment-time {
+        color: #b39ddb !important;
+        font-size: 0.92em !important;
+        opacity: 0.95;
+        margin-left: 8px;
     }
 </style>
 <link rel="stylesheet" href="{% static 'blog/css/blog_detail.css' %}">
