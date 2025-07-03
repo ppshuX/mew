@@ -99,8 +99,9 @@ def qq_callback(request):
         # 查找或创建QQUser
         qq_user = QQUser.objects.filter(qq_openid=openid).first()
         if not qq_user:
-            # 创建新用户
-            username = f"qq_{openid[:8]}"
+            # 创建新用户，优先用QQ昵称作为用户名
+            nickname = user_info.get('nickname', '')
+            username = nickname if nickname else f"qq_{openid[:8]}"
             counter = 1
             original_username = username
             while User.objects.filter(username=username).exists():
@@ -114,7 +115,7 @@ def qq_callback(request):
             qq_user = QQUser.objects.create(
                 user=user,
                 qq_openid=openid,
-                qq_nickname=user_info.get('nickname', ''),
+                qq_nickname=nickname,
                 qq_avatar=user_info.get('figureurl_qq_2', user_info.get('figureurl_qq', '')),
             )
         else:
@@ -126,6 +127,17 @@ def qq_callback(request):
         
         # 登录用户
         login(request, user)
+        
+        # 同步昵称和头像到UserProfile
+        profile = getattr(user, 'user_profile', None)
+        if profile:
+            # 同步昵称
+            if not profile.nickname:
+                profile.nickname = user_info.get('nickname', '')
+            # 同步头像（如本地为默认头像或为空时，直接存QQ头像URL）
+            if (not profile.avatar or str(profile.avatar) == 'avatars/default.jpg') and user_info.get('figureurl_qq_2'):
+                profile.avatar = user_info.get('figureurl_qq_2', user_info.get('figureurl_qq', ''))
+            profile.save()
         
         # 清除session中的state
         if 'qq_state' in request.session:
