@@ -134,9 +134,7 @@ def qq_callback(request):
             # 同步昵称
             if not profile.nickname:
                 profile.nickname = user_info.get('nickname', '')
-            # 同步头像（如本地为默认头像或为空时，直接存QQ头像URL）
-            if (not profile.avatar or str(profile.avatar) == 'avatars/default.jpg') and user_info.get('figureurl_qq_2'):
-                profile.avatar = user_info.get('figureurl_qq_2', user_info.get('figureurl_qq', ''))
+            # 头像不再赋值QQ外链，保持默认头像，用户可自行更换
             profile.save()
         
         # 清除session中的state
