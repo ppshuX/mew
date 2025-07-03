@@ -7,7 +7,7 @@
 {% block content %}
 <div class="moments-content-outer">
     <h3 class="publish-title mb-4"
-        style="font-size:2.6rem; font-family:'ZCOOL KuaiLe','Arial Black','Arial',sans-serif; font-weight:bold; background: linear-gradient(90deg, #a18cd1 0%, #fbc2eb 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 2px 4px 12px #e0c3fc, 0 2px 8px #fff; letter-spacing:2px; display:flex; align-items:center; justify-content:center;">
+        style="font-size:2.6rem; font-family:'ZCOOL KuaiLe','Arial Black','Arial',sans-serif; font-weight:bold; color:#a084ee; letter-spacing:2px; display:flex; align-items:center; justify-content:center; text-shadow: 0 2px 8px #e0d7f7;">
         <span style="font-size:2.2rem; margin-right:10px;">👋</span> 朋友圈 Moments
     </h3>
     <!-- 发布说说 -->
@@ -49,7 +49,18 @@
         {% for post in posts %}
         {% if post.content_type == 'blog' %}
         <!-- 博客卡片 -->
-        <div class="blog-card" onclick="window.location.href='{% url 'blog_detail' post.id %}'">
+        <div class="blog-card" style="position:relative;"
+            onclick="window.location.href='{% url 'blog_detail' post.id %}'">
+            <div
+                style="position:absolute;top:24px;right:18px;z-index:2;display:flex;flex-direction:column;align-items:flex-end;">
+                <div class="category-badge"
+                    style="display:inline-block;padding:2px 14px;border-radius:14px;background:#f3eaff;color:#7a3ee5;font-size:1.05rem;font-weight:bold;box-shadow:0 2px 8px #e0d7f7;letter-spacing:1px;">
+                    {{ post.get_category_display }}
+                </div>
+                <span style="margin-top:6px;font-size:0.98rem;color:#b3a6d9;text-shadow:0 1px 2px #fff;">
+                    {{ post.created_at|naturaltime }}
+                </span>
+            </div>
             <div class="blog-badge">📓 博客</div>
             <div class="author-row">
                 <a href="{% url 'userzone:detail' username=post.author.username %}" style="display:contents;">
@@ -60,8 +71,9 @@
                     <span class="author-avatar-circle">{{ post.author.username|first|upper }}</span>
                     {% endif %}
                 </a>
-                <span class="author-nickname">{{ post.author.user_profile.nickname|default:post.author.username
-                    }}</span>
+                <span class="author-nickname">
+                    {{ post.author.user_profile.nickname|default:post.author.username }}
+                </span>
             </div>
             <div class="blog-cover">
                 {% if post.cover_image %}
@@ -85,7 +97,17 @@
         </div>
         {% elif post.content_type == 'post' %}
         <!-- 普通动态卡片 -->
-        <div class="moment-card" onclick="window.location.href='{% url 'moments:post_detail' post.id %}'">
+        <div class="moment-card" style="position:relative;"
+            onclick="window.location.href='{% url 'moments:post_detail' post.id %}'">
+            <div
+                style="position:absolute;top:12px;right:18px;z-index:2;display:flex;flex-direction:column;align-items:flex-end;">
+                <div class="category-badge"
+                    style="display:inline-block;padding:2px 14px;border-radius:14px;background:#f3eaff;color:#7a3ee5;font-size:1.05rem;font-weight:bold;box-shadow:0 2px 8px #e0d7f7;letter-spacing:1px;">
+                    {{ post.get_category_display }}</div>
+                <span style="margin-top:6px;font-size:0.98rem;color:#b3a6d9;text-shadow:0 1px 2px #fff;">
+                    {{ post.created_at|naturaltime }}
+                </span>
+            </div>
             <div class="author-row">
                 <a href="{% url 'userzone:detail' username=post.author.username %}" style="display:contents;">
                     {% if post.author.user_profile.avatar and post.author.user_profile.avatar.url != '/media/avatars/default.jpg' %}
@@ -96,7 +118,6 @@
                 </a>
                 <span class="author-divider">|</span>
                 <span class="author-name">{{ post.author.user_profile.nickname|default:post.author.username }}</span>
-                <span class="timestamp">{{ post.created_at|naturaltime }}</span>
             </div>
             {% if post.images.all %}
             <div class="image-grid{% if post.images.all|length == 4 %} four-images{% endif %}">

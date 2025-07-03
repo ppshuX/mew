@@ -45,12 +45,21 @@
     <div class="moments-list">
         {% for post in posts %}
         {% if post.content_type == 'blog' %}
-        <div class="blog-card" onclick="window.location.href='{% url 'blog_detail' post.id %}'">
+        <div class="blog-card" style="position:relative;margin-bottom:40px;"
+            onclick="window.location.href='{% url 'blog_detail' post.id %}'">
+            <div
+                style="position:absolute;top:24px;right:18px;z-index:2;display:flex;flex-direction:column;align-items:flex-end;">
+                <div class="category-badge"
+                    style="display:inline-block;padding:2px 14px;border-radius:14px;background:#f3eaff;color:#7a3ee5;font-size:1.05rem;font-weight:bold;box-shadow:0 2px 8px #e0d7f7;letter-spacing:1px;">
+                    {{ post.get_category_display }}</div>
+                <span style="margin-top:6px;font-size:0.98rem;color:#b3a6d9;text-shadow:0 1px 2px #fff;">
+                    {{ post.created_at|naturaltime }}
+                </span>
+            </div>
             <div class="blog-badge">📓 博客</div>
             <div class="author-row">
                 <a href="{% url 'userzone:detail' username=post.author.username %}" style="display:contents;">
-                    {% if post.author.user_profile.avatar and post.author.user_profile.avatar.url !=
-                    '/media/avatars/default.jpg' %}
+                    {% if post.author.user_profile.avatar and post.author.user_profile.avatar.url != '/media/avatars/default.jpg' %}
                     <img class="avatar-img" src="{{ post.author.user_profile.avatar.url }}" alt="头像"
                         style="width:36px;height:36px;border-radius:50%;object-fit:cover;vertical-align:middle;">
                     {% else %}
@@ -82,11 +91,20 @@
             </div>
         </div>
         {% elif post.content_type == 'post' %}
-        <div class="moment-card" onclick="window.location.href='{% url 'plaza:detail' post.id %}'">
+        <div class="moment-card" style="position:relative;"
+            onclick="window.location.href='{% url 'plaza:detail' post.id %}'">
+            <div
+                style="position:absolute;top:12px;right:18px;z-index:2;display:flex;flex-direction:column;align-items:flex-end;">
+                <div class="category-badge"
+                    style="display:inline-block;padding:2px 14px;border-radius:14px;background:#f3eaff;color:#7a3ee5;font-size:1.05rem;font-weight:bold;box-shadow:0 2px 8px #e0d7f7;letter-spacing:1px;">
+                    {{ post.get_category_display }}</div>
+                <span style="margin-top:6px;font-size:0.98rem;color:#b3a6d9;text-shadow:0 1px 2px #fff;">
+                    {{ post.created_at|naturaltime }}
+                </span>
+            </div>
             <div class="author-row">
                 <a href="{% url 'userzone:detail' username=post.author.username %}" style="display:contents;">
-                    {% if post.author.user_profile.avatar and post.author.user_profile.avatar.url !=
-                    '/media/avatars/default.jpg' %}
+                    {% if post.author.user_profile.avatar and post.author.user_profile.avatar.url != '/media/avatars/default.jpg' %}
                     <img class="avatar-img" src="{{ post.author.user_profile.avatar.url }}" alt="头像"
                         style="width:36px;height:36px;border-radius:50%;object-fit:cover;vertical-align:middle;">
                     {% else %}
@@ -95,7 +113,6 @@
                 </a>
                 <span class="author-divider">|</span>
                 <span class="author-name">{{ post.author.user_profile.nickname|default:post.author.username }}</span>
-                <span class="timestamp">{{ post.created_at|naturaltime }}</span>
             </div>
             {% if post.images.all.count > 0 %}
             <div class="image-grid">
