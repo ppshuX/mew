@@ -27,7 +27,7 @@ class CustomRegisterForm(UserCreationForm):
 class MomentsPostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ['content', 'image', 'category', 'is_private']
+        fields = ['content', 'category', 'is_private']
         widgets = {
             'content': forms.Textarea(attrs={'rows': 3, 'placeholder': '想说点什么...'}),
             'category': forms.Select(attrs={'class': 'form-select'}),

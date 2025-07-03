@@ -15,11 +15,16 @@
                 required></textarea>
         </div>
         <div class="publish-form-row publish-form-bottom">
-            <input type="file" name="image" multiple accept="image/*" class="form-control publish-file no-border">
+            <div id="image-upload-preview" class="image-upload-preview"></div>
+            <label for="image-upload-input" class="image-upload-plus">
+                <span>+</span>
+            </label>
+            <input type="file" id="image-upload-input" name="images" multiple accept="image/*" style="display:none;" />
             <button type="submit" class="btn btn-primary publish-btn ml-auto">分享新鲜事</button>
         </div>
         <hr class="publish-divider">
     </form>
+    <div class="soft-divider"></div>
     <!-- 动态卡片 -->
     <div class="moments-list">
         {% for post in posts %}
@@ -82,19 +87,9 @@
                 </div>
                 {% endfor %}
             </div>
-            {% elif post.image %}
-            <div class="image-grid">
-                <div class="image-card">
-                    <img src="{{ post.image.url }}" alt="图片">
-                </div>
-            </div>
             {% endif %}
             <div class="text-content">
-                {% if post.image %}
-                <div class="content">{{ post.content }}</div>
-                {% else %}
                 <div class="content-long">{{ post.content }}</div>
-                {% endif %}
                 <!-- 点赞 -->
                 <div class="bottom-bar">
                     <button class="like-btn" data-post-id="{{ post.id }}" onclick="event.stopPropagation();">
@@ -130,4 +125,77 @@
 </div>
 <link rel="stylesheet" href="{% static 'moments/css/moments.css' %}">
 <script src="{% static 'moments/js/moments.js' %}"></script>
+<script>
+    // 多图选择和预览逻辑
+    (function () {
+        const maxImages = 9;
+        const input = document.getElementById('image-upload-input');
+        const preview = document.getElementById('image-upload-preview');
+        const plusBtn = document.querySelector('.image-upload-plus');
+        let fileList = [];
+        if (!input || !preview || !plusBtn) return;
+        function renderPreview() {
+            preview.innerHTML = '';
+            fileList.forEach(function (file, idx) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const wrapper = document.createElement('div');
+                    wrapper.style.position = 'relative';
+                    wrapper.style.display = 'inline-block';
+                    wrapper.style.marginRight = '0px';
+                    wrapper.style.marginBottom = '0px';
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.className = 'preview-img';
+                    img.title = file.name;
+                    // 删除按钮
+                    const removeBtn = document.createElement('button');
+                    removeBtn.className = 'img-remove';
+                    removeBtn.type = 'button';
+                    removeBtn.innerHTML = '×';
+                    removeBtn.onclick = function () {
+                        fileList.splice(idx, 1);
+                        renderPreview();
+                        updateInputFiles();
+                    };
+                    wrapper.appendChild(img);
+                    wrapper.appendChild(removeBtn);
+                    preview.appendChild(wrapper);
+                };
+                reader.readAsDataURL(file);
+            });
+            if (fileList.length >= maxImages) {
+                plusBtn.style.display = 'none';
+            } else {
+                plusBtn.style.display = '';
+            }
+        }
+        function updateInputFiles() {
+            // 创建新的 DataTransfer 对象以更新 input.files
+            const dt = new DataTransfer();
+            fileList.forEach(f => dt.items.add(f));
+            input.files = dt.files;
+        }
+        input.addEventListener('change', function () {
+            let newFiles = Array.from(this.files);
+            if (fileList.length + newFiles.length > maxImages) {
+                alert('最多只能上传9张图片');
+                this.value = '';
+                return;
+            }
+            fileList = fileList.concat(newFiles).slice(0, maxImages);
+            renderPreview();
+            updateInputFiles();
+            // this.value = '' 不要清空，否则input.files会丢失
+        });
+        // 提交前强制同步一次input.files
+        var form = document.querySelector('.publish-form');
+        if (form) {
+            form.addEventListener('submit', function () {
+                updateInputFiles();
+            });
+        }
+        renderPreview();
+    })();
+</script>
 {% endblock %}

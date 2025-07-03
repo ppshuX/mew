@@ -16,7 +16,7 @@ class Post(models.Model):
     
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='moments_posts')
     content = models.TextField(max_length=5000)
-    image = models.ImageField(upload_to='moments_posts/', blank=True, null=True)
+    # image = models.ImageField(upload_to='moments_posts/', blank=True, null=True)  # 已弃用，改为多图
     category = models.CharField(max_length=20, choices=CATEGORY_CHOICES, default='daily', verbose_name='类别')
     created_at = models.DateTimeField(auto_now_add=True)
     likes = models.ManyToManyField(User, related_name='liked_posts', blank=True)

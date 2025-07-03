@@ -14,10 +14,14 @@
         {% csrf_token %}
         <textarea name="content" class="form-control publish-textarea mb-3" rows="3" placeholder="想说点什么..."
             required></textarea>
-        <div class="publish-row">
-            <input type="file" name="image" multiple accept="image/*" class="form-control publish-file">
+        <div class="publish-form-row publish-form-bottom">
+            <div id="image-upload-preview" class="image-upload-preview"></div>
+            <label for="image-upload-input" class="image-upload-plus">
+                <span>+</span>
+            </label>
+            <input type="file" id="image-upload-input" name="images" multiple accept="image/*" style="display:none;" />
+            <button type="submit" class="btn btn-primary publish-btn ml-auto">分享新鲜事</button>
         </div>
-        <button type="submit" class="btn btn-primary publish-btn">分享新鲜事</button>
         <hr class="publish-divider">
     </form>
     <!-- 动态卡片 -->
@@ -131,4 +135,75 @@
 
 <link rel="stylesheet" href="{% static 'plaza/css/plaza.css' %}">
 <script src="{% static 'plaza/js/plaza.js' %}"></script>
+<script>
+    (function () {
+        const maxImages = 9;
+        const input = document.getElementById('image-upload-input');
+        const preview = document.getElementById('image-upload-preview');
+        const plusBtn = document.querySelector('.image-upload-plus');
+        let fileList = [];
+        if (!input || !preview || !plusBtn) return;
+        function renderPreview() {
+            preview.innerHTML = '';
+            fileList.forEach(function (file, idx) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const wrapper = document.createElement('div');
+                    wrapper.style.position = 'relative';
+                    wrapper.style.display = 'inline-block';
+                    wrapper.style.marginRight = '0px';
+                    wrapper.style.marginBottom = '0px';
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.className = 'preview-img';
+                    img.title = file.name;
+                    // 删除按钮
+                    const removeBtn = document.createElement('button');
+                    removeBtn.className = 'img-remove';
+                    removeBtn.type = 'button';
+                    removeBtn.innerHTML = '×';
+                    removeBtn.onclick = function () {
+                        fileList.splice(idx, 1);
+                        renderPreview();
+                        updateInputFiles();
+                    };
+                    wrapper.appendChild(img);
+                    wrapper.appendChild(removeBtn);
+                    preview.appendChild(wrapper);
+                };
+                reader.readAsDataURL(file);
+            });
+            if (fileList.length >= maxImages) {
+                plusBtn.style.display = 'none';
+            } else {
+                plusBtn.style.display = '';
+            }
+        }
+        function updateInputFiles() {
+            // 创建新的 DataTransfer 对象以更新 input.files
+            const dt = new DataTransfer();
+            fileList.forEach(f => dt.items.add(f));
+            input.files = dt.files;
+        }
+        input.addEventListener('change', function () {
+            let newFiles = Array.from(this.files);
+            if (fileList.length + newFiles.length > maxImages) {
+                alert('最多只能上传9张图片');
+                this.value = '';
+                return;
+            }
+            fileList = fileList.concat(newFiles).slice(0, maxImages);
+            renderPreview();
+            updateInputFiles();
+        });
+        // 提交前强制同步一次input.files
+        var form = document.querySelector('.publish-form');
+        if (form) {
+            form.addEventListener('submit', function () {
+                updateInputFiles();
+            });
+        }
+        renderPreview();
+    })();
+</script>
 {% endblock %}

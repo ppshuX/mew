@@ -12,7 +12,7 @@ from operator import attrgetter
 def plaza_list(request):
     if request.method == 'POST':
         content = request.POST.get('content')
-        images = request.FILES.getlist('image')
+        images = request.FILES.getlist('images')
         
         if content or images:
             post = Post.objects.create(author=request.user, content=content)

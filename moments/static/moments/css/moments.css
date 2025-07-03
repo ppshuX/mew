@@ -549,3 +549,82 @@ body {
 .ml-auto {
     margin-left: auto;
 }
+
+/* 多图上传区样式 */
+.image-upload-preview {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 10px;
+    min-height: 60px;
+}
+
+.preview-img {
+    width: 90px;
+    height: 90px;
+    object-fit: cover;
+    border-radius: 10px;
+    border: 1.5px solid #e3e8f0;
+    box-shadow: 0 2px 8px rgba(168, 106, 227, 0.08);
+    position: relative;
+    background: #fafbfc;
+    margin-right: 0;
+}
+
+.image-upload-plus {
+    width: 90px;
+    height: 90px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1.5px dashed #a86ae3;
+    border-radius: 10px;
+    font-size: 2.5rem;
+    color: #a86ae3;
+    background: #fafbfc;
+    cursor: pointer;
+    transition: border-color 0.2s, color 0.2s;
+    margin-bottom: 10px;
+}
+
+.image-upload-plus:hover {
+    border-color: #764ba2;
+    color: #764ba2;
+}
+
+.image-upload-preview {
+    position: relative;
+}
+
+.image-upload-preview .img-remove {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    background: rgba(0, 0, 0, 0.55);
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 22px;
+    height: 22px;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 2;
+    transition: background 0.2s;
+}
+
+.image-upload-preview .img-remove:hover {
+    background: #d9534f;
+}
+
+.soft-divider {
+    width: 100%;
+    height: 2.5px;
+    background: linear-gradient(90deg, #f3eaff 0%, #e6edff 100%);
+    border-radius: 2px;
+    margin: 18px 0 24px 0;
+    box-shadow: 0 1px 6px 0 rgba(168, 106, 227, 0.06);
+    opacity: 0.85;
+}

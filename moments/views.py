@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect, get_object_or_404
-from .models import Post, Comment
+from .models import Post, Comment, MomentsImage
 from blog.models import BlogPost
 from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
@@ -17,9 +17,17 @@ from django.urls import reverse
 def  moments_list(request):
     if request.method == 'POST':
         content = request.POST.get('content')
-        image = request.FILES.get('image')
-        if content or image:
-            Post.objects.create(author=request.user, content=content, image=image)
+        images = request.FILES.getlist('images')
+        print("收到图片数量：", len(images))  # 调试输出
+        if content or images:
+            post = Post.objects.create(author=request.user, content=content)
+            for img in images[:9]:
+                try:
+                    MomentsImage.objects.create(post=post, image=img)
+                    print("图片保存成功：", img)
+                except Exception as e:
+                    print("图片保存失败：", e)
+            print("该帖图片数量：", post.images.count())  # 调试输出
             return redirect('moments:list')
         
     # 获取普通动态
