@@ -16,7 +16,7 @@ from .models import QQUser
 # QQ OAuth配置
 QQ_APP_ID = '102799644'
 QQ_APP_KEY = 'JWWP8iBWfhaJtLf0'
-QQ_REDIRECT_URI = 'https://app7534.acapp.acwing.com.cn/qq_login/callback/'
+QQ_REDIRECT_URI = 'https://app7534.acapp.acwing.com.cn/qq_login/callback'
 QQ_AUTHORIZE_URL = 'https://graph.qq.com/oauth2.0/authorize'
 QQ_ACCESS_TOKEN_URL = 'https://graph.qq.com/oauth2.0/token'
 QQ_OPENID_URL = 'https://graph.qq.com/oauth2.0/me'
