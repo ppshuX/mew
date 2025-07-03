@@ -12,16 +12,17 @@
     <form method="post" enctype="multipart/form-data" class="publish-form mb-5"
         style="background:none;box-shadow:none;border-radius:0;padding:0;">
         {% csrf_token %}
-        <textarea name="content" class="form-control publish-textarea mb-3" rows="3" placeholder="想说点什么..."
-            required></textarea>
-        <div class="publish-form-row publish-form-bottom">
-            <div id="image-upload-preview" class="image-upload-preview"></div>
-            <label for="image-upload-input" class="image-upload-plus">
-                <span>+</span>
+        <div class="publish-form-row" style="display: flex; align-items: center; justify-content: center;">
+            <textarea name="content" class="form-control publish-textarea" rows="3" placeholder="想说点什么..." required
+                style="flex:1; max-width: 700px; min-width:0; margin-bottom:0; height: 100px; resize: vertical;"></textarea>
+            <label for="image-upload-input" class="image-upload-plus"
+                style="margin-left: 24px; cursor:pointer; display: flex; align-items: center; justify-content: center; width: 80px; height: 80px; border: 2px dashed #b388ff; border-radius: 16px; background: #fafcff;">
+                <span style="font-size: 2rem; color: #b388ff;">+</span>
             </label>
             <input type="file" id="image-upload-input" name="images" multiple accept="image/*" style="display:none;" />
-            <button type="submit" class="btn btn-primary publish-btn ml-auto">分享新鲜事</button>
         </div>
+        <div id="image-upload-preview" class="image-upload-preview" style="margin-bottom: 8px;"></div>
+        <button type="submit" class="btn btn-primary publish-btn ml-auto">分享新鲜事</button>
         <hr class="publish-divider">
     </form>
     <!-- 动态卡片 -->
