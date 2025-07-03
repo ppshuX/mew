@@ -79,12 +79,6 @@
                     <img id="cover-preview"
                         src="{% if blog.cover_image %}{{ blog.cover_image.url }}{% else %}#{% endif %}" alt="封面预览"
                         style="{% if blog.cover_image %}display:block;{% else %}display:none;{% endif %}max-width:100%;margin-top:8px;border-radius:4px;" />
-                    <label class="mew-form-label" style="margin-top:56px;">类别</label>
-                    <select name="category" class="form-select form-select-sm">
-                        <option value="private">私密（仅自己可见）</option>
-                        <option value="friends">朋友可见</option>
-                        <option value="public">所有人可见</option>
-                    </select>
                 </div>
                 <div class="col-md-6 mb-3 mb-md-0 d-flex flex-column align-items-end justify-content-center">
                     <div style="width:340px;">
