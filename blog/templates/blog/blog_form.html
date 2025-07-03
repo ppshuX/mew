@@ -6,9 +6,9 @@
 {% block content %}
 <link rel="stylesheet" href="{% static 'blog/css/blog_form.css' %}">
 <!-- ToastUI Editor CSS -->
-<link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" />
+<link rel="stylesheet" href="{% static 'vendor/toastui-editor/toastui-editor.min.css' %}" />
 <!-- ToastUI Editor UMD JS -->
-<script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
+<script src="{% static 'vendor/toastui-editor/toastui-editor-all.min.js' %}"></script>
 <div class="mew-form-bg">
     <div class="mew-form-card" style="max-width:900px;margin:0 auto;position:relative;">
         <a href="{% url 'draft_list' %}" class="btn btn-outline-secondary"
@@ -111,7 +111,7 @@
 </div>
 
 <script src="{% static 'blog/js/blog_form.js' %}"></script>
-<script src="https://cdn.ckeditor.com/ckeditor5/39.0.1/classic/ckeditor.js"></script>
+<script src="{% static 'vendor/ckeditor/ckeditor.js' %}"></script>
 <script>
     // Tab切换逻辑
     const tabEdit = document.getElementById('tab-edit');

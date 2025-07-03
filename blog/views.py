@@ -14,6 +14,9 @@ import markdown
 from django.utils.safestring import mark_safe
 from django.views.decorators.http import require_POST
 from django.template.loader import render_to_string
+from PIL import Image
+from django.core.files.uploadedfile import InMemoryUploadedFile
+import io
 
 # Create your views here.
 @login_required
@@ -22,11 +25,13 @@ def blog_create(request):
         is_draft = str(request.POST.get('is_draft', '')).lower() in ['true', '1']
         publish_to = request.POST.getlist('publish_to')
         publish_type = ','.join(sorted(set([x for x in publish_to if x in ['blog', 'moments', 'plaza', 'private']])))
+        cover = request.FILES.get('blog_cover')
+        cover_image = compress_image(cover) if cover else None
         post = BlogPost(
             author=request.user,
             title=request.POST.get('blog_title'),
             content=request.POST.get('blog_content'),
-            cover_image=request.FILES.get('blog_cover'),
+            cover_image=cover_image,
             category=request.POST.get('category', 'daily'),
             is_blog=True,
             blog_tags=request.POST.get('blog_tags'),
@@ -36,7 +41,11 @@ def blog_create(request):
         )
         post.save()
         for img in request.FILES.getlist('images'):
-            BlogImage.objects.create(post=post, image=img)
+            try:
+                compressed_img = compress_image(img)
+                BlogImage.objects.create(post=post, image=compressed_img)
+            except Exception as e:
+                pass
         return redirect('blog_detail', pk=post.id)
     else:
         form = BlogPostForm()
@@ -279,3 +288,17 @@ def like_blog_post(request, post_id):
         'liked': liked,
         'like_count': post.like_count(),
     })
+
+def compress_image(uploaded_file, quality=70, max_size=1024):
+    image = Image.open(uploaded_file)
+    if max(image.size) > max_size:
+        ratio = max_size / max(image.size)
+        new_size = (int(image.size[0]*ratio), int(image.size[1]*ratio))
+        image = image.resize(new_size, Image.ANTIALIAS)
+    output_io = io.BytesIO()
+    image = image.convert('RGB')
+    image.save(output_io, format='JPEG', quality=quality)
+    output_io.seek(0)
+    return InMemoryUploadedFile(
+        output_io, 'ImageField', uploaded_file.name, 'image/jpeg', output_io.getbuffer().nbytes, None
+    )

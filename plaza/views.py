@@ -7,6 +7,23 @@ from django.http import JsonResponse
 from django.contrib import messages
 from itertools import chain
 from operator import attrgetter
+from PIL import Image
+from django.core.files.uploadedfile import InMemoryUploadedFile
+import io
+
+def compress_image(uploaded_file, quality=70, max_size=1024):
+    image = Image.open(uploaded_file)
+    if max(image.size) > max_size:
+        ratio = max_size / max(image.size)
+        new_size = (int(image.size[0]*ratio), int(image.size[1]*ratio))
+        image = image.resize(new_size, Image.ANTIALIAS)
+    output_io = io.BytesIO()
+    image = image.convert('RGB')
+    image.save(output_io, format='JPEG', quality=quality)
+    output_io.seek(0)
+    return InMemoryUploadedFile(
+        output_io, 'ImageField', uploaded_file.name, 'image/jpeg', output_io.getbuffer().nbytes, None
+    )
 
 @login_required
 def plaza_list(request):
@@ -21,7 +38,11 @@ def plaza_list(request):
             # 处理多张图片上传
             for image in images:
                 if image:
-                    PostImage.objects.create(post=post, image=image)
+                    try:
+                        compressed_img = compress_image(image)
+                        PostImage.objects.create(post=post, image=compressed_img)
+                    except Exception as e:
+                        pass
             
             return redirect('plaza:list')
         
