@@ -140,13 +140,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 fullscreenBtn.innerHTML = '<i class="fas fa-expand"></i> 全屏编辑';
                 if (exitFullscreenBtn) exitFullscreenBtn.style.display = 'none';
             }
-
-            // 刷新编辑器以适配新尺寸
-            if (window.toastEditor) {
-                setTimeout(function () {
-                    window.toastEditor.resize();
-                }, 100);
-            }
         });
     }
 
@@ -158,11 +151,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (fullscreenBtn) fullscreenBtn.classList.remove('fullscreen-active');
                 if (fullscreenBtn) fullscreenBtn.innerHTML = '<i class="fas fa-expand"></i> 全屏编辑';
                 exitFullscreenBtn.style.display = 'none';
-                if (window.toastEditor) {
-                    setTimeout(function () {
-                        window.toastEditor.resize();
-                    }, 100);
-                }
             }
         });
     }
