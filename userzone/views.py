@@ -50,10 +50,6 @@ def userzone(request, username):
         plaza_posts = plaza_posts.filter(category=category)
         private_posts = private_posts.filter(category=category)
     
-    # 添加调试信息
-    print(f"Debug: Found {moments_posts.count()} moments posts for user {username}")
-    print(f"Debug: Found {plaza_posts.count()} plaza posts for user {username}")
-    
     form = None
     if is_owner:
         if request.method == 'POST':
