@@ -48,10 +48,10 @@ def qq_callback(request):
     
     # 验证state参数
     if state != request.session.get('qq_state'):
-        return HttpResponse('State验证失败', status=400)
+        return HttpResponse('State validation failed', status=400)
     
     if not code:
-        return HttpResponse('授权失败', status=400)
+        return HttpResponse('Authorization failed', status=400)
     
     try:
         # 获取access_token
@@ -67,7 +67,7 @@ def qq_callback(request):
         token_data = parse_qs(token_response.text)
         
         if 'error' in token_data:
-            return HttpResponse(f'获取access_token失败: {token_data["error"]}', status=400)
+            return HttpResponse(f'Failed to get access_token: {token_data["error"]}', status=400)
         
         access_token = token_data['access_token'][0]
         
@@ -94,7 +94,7 @@ def qq_callback(request):
         user_info = user_info_response.json()
         
         if user_info.get('ret') != 0:
-            return HttpResponse(f'获取用户信息失败: {user_info.get("msg")}', status=400)
+            return HttpResponse(f'Failed to get user information: {user_info.get("msg")}', status=400)
         
         # 查找或创建QQUser
         qq_user = QQUser.objects.filter(qq_openid=openid).first()
@@ -145,4 +145,4 @@ def qq_callback(request):
         return redirect('moments:list')
         
     except Exception as e:
-        return HttpResponse(f'QQ登录失败: {str(e)}', status=500)
+        return HttpResponse(f'QQ login failed: {str(e)}', status=500)

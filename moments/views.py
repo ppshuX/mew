@@ -29,7 +29,7 @@ def  moments_list(request):
                 try:
                     MomentsImage.objects.create(post=post, image=img)
                 except Exception as e:
-                    import traceback; traceback.print_exc()
+                    pass
             return redirect('moments:list')
         
     # 获取普通动态
@@ -161,7 +161,7 @@ def compress_image(uploaded_file, quality=70, max_size=1024):
     if max(image.size) > max_size:
         ratio = max_size / max(image.size)
         new_size = (int(image.size[0]*ratio), int(image.size[1]*ratio))
-        image = image.resize(new_size, Image.ANTIALIAS)
+        image = image.resize(new_size, Image.Resampling.LANCZOS)
     output_io = io.BytesIO()
     image = image.convert('RGB')
     image.save(output_io, format='JPEG', quality=quality)

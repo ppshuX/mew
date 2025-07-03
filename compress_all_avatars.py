@@ -23,8 +23,7 @@ for filename in os.listdir(avatar_dir):
             img = img.convert('RGB')
             # 统一保存为JPEG，覆盖原文件
             img.save(path, format='JPEG', quality=quality)
-            print(f"已压缩: {filename}")
         except Exception as e:
-            print(f"跳过 {filename}: {e}")
+            pass
 
 print("全部处理完成！") 

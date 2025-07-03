@@ -16,7 +16,7 @@ def compress_image(uploaded_file, quality=70, max_size=1024):
     if max(image.size) > max_size:
         ratio = max_size / max(image.size)
         new_size = (int(image.size[0]*ratio), int(image.size[1]*ratio))
-        image = image.resize(new_size, Image.ANTIALIAS)
+        image = image.resize(new_size, Image.Resampling.LANCZOS)
     output_io = io.BytesIO()
     image = image.convert('RGB')
     image.save(output_io, format='JPEG', quality=quality)
@@ -122,23 +122,17 @@ def like_comment(request, comment_id):
     comment = get_object_or_404(Comment, id=comment_id)
     user = request.user
     
-    print(f"评论点赞请求: 评论ID={comment_id}, 用户={user.username}")
-    print(f"当前点赞状态: {user in comment.likes.all()}")
-
     if user in comment.likes.all():
         comment.likes.remove(user)
         liked = False
-        print(f"取消点赞: 用户={user.username}, 评论ID={comment_id}")
     else:
         comment.likes.add(user)
         liked = True
-        print(f"添加点赞: 用户={user.username}, 评论ID={comment_id}")
 
     # 确保数据保存到数据库
     comment.save()
     
     like_count = comment.likes.count()
-    print(f"点赞后状态: liked={liked}, like_count={like_count}")
 
     return JsonResponse({
         'liked': liked,
