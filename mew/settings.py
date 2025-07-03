@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'plaza',
     'userzone',
     'blog',
+    'qq_login',
 ]
 
 MIDDLEWARE = [
