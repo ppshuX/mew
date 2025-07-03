@@ -12,14 +12,30 @@
     <form method="post" enctype="multipart/form-data" class="publish-form mb-5"
         style="background:none;box-shadow:none;border-radius:0;padding:0;">
         {% csrf_token %}
-        <div class="publish-form-row" style="display: flex; align-items: center; justify-content: center;">
-            <textarea name="content" class="form-control publish-textarea" rows="3" placeholder="想说点什么..." required
-                style="flex:1; max-width: 700px; min-width:0; margin-bottom:0; height: 100px; resize: vertical;"></textarea>
-            <label for="image-upload-input" class="image-upload-plus"
-                style="margin-left: 24px; cursor:pointer; display: flex; align-items: center; justify-content: center; width: 80px; height: 80px; border: 2px dashed #b388ff; border-radius: 16px; background: #fafcff;">
-                <span style="font-size: 2rem; color: #b388ff;">+</span>
-            </label>
-            <input type="file" id="image-upload-input" name="images" multiple accept="image/*" style="display:none;" />
+        <div class="publish-form-row" style="display: flex; align-items: flex-start; justify-content: center;">
+            <div style="position: relative; flex:1; max-width: 700px; min-width:0; margin-bottom:0;">
+                <textarea name="content" class="form-control publish-textarea" rows="3" placeholder="想说点什么..." required
+                    style="width:100%; height: 100px; resize: vertical;"></textarea>
+            </div>
+            <div style="display: flex; flex-direction: column; align-items: center; margin-left: 24px;">
+                <label for="image-upload-input" class="image-upload-plus"
+                    style="cursor:pointer; display: flex; align-items: center; justify-content: center; width: 80px; height: 80px; border: 2px dashed #b388ff; border-radius: 16px; background: #fafcff;">
+                    <span style="font-size: 2rem; color: #b388ff;">+</span>
+                </label>
+                <input type="file" id="image-upload-input" name="images" multiple accept="image/*"
+                    style="display:none;" />
+                <select name="category" class="form-control"
+                    style="margin-top: 12px; width: 140px; max-width: 160px; border: 2px solid #b388ff; border-radius: 16px; height: 40px; font-size: 1.1rem; color: #6c3fc5; background: #fafcff; box-shadow: 0 2px 8px #f3eaff;">
+                    <option value="daily">日常</option>
+                    <option value="study">学习</option>
+                    <option value="work">工作</option>
+                    <option value="travel">旅行</option>
+                    <option value="food">美食</option>
+                    <option value="sports">运动</option>
+                    <option value="entertainment">娱乐</option>
+                    <option value="other">其他</option>
+                </select>
+            </div>
         </div>
         <div id="image-upload-preview" class="image-upload-preview" style="margin-bottom: 8px;"></div>
         <button type="submit" class="btn btn-primary publish-btn ml-auto">分享新鲜事</button>
@@ -33,7 +49,8 @@
             <div class="blog-badge">📓 博客</div>
             <div class="author-row">
                 <a href="{% url 'userzone:detail' username=post.author.username %}" style="display:contents;">
-                    {% if post.author.user_profile.avatar and post.author.user_profile.avatar.url != '/media/avatars/default.jpg' %}
+                    {% if post.author.user_profile.avatar and post.author.user_profile.avatar.url !=
+                    '/media/avatars/default.jpg' %}
                     <img class="avatar-img" src="{{ post.author.user_profile.avatar.url }}" alt="头像"
                         style="width:36px;height:36px;border-radius:50%;object-fit:cover;vertical-align:middle;">
                     {% else %}
@@ -68,7 +85,8 @@
         <div class="moment-card" onclick="window.location.href='{% url 'plaza:detail' post.id %}'">
             <div class="author-row">
                 <a href="{% url 'userzone:detail' username=post.author.username %}" style="display:contents;">
-                    {% if post.author.user_profile.avatar and post.author.user_profile.avatar.url != '/media/avatars/default.jpg' %}
+                    {% if post.author.user_profile.avatar and post.author.user_profile.avatar.url !=
+                    '/media/avatars/default.jpg' %}
                     <img class="avatar-img" src="{{ post.author.user_profile.avatar.url }}" alt="头像"
                         style="width:36px;height:36px;border-radius:50%;object-fit:cover;vertical-align:middle;">
                     {% else %}

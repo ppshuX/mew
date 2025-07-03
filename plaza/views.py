@@ -13,9 +13,10 @@ def plaza_list(request):
     if request.method == 'POST':
         content = request.POST.get('content')
         images = request.FILES.getlist('images')
+        category = request.POST.get('category', 'daily')
         
         if content or images:
-            post = Post.objects.create(author=request.user, content=content)
+            post = Post.objects.create(author=request.user, content=content, category=category)
             
             # 处理多张图片上传
             for image in images:

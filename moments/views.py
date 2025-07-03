@@ -18,9 +18,10 @@ def  moments_list(request):
     if request.method == 'POST':
         content = request.POST.get('content')
         images = request.FILES.getlist('images')
+        category = request.POST.get('category', 'daily')
         print("收到图片数量：", len(images))  # 调试输出
         if content or images:
-            post = Post.objects.create(author=request.user, content=content)
+            post = Post.objects.create(author=request.user, content=content, category=category)
             for img in images[:9]:
                 try:
                     MomentsImage.objects.create(post=post, image=img)

@@ -6,22 +6,41 @@
 
 {% block content %}
 <div class="moments-content-outer">
-    <h3 class="publish-title mb-4">👋 朋友圈 Moments</h3>
+    <h3 class="publish-title mb-4"
+        style="font-size:2.6rem; font-family:'ZCOOL KuaiLe','Arial Black','Arial',sans-serif; font-weight:bold; background: linear-gradient(90deg, #a18cd1 0%, #fbc2eb 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 2px 4px 12px #e0c3fc, 0 2px 8px #fff; letter-spacing:2px; display:flex; align-items:center; justify-content:center;">
+        <span style="font-size:2.2rem; margin-right:10px;">👋</span> 朋友圈 Moments
+    </h3>
     <!-- 发布说说 -->
     <form method="post" enctype="multipart/form-data" class="publish-form mb-5 publish-form-flex">
         {% csrf_token %}
-        <div class="publish-form-row">
-            <textarea name="content" class="form-control publish-textarea mb-3" rows="3" placeholder="想说点什么..."
-                required></textarea>
+        <div class="publish-form-row" style="display: flex; align-items: flex-start; justify-content: center;">
+            <div style="position: relative; flex:1; max-width: 700px; min-width:0; margin-bottom:0;">
+                <textarea name="content" class="form-control publish-textarea" rows="3" placeholder="想说点什么..." required
+                    style="width:100%; height: 100px; resize: vertical;"></textarea>
+            </div>
+            <div style="display: flex; flex-direction: column; align-items: center; margin-left: 24px;">
+                <label for="image-upload-input" class="image-upload-plus"
+                    style="cursor:pointer; display: flex; align-items: center; justify-content: center; width: 80px; height: 80px; border: 2px dashed #b388ff; border-radius: 16px; background: #fafcff;">
+                    <span style="font-size: 2rem; color: #b388ff;">+</span>
+                </label>
+                <input type="file" id="image-upload-input" name="images" multiple accept="image/*"
+                    style="display:none;" />
+                <select name="category" class="form-control"
+                    style="margin-top: 12px; width: 110px; max-width: 120px; border: 2px solid #b388ff; border-radius: 12px; height: 32px; font-size: 0.95rem; color: #6c3fc5; background: #fafcff; box-shadow: 0 2px 8px #f3eaff; padding: 2px 8px;">
+                    <option value="daily">日常</option>
+                    <option value="study">学习</option>
+                    <option value="work">工作</option>
+                    <option value="travel">旅行</option>
+                    <option value="food">美食</option>
+                    <option value="sports">运动</option>
+                    <option value="entertainment">娱乐</option>
+                    <option value="other">其他</option>
+                </select>
+            </div>
         </div>
-        <div class="publish-form-row publish-form-bottom">
-            <div id="image-upload-preview" class="image-upload-preview"></div>
-            <label for="image-upload-input" class="image-upload-plus">
-                <span>+</span>
-            </label>
-            <input type="file" id="image-upload-input" name="images" multiple accept="image/*" style="display:none;" />
-            <button type="submit" class="btn btn-primary publish-btn ml-auto">分享新鲜事</button>
-        </div>
+        <div id="image-upload-preview" class="image-upload-preview" style="margin-bottom: 8px;"></div>
+        <button type="submit" class="btn btn-primary publish-btn ml-auto"
+            style="display:block;margin:24px auto 0 auto;">分享新鲜事</button>
         <hr class="publish-divider">
     </form>
     <div class="soft-divider"></div>
