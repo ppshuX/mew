@@ -179,26 +179,6 @@ CATEGORY_CHOICES = [
     ('other', '其他'),
 ]
 
-@login_required
-def simple_create(request):
-    if request.method == 'POST':
-        title = request.POST.get('title')
-        content = request.POST.get('content')
-        category = request.POST.get('category')
-        publish_to = request.POST.getlist('publish_to')
-        publish_type = ','.join(sorted(set([x for x in publish_to if x in ['blog', 'moments', 'plaza', 'private']])))
-        post = BlogPost(
-            author=request.user,
-            title=title,
-            content=content,
-            category=category,
-            is_blog=False,
-            publish_type=publish_type or 'private',
-        )
-        post.save()
-        return redirect('userzone:detail', request.user.username)
-    return render(request, 'blog/blog_form_simple.html', {'category_choices': CATEGORY_CHOICES})
-
 @csrf_exempt
 def upload_blog_image(request):
     if request.method == 'POST' and request.FILES.get('image'):
