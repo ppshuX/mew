@@ -87,6 +87,27 @@ DATABASES = {
     }
 }
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'ERROR',
+            'class': 'logging.FileHandler',
+            'filename': 'error.log',
+            'encoding': 'utf-8',  # 确保日志文件是用 utf-8 编码
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+    },
+}
+
+
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
@@ -125,3 +146,4 @@ LOGIN_REDIRECT_URL = '/moments/'
 LOGOUT_REDIRECT_URL = '/accounts/login/'
 
 DEFAULT_CHARSET = 'utf-8'
+FILE_CHARSET = 'utf-8'
