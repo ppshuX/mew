@@ -278,8 +278,8 @@
                                         <img src="{{ post.author.user_profile.avatar.url }}" class="uz-feed-avatar"
                                             alt="{{ post.author.user_profile.nickname }}">
                                         <div class="uz-feed-meta">
-                                            <span class="uz-feed-author">{{
-                                                post.author.user_profile.nickname|default:post.author.username }}</span>
+                                            <span class="uz-feed-author">
+                                                {{ post.author.user_profile.nickname|default:post.author.username }}</span>
                                             <span class="uz-feed-time">{{ post.created_at|date:"Y-m-d H:i" }}</span>
                                         </div>
                                         {% else %}
