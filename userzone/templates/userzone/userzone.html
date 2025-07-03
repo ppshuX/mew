@@ -58,12 +58,14 @@
                     </div>
                     <div class="uz-visitors-grid d-flex flex-wrap gap-2 justify-content-start">
                         {% for v in recent_visitors %}
-                        <a href="{% url 'userzone:detail' username=v.user.username %}" title="{{ v.nickname|default:v.user.username }}" style="display:inline-block;">
+                        <a href="{% url 'userzone:detail' username=v.user.username %}"
+                            title="{{ v.nickname|default:v.user.username }}" style="display:inline-block;">
                             {% if v.avatar and v.avatar.url and v.avatar.url != '/media/avatars/default.jpg' %}
                             <img src="{{ v.avatar.url }}" class="uz-visitor-avatar"
                                 alt="{{ v.nickname|default:v.user.username }}">
                             {% else %}
-                            <span class="uz-visitor-avatar" style="background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%); display: flex; align-items: center; justify-content: center; font-weight: bold; color: #a86ae3; font-size: 1.2rem; border: 3px solid #f3eaff; box-shadow: 0 0 8px #f3eaff;">
+                            <span class="uz-visitor-avatar"
+                                style="background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%); display: flex; align-items: center; justify-content: center; font-weight: bold; color: #a86ae3; font-size: 1.2rem; border: 3px solid #f3eaff; box-shadow: 0 0 8px #f3eaff;">
                                 {{ v.nickname|default:v.user.username|first|upper }}
                             </span>
                             {% endif %}
@@ -126,7 +128,7 @@
                                 <div class="uz-feed-header d-flex align-items-center justify-content-between">
                                     <div class="d-flex align-items-center gap-2">
                                         {% with profile=post.author.user_profile %}
-                                        {% if profile and profile.avatar %}
+                                        {% if profile and profile.avatar and profile.avatar.url != '/media/avatars/default.jpg' %}
                                         <img src="{{ profile.avatar.url }}" class="uz-feed-avatar"
                                             alt="{{ profile.nickname|default:post.author.username }}">
                                         {% else %}
@@ -200,7 +202,7 @@
                                 <div class="uz-feed-header d-flex align-items-center justify-content-between">
                                     <div class="d-flex align-items-center gap-2">
                                         {% with profile=post.author.user_profile %}
-                                        {% if profile and profile.avatar %}
+                                        {% if profile and profile.avatar and profile.avatar.url != '/media/avatars/default.jpg' %}
                                         <img src="{{ profile.avatar.url }}" class="uz-feed-avatar"
                                             alt="{{ profile.nickname|default:post.author.username }}">
                                         {% else %}
@@ -276,7 +278,8 @@
                                         <img src="{{ post.author.user_profile.avatar.url }}" class="uz-feed-avatar"
                                             alt="{{ post.author.user_profile.nickname }}">
                                         <div class="uz-feed-meta">
-                                            <span class="uz-feed-author">{{ post.author.user_profile.nickname|default:post.author.username }}</span>
+                                            <span class="uz-feed-author">{{
+                                                post.author.user_profile.nickname|default:post.author.username }}</span>
                                             <span class="uz-feed-time">{{ post.created_at|date:"Y-m-d H:i" }}</span>
                                         </div>
                                         {% else %}

@@ -59,7 +59,8 @@
             <div class="blog-badge">📓 博客</div>
             <div class="author-row">
                 <a href="{% url 'userzone:detail' username=post.author.username %}" style="display:contents;">
-                    {% if post.author.user_profile.avatar and post.author.user_profile.avatar.url != '/media/avatars/default.jpg' %}
+                    {% if post.author.user_profile.avatar and post.author.user_profile.avatar.url !=
+                    '/media/avatars/default.jpg' %}
                     <img class="avatar-img" src="{{ post.author.user_profile.avatar.url }}" alt="头像"
                         style="width:36px;height:36px;border-radius:50%;object-fit:cover;vertical-align:middle;">
                     {% else %}
@@ -104,7 +105,8 @@
             </div>
             <div class="author-row">
                 <a href="{% url 'userzone:detail' username=post.author.username %}" style="display:contents;">
-                    {% if post.author.user_profile.avatar and post.author.user_profile.avatar.url != '/media/avatars/default.jpg' %}
+                    {% if post.author.user_profile.avatar and post.author.user_profile.avatar.url !=
+                    '/media/avatars/default.jpg' %}
                     <img class="avatar-img" src="{{ post.author.user_profile.avatar.url }}" alt="头像"
                         style="width:36px;height:36px;border-radius:50%;object-fit:cover;vertical-align:middle;">
                     {% else %}
