@@ -246,7 +246,7 @@
             </div>
 
             <!-- 多张图片显示 -->
-            {% if post.images.all %}
+            {% if post.images.all.count > 0 %}
             <div class="detail-image-grid">
                 {% for post_image in post.images.all %}
                 <div class="detail-image-card">

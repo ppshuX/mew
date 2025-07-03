@@ -119,7 +119,7 @@
                 <span class="author-divider">|</span>
                 <span class="author-name">{{ post.author.user_profile.nickname|default:post.author.username }}</span>
             </div>
-            {% if post.images.all %}
+            {% if post.images.all.count > 0 %}
             <div class="image-grid{% if post.images.all|length == 4 %} four-images{% endif %}">
                 {% for img in post.images.all %}
                 <div class="image-card">
