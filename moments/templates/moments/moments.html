@@ -28,13 +28,16 @@
         <div class="blog-card" onclick="window.location.href='{% url 'blog_detail' post.id %}'">
             <div class="blog-badge">📓 博客</div>
             <div class="author-row">
-                {% if post.author.user_profile.avatar and post.author.user_profile.avatar.url != '/media/avatars/default.jpg' %}
-                <img class="avatar-img" src="{{ post.author.user_profile.avatar.url }}" alt="头像"
-                    style="width:36px;height:36px;border-radius:50%;object-fit:cover;vertical-align:middle;">
-                {% else %}
-                <span class="author-avatar-circle">{{ post.author.username|first|upper }}</span>
-                {% endif %}
-                <span class="author-nickname">{{ post.author.user_profile.nickname|default:post.author.username }}</span>
+                <a href="{% url 'userzone:detail' username=post.author.username %}" style="display:contents;">
+                    {% if post.author.user_profile.avatar and post.author.user_profile.avatar.url != '/media/avatars/default.jpg' %}
+                    <img class="avatar-img" src="{{ post.author.user_profile.avatar.url }}" alt="头像"
+                        style="width:36px;height:36px;border-radius:50%;object-fit:cover;vertical-align:middle;">
+                    {% else %}
+                    <span class="author-avatar-circle">{{ post.author.username|first|upper }}</span>
+                    {% endif %}
+                </a>
+                <span class="author-nickname">{{ post.author.user_profile.nickname|default:post.author.username
+                    }}</span>
             </div>
             <div class="blog-cover">
                 {% if post.cover_image %}
@@ -60,11 +63,13 @@
         <!-- 普通动态卡片 -->
         <div class="moment-card" onclick="window.location.href='{% url 'moments:post_detail' post.id %}'">
             <div class="author-row">
-                {% if post.author.user_profile.avatar and post.author.user_profile.avatar.url != '/media/avatars/default.jpg' %}
-                <img class="avatar-img" src="{{ post.author.user_profile.avatar.url }}" alt="头像"
-                    style="width:36px;height:36px;border-radius:50%;object-fit:cover;vertical-align:middle;">
-                {% else %}
-                <span class="avatar-circle">{{ post.author.username|first|upper }}</span>{% endif %}
+                <a href="{% url 'userzone:detail' username=post.author.username %}" style="display:contents;">
+                    {% if post.author.user_profile.avatar and post.author.user_profile.avatar.url != '/media/avatars/default.jpg' %}
+                    <img class="avatar-img" src="{{ post.author.user_profile.avatar.url }}" alt="头像"
+                        style="width:36px;height:36px;border-radius:50%;object-fit:cover;vertical-align:middle;">
+                    {% else %}
+                    <span class="avatar-circle">{{ post.author.username|first|upper }}</span>{% endif %}
+                </a>
                 <span class="author-divider">|</span>
                 <span class="author-name">{{ post.author.user_profile.nickname|default:post.author.username }}</span>
                 <span class="timestamp">{{ post.created_at|naturaltime }}</span>
