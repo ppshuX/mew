@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
+import uuid
+from django.utils.timezone import now
 
 # Create your models here.
 class Post(models.Model):
@@ -41,9 +43,14 @@ class Comment(models.Model):
     def is_liked_by(self, user):
         return self.likes.filter(id=user.id).exists()
 
+def moments_image_upload_to(instance, filename):
+    ext = filename.split('.')[-1]
+    unique_filename = f"{uuid.uuid4().hex}_{now().strftime('%Y%m%d%H%M%S')}.{ext}"
+    return f"moments_images/{unique_filename}"
+
 class MomentsImage(models.Model):
     post = models.ForeignKey(Post, related_name='images', on_delete=models.CASCADE)
-    image = models.ImageField(upload_to='moments_images/')
+    image = models.ImageField(upload_to=moments_image_upload_to)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:

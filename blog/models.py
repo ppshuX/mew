@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
+import uuid
+from django.utils.timezone import now
 
 # Create your models here.
 class BlogPost(models.Model):
@@ -33,9 +35,14 @@ class BlogPost(models.Model):
             return ''
         return (self.content[:length] + '...') if len(self.content) > length else self.content
 
+def blog_image_upload_to(instance, filename):
+    ext = filename.split('.')[-1]
+    unique_filename = f"{uuid.uuid4().hex}_{now().strftime('%Y%m%d%H%M%S')}.{ext}"
+    return f"blog_images/{unique_filename}"
+
 class BlogImage(models.Model):
     post = models.ForeignKey(BlogPost, related_name='images', on_delete=models.CASCADE)
-    image = models.ImageField(upload_to='blog_images/')
+    image = models.ImageField(upload_to=blog_image_upload_to)
 
 class BlogComment(models.Model):
     post = models.ForeignKey(BlogPost, related_name='comments', on_delete=models.CASCADE)
