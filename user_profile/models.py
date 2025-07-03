@@ -1,10 +1,14 @@
 from django.db import models
 from django.contrib.auth.models import User
+import uuid
+import os
 
 # Create your models here.
 
 def user_directory_path(instance, filename):
-    return f'avatars/user_{instance.user.id}/{filename}'
+    ext = filename.split('.')[-1]
+    unique_filename = f"{uuid.uuid4().hex}.{ext}"
+    return os.path.join('avatars', f'user_{instance.user.id}', unique_filename)
 
 class UserProfile(models.Model):
     GENDER_CHOICES = [
@@ -29,3 +33,4 @@ class UserProfile(models.Model):
 
     def __str__(self):
         return f"{self.user.username}的资料"
+
