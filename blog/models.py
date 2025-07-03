@@ -3,11 +3,16 @@ from django.contrib.auth.models import User
 import uuid
 from django.utils.timezone import now
 
+def blog_cover_upload_to(instance, filename):
+    ext = filename.split('.')[-1]
+    unique_filename = f"{uuid.uuid4().hex}_{now().strftime('%Y%m%d%H%M%S')}.{ext}"
+    return f"blog/covers/{unique_filename}"
+
 # Create your models here.
 class BlogPost(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
-    cover_image = models.ImageField(upload_to='blog/covers/', blank=True, null=True)
+    cover_image = models.ImageField(upload_to=blog_cover_upload_to, blank=True, null=True)
     content = models.TextField()
     category = models.CharField(max_length=50, default='未分类')
     is_draft = models.BooleanField(default=False, verbose_name="是否草稿")
@@ -56,3 +61,4 @@ class BlogComment(models.Model):
 
     def like_count(self):
         return self.likes.count()
+
