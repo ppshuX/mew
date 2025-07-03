@@ -30,7 +30,6 @@ def plaza_list(request):
     if request.method == 'POST':
         content = request.POST.get('content')
         images = request.FILES.getlist('images')
-        print("收到图片数量：", len(images))
         category = request.POST.get('category', 'daily')
         if content or images:
             post = Post.objects.create(author=request.user, content=content, category=category)
@@ -151,3 +150,4 @@ def delete_post(request, post_id):
         return redirect('plaza:list')
     else:
         return render(request, 'plaza/plaza_confirm_delete.html', {'post': post})
+

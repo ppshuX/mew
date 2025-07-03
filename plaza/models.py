@@ -2,6 +2,12 @@ from django.db import models
 from django.contrib.auth.models import User
 import uuid
 from django.utils.timezone import now
+import os
+
+def plaza_single_image_upload_to(instance, filename):
+    ext = filename.split('.')[-1]
+    unique_filename = f"{uuid.uuid4().hex}_{now().strftime('%Y%m%d%H%M%S')}.{ext}"
+    return os.path.join('plaza_posts', unique_filename)
 
 # Create your models here.
 class Post(models.Model):
@@ -18,7 +24,7 @@ class Post(models.Model):
     
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='plaza_posts')
     content = models.TextField(max_length=5000)
-    image = models.ImageField(upload_to='plaza_posts/', blank=True, null=True)  # 保留单图片字段以兼容旧数据
+    image = models.ImageField(upload_to=plaza_single_image_upload_to, blank=True, null=True)  # 保留单图片字段以兼容旧数据
     category = models.CharField(max_length=20, choices=CATEGORY_CHOICES, default='daily', verbose_name='类别')
     created_at = models.DateTimeField(auto_now_add=True)
     likes = models.ManyToManyField(User, related_name='plaza_liked_posts', blank=True)
@@ -63,3 +69,4 @@ class Comment(models.Model):
 
 class Meta:
     unique_together = ('post', 'user')
+
