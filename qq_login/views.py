@@ -96,32 +96,27 @@ def qq_callback(request):
         if user_info.get('ret') != 0:
             return HttpResponse(f'获取用户信息失败: {user_info.get("msg")}', status=400)
         
-        # 查找或创建用户
-        qq_user, created = QQUser.objects.get_or_create(
-            qq_openid=openid,
-            defaults={
-                'qq_nickname': user_info.get('nickname', ''),
-                'qq_avatar': user_info.get('figureurl_qq_2', user_info.get('figureurl_qq', '')),
-            }
-        )
-        
-        if created:
+        # 查找或创建QQUser
+        qq_user = QQUser.objects.filter(qq_openid=openid).first()
+        if not qq_user:
             # 创建新用户
             username = f"qq_{openid[:8]}"
-            # 确保用户名唯一
             counter = 1
             original_username = username
             while User.objects.filter(username=username).exists():
                 username = f"{original_username}_{counter}"
                 counter += 1
-            
             user = User.objects.create_user(
                 username=username,
                 email='',
                 password=None  # 不设置密码，因为使用QQ登录
             )
-            qq_user.user = user
-            qq_user.save()
+            qq_user = QQUser.objects.create(
+                user=user,
+                qq_openid=openid,
+                qq_nickname=user_info.get('nickname', ''),
+                qq_avatar=user_info.get('figureurl_qq_2', user_info.get('figureurl_qq', '')),
+            )
         else:
             # 更新现有用户信息
             qq_user.qq_nickname = user_info.get('nickname', qq_user.qq_nickname)
