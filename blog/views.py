@@ -45,7 +45,8 @@ def blog_create(request):
                 compressed_img = compress_image(img)
                 BlogImage.objects.create(post=post, image=compressed_img)
             except Exception as e:
-                pass
+                print("图片保存失败：", e)
+                import traceback; traceback.print_exc()
         return redirect('blog_detail', pk=post.id)
     else:
         form = BlogPostForm()

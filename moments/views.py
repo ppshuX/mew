@@ -14,6 +14,7 @@ from django.urls import reverse
 from PIL import Image
 from django.core.files.uploadedfile import InMemoryUploadedFile
 import io
+from django.views.decorators.csrf import csrf_exempt
 
 # Create your views here.
 @login_required
@@ -26,10 +27,10 @@ def  moments_list(request):
             post = Post.objects.create(author=request.user, content=content, category=category)
             for img in images[:9]:
                 try:
-                    compressed_img = compress_image(img)
-                    MomentsImage.objects.create(post=post, image=compressed_img)
+                    MomentsImage.objects.create(post=post, image=img)
                 except Exception as e:
-                    pass
+                    print("图片保存失败：", e)
+                    import traceback; traceback.print_exc()
             return redirect('moments:list')
         
     # 获取普通动态
@@ -169,3 +170,15 @@ def compress_image(uploaded_file, quality=70, max_size=1024):
     return InMemoryUploadedFile(
         output_io, 'ImageField', uploaded_file.name, 'image/jpeg', output_io.getbuffer().nbytes, None
     )
+
+def test_upload(request):
+    if request.method == 'POST':
+        images = request.FILES.getlist('images')
+        print("收到图片数量：", len(images))
+        from .models import Post, MomentsImage
+        # 这里随便找一条 Post 关联图片（仅测试用）
+        post = Post.objects.first()
+        for img in images:
+            MomentsImage.objects.create(post=post, image=img)
+        return render(request, 'moments/test_upload.html', {'msg': '上传完成'})
+    return render(request, 'moments/test_upload.html')

@@ -30,20 +30,16 @@ def plaza_list(request):
     if request.method == 'POST':
         content = request.POST.get('content')
         images = request.FILES.getlist('images')
+        print("收到图片数量：", len(images))
         category = request.POST.get('category', 'daily')
-        
         if content or images:
             post = Post.objects.create(author=request.user, content=content, category=category)
-            
-            # 处理多张图片上传
-            for image in images:
-                if image:
-                    try:
-                        compressed_img = compress_image(image)
-                        PostImage.objects.create(post=post, image=compressed_img)
-                    except Exception as e:
-                        pass
-            
+            for img in images[:9]:
+                try:
+                    PostImage.objects.create(post=post, image=img)
+                except Exception as e:
+                    print("图片保存失败：", e)
+                    import traceback; traceback.print_exc()
             return redirect('plaza:list')
         
     # 获取普通动态

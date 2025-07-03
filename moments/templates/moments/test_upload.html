@@ -1,0 +1,6 @@
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="file" name="images" multiple>
+    <button type="submit">上传</button>
+</form>
+{% if msg %}<div>{{ msg }}</div>{% endif %}
