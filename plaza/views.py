@@ -38,7 +38,6 @@ def plaza_list(request):
                 try:
                     PostImage.objects.create(post=post, image=img)
                 except Exception as e:
-                    print("图片保存失败：", e)
                     import traceback; traceback.print_exc()
             return redirect('plaza:list')
         
