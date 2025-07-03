@@ -249,7 +249,8 @@
             <div class="detail-image-grid">
                 {% for post_image in post.images.all %}
                 <div class="detail-image-card">
-                    <img src="{{ post_image.image.url }}" alt="动态图片" class="detail-image">
+                    <img src="{{ post_image.image.url }}" alt="动态图片" class="detail-image"
+                        style="width:100%;max-width:100%;max-height:500px;object-fit:contain;background:#fafbfc;display:block;">
                 </div>
                 {% endfor %}
             </div>
@@ -257,7 +258,8 @@
             <!-- 兼容旧数据：单张图片 -->
             <div class="detail-image-grid">
                 <div class="detail-image-card">
-                    <img src="{{ post.image.url }}" alt="动态图片" class="detail-image">
+                    <img src="{{ post.image.url }}" alt="动态图片" class="detail-image"
+                        style="width:100%;max-width:100%;max-height:500px;object-fit:contain;background:#fafbfc;display:block;">
                 </div>
             </div>
             {% endif %}
