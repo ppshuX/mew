@@ -19,16 +19,13 @@ def  moments_list(request):
         content = request.POST.get('content')
         images = request.FILES.getlist('images')
         category = request.POST.get('category', 'daily')
-        print("收到图片数量：", len(images))  # 调试输出
         if content or images:
             post = Post.objects.create(author=request.user, content=content, category=category)
             for img in images[:9]:
                 try:
                     MomentsImage.objects.create(post=post, image=img)
-                    print("图片保存成功：", img)
                 except Exception as e:
-                    print("图片保存失败：", e)
-            print("该帖图片数量：", post.images.count())  # 调试输出
+                    pass
             return redirect('moments:list')
         
     # 获取普通动态
@@ -125,23 +122,17 @@ def like_comment(request, comment_id):
     comment = get_object_or_404(Comment, id=comment_id)
     user = request.user
     
-    print(f"评论点赞请求: 评论ID={comment_id}, 用户={user.username}")
-    print(f"当前点赞状态: {user in comment.likes.all()}")
-
     if user in comment.likes.all():
         comment.likes.remove(user)
         liked = False
-        print(f"取消点赞: 用户={user.username}, 评论ID={comment_id}")
     else:
         comment.likes.add(user)
         liked = True
-        print(f"添加点赞: 用户={user.username}, 评论ID={comment_id}")
 
     # 确保数据保存到数据库
     comment.save()
     
     like_count = comment.like_count()
-    print(f"点赞后状态: liked={liked}, like_count={like_count}")
 
     return JsonResponse({
         'liked': liked,
