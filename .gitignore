@@ -18,3 +18,5 @@ staticfiles/
 # OS 文件
 .DS_Store
 Thumbs.db
+
+!media/avatars/default.jpg
