@@ -188,8 +188,6 @@ window.addEventListener('DOMContentLoaded', function () {
             const countSpan = document.getElementById('comment-like-count-' + commentId);
             const iconSpan = document.getElementById('comment-like-icon-' + commentId);
 
-            console.log('评论点赞请求:', commentId, '当前状态:', this.dataset.liked);
-
             fetch(`/moments/comment/${commentId}/like/`, {
                 method: 'POST',
                 headers: {
@@ -198,11 +196,9 @@ window.addEventListener('DOMContentLoaded', function () {
                 }
             })
                 .then(response => {
-                    console.log('响应状态:', response.status);
                     return response.json();
                 })
                 .then(data => {
-                    console.log('点赞响应:', data);
                     this.dataset.liked = data.liked ? 'true' : 'false';
                     countSpan.textContent = data.like_count;
 
