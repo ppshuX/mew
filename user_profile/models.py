@@ -30,6 +30,7 @@ class UserProfile(models.Model):
     following_count = models.IntegerField(default=0, verbose_name='关注数')
     follower_count = models.IntegerField(default=0, verbose_name='粉丝数')
     view_count = models.IntegerField(default=0, verbose_name='阅读量')
+    followers = models.ManyToManyField('self', symmetrical=False, related_name='followings', blank=True, verbose_name='粉丝')
 
     def __str__(self):
         return f"{self.user.username}的资料"

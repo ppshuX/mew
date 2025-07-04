@@ -1,3 +1,5 @@
+console.log('userzone.js loaded');
+
 // 目前无需JS，预留
 
 // UserZone 页面交互效果
@@ -249,6 +251,37 @@ document.addEventListener('DOMContentLoaded', function () {
             // 使用history API更新URL而不刷新页面
             window.history.pushState({}, '', url.toString());
         }
+    }
+
+    // 关注/取关按钮AJAX
+    const followForm = document.getElementById('follow-form');
+    if (followForm) {
+        console.log('fetching', followForm.action);
+        followForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+            const btn = document.getElementById('follow-btn');
+            btn.disabled = true;
+            fetch(followForm.action, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': followForm.querySelector('[name=csrfmiddlewaretoken]').value,
+                    'X-Requested-With': 'XMLHttpRequest',
+                },
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        btn.textContent = data.followed ? '已关注' : '关注';
+                        // 刷新粉丝数
+                        const followerNum = document.querySelector('.uz-follower-num');
+                        if (followerNum) followerNum.textContent = data.follower_count;
+                    } else {
+                        alert(data.msg || '操作失败');
+                    }
+                })
+                .catch(() => alert('网络错误'))
+                .finally(() => { btn.disabled = false; });
+        });
     }
 });
 

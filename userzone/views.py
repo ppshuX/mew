@@ -6,6 +6,8 @@ from moments.models import Post as MomentsPost
 from moments.forms import MomentsPostForm
 from userzone.models import UserZoneVisitor
 from django.utils import timezone
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
 
 def userzone(request, username):
     try:
@@ -85,3 +87,27 @@ def userzone(request, username):
         'category_choices': category_choices,
     }
     return render(request, 'userzone/userzone.html', context)
+
+@require_POST
+def follow_user(request, username):
+    if not request.user.is_authenticated:
+        return JsonResponse({'success': False, 'msg': '请先登录'}, status=403)
+    from user_profile.models import UserProfile
+    try:
+        target_profile = UserProfile.objects.get(user__username=username)
+        my_profile = request.user.user_profile
+        if my_profile == target_profile:
+            return JsonResponse({'success': False, 'msg': '不能关注自己'}, status=400)
+        if my_profile in target_profile.followers.all():
+            target_profile.followers.remove(my_profile)
+            followed = False
+        else:
+            target_profile.followers.add(my_profile)
+            followed = True
+        # 关键：强制重新查数据库，拿到最新粉丝数
+        follower_count = UserProfile.objects.get(pk=target_profile.pk).followers.count()
+        target_profile.follower_count = follower_count
+        target_profile.save()
+        return JsonResponse({'success': True, 'followed': followed, 'follower_count': follower_count})
+    except UserProfile.DoesNotExist:
+        return JsonResponse({'success': False, 'msg': '用户不存在'}, status=404)

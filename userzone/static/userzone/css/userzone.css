@@ -89,6 +89,7 @@ body {
     text-shadow: 0 1px 4px #f3eaff;
     box-shadow: 0 1px 4px rgba(120, 120, 160, 0.04);
     text-align: center;
+    margin-bottom: 28px !important;
 }
 
 .uz-stats-visitors-card {
@@ -530,7 +531,7 @@ body {
 }
 
 .uz-left .uz-profile-avatar-box {
-    background: none;
+    margin-bottom: 32px;
 }
 
 .uz-left .uz-nickname {
@@ -575,6 +576,7 @@ body {
     justify-content: space-around;
     align-items: center;
     padding: 8px 0 0 0;
+    margin-bottom: 10px;
 }
 
 .uz-left .uz-stat-item {
@@ -933,4 +935,49 @@ body {
     min-height: unset;
     flex: none;
     padding: 32px 24px 32px 24px;
+}
+
+.uz-action-row {
+    display: flex;
+    justify-content: center;
+    gap: 44px;
+    margin-top: 10px;
+    margin-bottom: 24px;
+}
+
+.uz-btn-follow,
+.uz-btn-message {
+    padding: 7px 22px;
+    font-size: 1rem;
+    border-radius: 12px;
+}
+
+.uz-btn-follow {
+    background: linear-gradient(90deg, #e0c3fc 0%, #a18cd1 100%);
+    color: #fff;
+    border: none;
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(168, 106, 227, 0.10);
+    transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+}
+
+.uz-btn-follow:hover {
+    background: linear-gradient(90deg, #a18cd1 0%, #e0c3fc 100%);
+    color: #fff;
+    box-shadow: 0 4px 16px rgba(168, 106, 227, 0.18);
+}
+
+.uz-btn-message {
+    background: linear-gradient(90deg, #fbc2eb 0%, #a6c1ee 100%);
+    color: #a86ae3;
+    border: none;
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(168, 106, 227, 0.10);
+    transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+}
+
+.uz-btn-message:hover {
+    background: linear-gradient(90deg, #a6c1ee 0%, #fbc2eb 100%);
+    color: #fff;
+    box-shadow: 0 4px 16px rgba(168, 106, 227, 0.18);
 }

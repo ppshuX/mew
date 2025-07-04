@@ -26,6 +26,16 @@
         <li><span class="user-profile-info-icon">📍</span> 地区：{{ user_profile.location }}</li>
         {% endif %}
     </ul>
+    {% if request.user != user_profile.user %}
+    <div class="user-profile-action-row">
+        <button id="follow-btn" class="user-profile-btn user-profile-btn-follow">
+            {{ is_followed|yesno:"已关注,关注" }}
+        </button>
+        <button id="message-btn" class="user-profile-btn user-profile-btn-message">
+            发消息
+        </button>
+    </div>
+    {% endif %}
     {% if request.user == user_profile.user %}
     <div class="text-center">
         <a href="{% url 'user_profile_edit' username=request.user.username %}"

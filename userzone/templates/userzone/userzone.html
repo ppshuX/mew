@@ -36,7 +36,7 @@
                         <div class="uz-stat-label">关注数</div>
                     </div>
                     <div class="uz-stat-item text-center">
-                        <div class="uz-stat-number">{{ user_profile.follower_count|default:0 }}</div>
+                        <div class="uz-stat-number uz-follower-num">{{ user_profile.follower_count|default:0 }}</div>
                         <div class="uz-stat-label">粉丝数</div>
                     </div>
                     <div class="uz-stat-item text-center">
@@ -44,6 +44,18 @@
                         <div class="uz-stat-label">阅读量</div>
                     </div>
                 </div>
+                {% if not is_owner %}
+                <div class="uz-action-row d-flex justify-content-center mb-2 gap-3">
+                    <form id="follow-form" method="post" action="{% url 'userzone:follow' user_profile.user.username %}"
+                        style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" id="follow-btn" class="uz-btn uz-btn-follow">
+                            {% if request.user.user_profile in user_profile.followers.all %}已关注{% else %}关注{% endif %}
+                        </button>
+                    </form>
+                    <a href="/chat/?user={{ user_profile.user.username }}" class="uz-btn uz-btn-message">私信</a>
+                </div>
+                {% endif %}
                 <!-- IP/在线状态 -->
                 <div class="uz-profile-meta w-100 text-center py-2">
                     <span class="uz-dot {% if user_profile.is_online %}online{% endif %}"></span>
