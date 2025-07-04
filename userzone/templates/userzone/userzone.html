@@ -305,7 +305,15 @@
                                     </span>
                                 </div>
                                 <!-- 图片宫格区 -->
-                                {% if post.image %}
+                                {% if post.images.all %}
+                                <div class="uz-feed-images">
+                                    <div class="uz-feed-image-grid">
+                                        {% for img in post.images.all %}
+                                        <img src="{{ img.image.url }}" class="uz-feed-img" alt="动态图片">
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                {% elif post.image %}
                                 <div class="uz-feed-images">
                                     <div class="uz-feed-image-grid">
                                         <img src="{{ post.image.url }}" class="uz-feed-img" alt="动态图片">

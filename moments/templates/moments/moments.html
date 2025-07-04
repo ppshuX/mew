@@ -13,10 +13,19 @@
     <!-- 发布说说 -->
     <form method="post" enctype="multipart/form-data" class="publish-form mb-5 publish-form-flex">
         {% csrf_token %}
-        <div class="publish-form-row" style="display: flex; align-items: flex-start; justify-content: center;">
+        <div class="publish-form-row"
+            style="display: flex; align-items: flex-start; justify-content: center; position:relative;">
             <div style="position: relative; flex:1; max-width: 700px; min-width:0; margin-bottom:0;">
                 <textarea name="content" class="form-control publish-textarea" rows="3" placeholder="想说点什么..." required
                     style="width:100%; height: 100px; resize: vertical;"></textarea>
+                <!-- 私密发送勾选框，左下角绝对定位 -->
+                <div style="position:absolute; left:0; bottom:-28px; z-index:2;">
+                    <label
+                        style="font-size:0.98rem; color:#a86ae3; font-weight:500; display:flex; align-items:center; gap:6px; user-select:none;">
+                        <input type="checkbox" name="is_private" value="true"
+                            style="width:16px;height:16px;vertical-align:middle;"> 私密发送（仅自己可见）
+                    </label>
+                </div>
             </div>
             <div style="display: flex; flex-direction: column; align-items: center; margin-left: 24px;">
                 <label for="image-upload-input" class="image-upload-plus"

@@ -23,8 +23,9 @@ def  moments_list(request):
         content = request.POST.get('content')
         images = request.FILES.getlist('images')
         category = request.POST.get('category', 'daily')
+        is_private = request.POST.get('is_private') == 'true'  # 处理私密发送
         if content or images:
-            post = Post.objects.create(author=request.user, content=content, category=category)
+            post = Post.objects.create(author=request.user, content=content, category=category, is_private=is_private)
             for img in images[:9]:
                 try:
                     MomentsImage.objects.create(post=post, image=img)
