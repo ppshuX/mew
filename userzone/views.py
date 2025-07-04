@@ -37,12 +37,18 @@ def userzone(request, username):
     
     if is_owner:
         moments_posts = MomentsPost.objects.filter(author=user_profile.user, is_private=False).order_by('-created_at')
-        private_posts = MomentsPost.objects.filter(author=user_profile.user, is_private=True).order_by('-created_at')
+        private_moments = list(MomentsPost.objects.filter(author=user_profile.user, is_private=True).order_by('-created_at'))
+        private_plaza = list(PlazaPost.objects.filter(author=user_profile.user, is_private=True).order_by('-created_at'))
+        for p in private_moments:
+            p.post_type = 'moments'
+        for p in private_plaza:
+            p.post_type = 'plaza'
+        private_posts = sorted(private_moments + private_plaza, key=lambda x: x.created_at, reverse=True)
     else:
         moments_posts = MomentsPost.objects.filter(author=user_profile.user, is_private=False).order_by('-created_at')
         private_posts = []
     
-    plaza_posts = PlazaPost.objects.filter(author=user_profile.user).order_by('-created_at')
+    plaza_posts = PlazaPost.objects.filter(author=user_profile.user, is_private=False).order_by('-created_at')
     
     # 按类别筛选
     if category != 'all':

@@ -31,8 +31,9 @@ def plaza_list(request):
         content = request.POST.get('content')
         images = request.FILES.getlist('images')
         category = request.POST.get('category', 'daily')
+        is_private = request.POST.get('is_private') == 'true'  # 处理私密发送
         if content or images:
-            post = Post.objects.create(author=request.user, content=content, category=category)
+            post = Post.objects.create(author=request.user, content=content, category=category, is_private=is_private)
             for img in images[:9]:
                 try:
                     PostImage.objects.create(post=post, image=img)
@@ -41,7 +42,7 @@ def plaza_list(request):
             return redirect('plaza:list')
         
     # 获取普通动态
-    posts = Post.objects.all().order_by('-created_at')
+    posts = Post.objects.filter(is_private=False).order_by('-created_at')
     # 获取博客动态（发布到广场的博客）
     blog_posts = BlogPost.objects.filter(
         is_draft=False,

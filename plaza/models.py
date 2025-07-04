@@ -28,6 +28,7 @@ class Post(models.Model):
     category = models.CharField(max_length=20, choices=CATEGORY_CHOICES, default='daily', verbose_name='类别')
     created_at = models.DateTimeField(auto_now_add=True)
     likes = models.ManyToManyField(User, related_name='plaza_liked_posts', blank=True)
+    is_private = models.BooleanField(default=False, verbose_name='私密动态')
 
     def like_count(self):
         return self.likes.count()

@@ -270,7 +270,8 @@
                         {% else %}style="display:none;" {% endif %}>
                         <div class="uz-posts-grid">
                             {% for post in private_posts %}
-                            <div class="uz-post-card uz-feed-card" data-url="{% url 'moments:post_detail' post.id %}">
+                            <div class="uz-post-card uz-feed-card"
+                                data-url="{% if post.post_type == 'moments' %}{% url 'moments:post_detail' post.id %}{% elif post.post_type == 'plaza' %}{% url 'plaza:detail' post.id %}{% endif %}">
                                 <!-- 顶部信息区 -->
                                 <div class="uz-feed-header d-flex align-items-center justify-content-between">
                                     <div class="d-flex align-items-center gap-2">
