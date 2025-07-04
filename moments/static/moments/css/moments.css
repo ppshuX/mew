@@ -468,22 +468,40 @@ body {
     font-size: 0.9rem;
 }
 
+/* 朋友圈作者首字母圆形头像样式 */
+.author-avatar-circle,
 .avatar-circle {
-    width: 36px;
-    height: 36px;
+    width: 28px;
+    height: 28px;
+    background: linear-gradient(135deg, #a86ae3 60%, #ffb6d5 100%);
+    color: #fff;
     border-radius: 50%;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: bold;
-    font-size: 1rem;
+    font-size: 0.92rem;
+    box-shadow: 0 2px 8px rgba(168, 106, 227, 0.10);
+    margin-right: 5px;
 }
 
+.avatar-img {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    object-fit: cover;
+    vertical-align: middle;
+    margin-right: 5px;
+}
+
+/* 头像和名字之间竖线，颜色更淡雅 */
 .author-divider {
-    color: #ccc;
-    font-weight: 300;
+    display: inline-block;
+    width: 1px;
+    height: 15px;
+    background: #ede7f6;
+    margin: 0 5px;
+    vertical-align: middle;
 }
 
 .author-name {

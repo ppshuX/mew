@@ -66,9 +66,8 @@
                     <span class="author-avatar-circle">{{ post.author.username|first|upper }}</span>
                     {% endif %}
                 </a>
-                <span class="author-nickname">
-                    {{ post.author.user_profile.nickname|default:post.author.username }}
-                </span>
+                <span class="author-divider"></span>
+                <span class="author-name">{{ post.author.user_profile.nickname|default:post.author.username }}</span>
             </div>
             <div class="blog-cover">
                 {% if post.cover_image %}
@@ -108,10 +107,10 @@
                     <img class="avatar-img" src="{{ post.author.user_profile.avatar.url }}" alt="头像"
                         style="width:36px;height:36px;border-radius:50%;object-fit:cover;vertical-align:middle;">
                     {% else %}
-                    <span class="avatar-circle">{{ post.author.username|first|upper }}</span>
+                    <span class="author-avatar-circle">{{ post.author.username|first|upper }}</span>
                     {% endif %}
                 </a>
-                <span class="author-divider">|</span>
+                <span class="author-divider"></span>
                 <span class="author-name">{{ post.author.user_profile.nickname|default:post.author.username }}</span>
             </div>
             {% if post.images.all.count > 0 %}

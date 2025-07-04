@@ -121,3 +121,28 @@
     border-radius: 2px;
     opacity: 0.4;
 }
+
+/* 博客作者首字母圆形头像 */
+.author-avatar-circle {
+    width: 36px;
+    height: 36px;
+    background: linear-gradient(135deg, #a86ae3 60%, #ffb6d5 100%);
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.15rem;
+    box-shadow: 0 2px 8px rgba(168, 106, 227, 0.10);
+    margin-right: 4px;
+}
+
+.avatar-img {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+    vertical-align: middle;
+    margin-right: 4px;
+}

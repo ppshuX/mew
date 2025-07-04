@@ -19,11 +19,12 @@
             <div class="author-row">
                 {% if blog.author.user_profile.avatar and blog.author.user_profile.avatar.url != '/media/avatars/default.jpg' %}
                 <img class="avatar-img" src="{{ blog.author.user_profile.avatar.url }}" alt="头像"
-                     style="width:36px;height:36px;border-radius:50%;object-fit:cover;vertical-align:middle;">
+                    style="width:36px;height:36px;border-radius:50%;object-fit:cover;vertical-align:middle;">
                 {% else %}
                 <span class="author-avatar-circle">{{ blog.author.username|first|upper }}</span>
                 {% endif %}
-                <span class="author-nickname">{{ blog.author.user_profile.nickname|default:blog.author.username }}</span>
+                <span class="author-nickname">
+                    {{ blog.author.user_profile.nickname|default:blog.author.username }}</span>
             </div>
 
             <div class="blog-cover">
@@ -42,7 +43,7 @@
                 <p class="blog-summary">{{ blog.blog_summary|default_if_none:"" }}</p>
                 {% endif %}
                 <button class="read-more-btn"
-                        onclick="event.stopPropagation(); window.location.href='{% url 'blog_detail' blog.id %}'">
+                    onclick="event.stopPropagation(); window.location.href='{% url 'blog_detail' blog.id %}'">
                     阅读全文
                 </button>
             </div>
