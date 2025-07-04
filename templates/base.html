@@ -10,15 +10,11 @@
     {% block extra_head %}{% endblock %}
     <style>
         body {
-                {
-                % block body_bg %
-            }
+                {% block body_bg %}
 
             background-color: #f5f7fb;
 
-                {
-                % endblock %
-            }
+                {% endblock %}
 
             font-family: 'Helvetica Neue',
             'PingFang SC',
@@ -98,6 +94,7 @@
             transition: background 0.2s, box-shadow 0.2s, border 0.2s;
             display: flex;
             align-items: center;
+            cursor: pointer;
         }
 
         .nav-card .nav-link {
@@ -109,6 +106,10 @@
             padding: 0;
             border-radius: 0;
             box-shadow: none;
+            text-decoration: none !important;
+            display: block;
+            width: 100%;
+            height: 100%;
         }
 
         .nav-card:hover,
@@ -135,6 +136,7 @@
             margin-left: 12px;
             font-size: 1.1rem;
             padding: 10px 28px;
+            text-decoration: none !important;
         }
 
         .navbar .btn-outline-danger:hover,
@@ -224,16 +226,16 @@
                         </span>
                     </a>
                     <ul class="navbar-nav">
-                        <li class="nav-item nav-card">
+                        <li class="nav-item nav-card" data-url="/chat/">
                             <a class="nav-link" href="/chat/">聊天室</a>
                         </li>
-                        <li class="nav-item nav-card">
+                        <li class="nav-item nav-card" data-url="{% url 'moments:list' %}">
                             <a class="nav-link" href="{% url 'moments:list' %}">朋友圈</a>
                         </li>
-                        <li class="nav-item nav-card">
+                        <li class="nav-item nav-card" data-url="{% url 'plaza:list' %}">
                             <a class="nav-link" href="{% url 'plaza:list' %}">广场</a>
                         </li>
-                        <li class="nav-item nav-card">
+                        <li class="nav-item nav-card" data-url="{% url 'blog_list' %}">
                             <a class="nav-link" href="{% url 'blog_list' %}">我的博客</a>
                         </li>
                     </ul>
@@ -246,7 +248,7 @@
                         </li>
                         <li class="nav-item">
                             <a href="{% url 'userzone:detail' username=user.username %}" title="个人空间"
-                                style="display:inline-flex;position:relative;width:40px;height:40px;min-width:40px;min-height:40px;border-radius:50%;background:#efefef;align-items:center;justify-content:center;margin-left:2px;vertical-align:middle;overflow:hidden;box-shadow:0 0 0 3px #e5d6fa,0 0 12px 0 #e5d6fa;">
+                                style="display:inline-flex;position:relative;width:40px;height:40px;min-width:40px;min-height:40px;border-radius:50%;background:#efefef;align-items:center;justify-content:center;margin-left:2px;vertical-align:middle;overflow:hidden;box-shadow:0 0 0 3px #e5d6fa,0 0 12px 0 #e5d6fa;cursor:pointer;text-decoration:none!important;">
                                 {% if user.user_profile.avatar %}
                                 {% if user.user_profile.avatar.url != '/media/avatars/default.jpg' %}
                                 <img src="{{ user.user_profile.avatar.url }}"
@@ -266,8 +268,7 @@
                         <li class="nav-item">
                             <form method="post" action="{% url 'logout' %}" style="display:inline;">
                                 {% csrf_token %}
-                                <button type="submit" class="btn btn-outline-danger btn-sm"
-                                    style="margin-top:4px;">退出</button>
+                                <button type="submit" class="btn btn-outline-danger btn-sm" style="margin-top:4px;cursor:pointer;">退出</button>
                             </form>
                         </li>
                         {% endif %}
@@ -285,6 +286,27 @@
         </div>
     </nav>
     {% block content %}{% endblock %}
+
+    <script>
+        // 导航按钮点击事件处理
+        document.addEventListener('DOMContentLoaded', function () {
+            const navCards = document.querySelectorAll('.nav-card');
+            navCards.forEach(function (card) {
+                card.addEventListener('click', function (e) {
+                    // 如果点击的是链接本身，不阻止默认行为
+                    if (e.target.classList.contains('nav-link')) {
+                        return;
+                    }
+                    // 否则阻止默认行为，使用data-url进行跳转
+                    e.preventDefault();
+                    const url = this.getAttribute('data-url');
+                    if (url) {
+                        window.location.href = url;
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 
 </html>
