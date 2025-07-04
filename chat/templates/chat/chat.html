@@ -15,14 +15,14 @@
                 <div class="chat-user-item {% if user == selected_user %}active{% endif %}" data-user-id="{{ user.id }}"
                     data-username="{{ user.username }}">
                     <div class="chat-user-avatar">
-                            {% if user.user_profile.avatar and user.user_profile.avatar.url != '/media/avatars/default.jpg' %}
-                            <img src="{{ user.user_profile.avatar.url }}"
-                                style="width:100%;height:100%;border-radius:50%;object-fit:cover;">
-                            {% else %}
-                            <div class="chat-avatar-default">
-                                <span class="avatar-initial">{{ user.username|first|upper }}</span>
-                            </div>
-                            {% endif %}
+                        {% if user.user_profile.avatar and user.user_profile.avatar.url != '/media/avatars/default.jpg' %}
+                        <img src="{{ user.user_profile.avatar.url }}"
+                            style="width:100%;height:100%;border-radius:50%;object-fit:cover;">
+                        {% else %}
+                        <div class="chat-avatar-default">
+                            <span class="avatar-initial">{{ user.username|first|upper }}</span>
+                        </div>
+                        {% endif %}
                         </a>
                     </div>
                     <div>

@@ -283,6 +283,15 @@ document.addEventListener('DOMContentLoaded', function () {
                 .finally(() => { btn.disabled = false; });
         });
     }
+
+    // 私信按钮点击跳转到聊天室
+    const messageBtn = document.querySelector('.uz-btn-message');
+    if (messageBtn) {
+        messageBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            window.location.href = '/chat/';
+        });
+    }
 });
 
 // 图片预览功能
