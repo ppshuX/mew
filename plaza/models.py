@@ -39,6 +39,15 @@ class Post(models.Model):
     def __str__(self):
         return f"{self.author.username} - {self.created_at.strftime('%Y-%m-%d %H:%M')}"
 
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        if self.image:
+            try:
+                from utils.image_compress import compress_image
+                compress_image(self.image.path)
+            except Exception:
+                pass
+
 def plaza_image_upload_to(instance, filename):
     ext = filename.split('.')[-1]
     unique_filename = f"{uuid.uuid4().hex}_{now().strftime('%Y%m%d%H%M%S')}.{ext}"
@@ -51,6 +60,14 @@ class PostImage(models.Model):
     
     class Meta:
         ordering = ['created_at']
+    
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        try:
+            from utils.image_compress import compress_image
+            compress_image(self.image.path)
+        except Exception:
+            pass
     
     def __str__(self):
         return f"图片 - {self.post.author.username} - {self.created_at.strftime('%Y-%m-%d %H:%M')}"

@@ -210,6 +210,7 @@
     </style>
     <script src="{% static 'chat/js/jquery.min.js' %}"></script>
     <script src="{% static 'chat/js/bootstrap.bundle.min.js' %}"></script>
+    <meta name="csrf-token" content="{{ csrf_token }}">
 </head>
 
 <body>
@@ -268,7 +269,8 @@
                         <li class="nav-item">
                             <form method="post" action="{% url 'logout' %}" style="display:inline;">
                                 {% csrf_token %}
-                                <button type="submit" class="btn btn-outline-danger btn-sm" style="margin-top:4px;cursor:pointer;">退出</button>
+                                <button type="submit" class="btn btn-outline-danger btn-sm"
+                                    style="margin-top:4px;cursor:pointer;">退出</button>
                             </form>
                         </li>
                         {% endif %}

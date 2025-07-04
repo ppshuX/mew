@@ -4,7 +4,7 @@ window.addEventListener('DOMContentLoaded', function () {
     buttons.forEach(button => {
         button.addEventListener('click', function (e) {
             const postId = this.dataset.postId;
-            const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
+            const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
             fetch(`/plaza/${postId}/like/`, {
                 method: 'POST',
                 headers: {
