@@ -35,3 +35,12 @@ class UserProfile(models.Model):
     def __str__(self):
         return f"{self.user.username}的资料"
 
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        if self.avatar:
+            try:
+                from utils.image_compress import compress_image
+                compress_image(self.avatar.path)
+            except Exception:
+                pass
+

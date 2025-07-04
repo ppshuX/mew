@@ -40,6 +40,15 @@ class BlogPost(models.Model):
             return ''
         return (self.content[:length] + '...') if len(self.content) > length else self.content
 
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        if self.cover_image:
+            try:
+                from utils.image_compress import compress_image
+                compress_image(self.cover_image.path)
+            except Exception:
+                pass
+
 def blog_image_upload_to(instance, filename):
     ext = filename.split('.')[-1]
     unique_filename = f"{uuid.uuid4().hex}_{now().strftime('%Y%m%d%H%M%S')}.{ext}"
@@ -48,6 +57,14 @@ def blog_image_upload_to(instance, filename):
 class BlogImage(models.Model):
     post = models.ForeignKey(BlogPost, related_name='images', on_delete=models.CASCADE)
     image = models.ImageField(upload_to=blog_image_upload_to)
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        try:
+            from utils.image_compress import compress_image
+            compress_image(self.image.path)
+        except Exception:
+            pass
 
 class BlogComment(models.Model):
     post = models.ForeignKey(BlogPost, related_name='comments', on_delete=models.CASCADE)
