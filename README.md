@@ -91,3 +91,56 @@ location /media/ {
 欢迎关注、参与开发、提出建议或 fork 项目！
 
 ```
+
+```
+# 数据备份脚本说明
+
+## 概述
+
+本脚本用于定期备份 Mew 项目的数据库文件（`db.sqlite3`）和媒体文件（`media/` 文件夹）。它会将数据库和媒体文件备份到指定的 GitHub 仓库中，并推送到远程仓库进行保存。可以通过设置定时任务自动化执行。
+
+## 功能
+
+- **数据库备份**：将 `db.sqlite3` 文件进行备份，命名为 `db_<日期>.sqlite3`。
+- **媒体文件备份**：将 `media/` 文件夹进行压缩，命名为 `media_<日期>.tar.gz`。
+- **推送到 GitHub**：将备份文件推送到一个私有 GitHub 仓库，用于长期存储。
+- **每日自动备份**：可以通过定时任务（例如 cron）每天自动执行备份操作。
+
+## 脚本执行流程
+
+1. **进入项目目录**：
+   脚本会进入 Mew 项目的根目录。
+
+2. **备份数据库文件**：
+   脚本会将 `db.sqlite3` 文件复制到指定的备份目录，并给文件命名为 `db_<日期>.sqlite3`，其中 `<日期>` 格式为 `YYYYMMDD_HHMMSS`。
+
+3. **备份媒体文件**：
+   脚本会将 `media/` 文件夹打包成一个 `.tar.gz` 文件，命名为 `media_<日期>.tar.gz`。
+
+4. **推送到 GitHub**：
+   脚本会进入指定的 GitHub 仓库目录，并将备份文件提交到仓库。每次提交的日志中会包含备份的日期信息。
+
+## 脚本代码
+
+```bash
+#!/bin/bash
+
+# 1. 设置变量
+PROJECT_DIR="/home/acs/mew"         # 项目根目录
+BACKUP_REPO_DIR="/home/acs/myblog-backup" # 备份仓库目录
+DATE=$(date +"%Y%m%d_%H%M%S")  # 当前时间，用于文件命名
+
+# 2. 进入项目目录，备份数据库和media
+cd "$PROJECT_DIR"
+cp db.sqlite3 "$BACKUP_REPO_DIR/db_$DATE.sqlite3"
+tar czf "$BACKUP_REPO_DIR/media_$DATE.tar.gz" media/
+
+# 3. 进入备份仓库目录，推送到GitHub
+cd "$BACKUP_REPO_DIR"
+git add .
+git commit -m "Backup on $DATE"
+git push origin master
+
+# 提示备份成功
+echo "Backup completed successfully! Files pushed to GitHub."
+```

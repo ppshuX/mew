@@ -620,6 +620,165 @@
     }
 }
 
+/* 移动端博客编辑优化 */
+@media (max-width: 600px) {
+    .mew-form-card {
+        padding: 24px 16px;
+        margin: 24px auto 0 auto;
+        border-radius: 16px;
+    }
+
+    .mew-form-title {
+        font-size: 1.5rem !important;
+        margin-bottom: 1.5rem !important;
+    }
+
+    .mew-form-label {
+        font-size: 16px !important;
+        margin-bottom: 8px !important;
+    }
+
+    .mew-form-card .form-control,
+    .mew-form-card .form-select {
+        font-size: 16px !important;
+        padding: 12px 16px !important;
+        border-radius: 12px !important;
+        min-height: 44px !important;
+    }
+
+    .mew-form-textarea {
+        min-height: 120px !important;
+        font-size: 16px !important;
+    }
+
+    .mew-form-card .btn-primary,
+    .mew-form-card .btn-outline-info,
+    .mew-form-card .btn-outline-primary {
+        font-size: 16px !important;
+        padding: 12px 24px !important;
+        min-height: 44px !important;
+        border-radius: 12px !important;
+    }
+
+    .btn.btn-sm {
+        font-size: 14px !important;
+        padding: 8px 16px !important;
+        min-height: 40px !important;
+    }
+
+    .mew-form-btn-row {
+        flex-direction: column !important;
+        gap: 12px !important;
+        padding: 0 !important;
+    }
+
+    .mew-form-btn-row .btn {
+        width: 100% !important;
+        margin: 0 !important;
+    }
+
+    .row.mb-4 {
+        flex-direction: column !important;
+    }
+
+    .row.mb-4 > [class^="col-"] {
+        width: 100% !important;
+        margin-bottom: 1rem !important;
+    }
+
+    .d-flex.mb-2 {
+        flex-wrap: wrap !important;
+        gap: 8px !important;
+    }
+
+    .d-flex.mb-2 .btn {
+        flex: 1 !important;
+        min-width: 0 !important;
+    }
+
+    #toastui-editor {
+        height: 300px !important;
+    }
+
+    .toastui-editor-defaultUI {
+        font-size: 16px !important;
+    }
+
+    .toastui-editor-toolbar-icons {
+        font-size: 16px !important;
+        padding: 8px !important;
+    }
+
+    .toastui-editor-md-vertical-style .toastui-editor-md-preview {
+        font-size: 16px !important;
+    }
+
+    .editor-wrapper.fullscreen #toastui-editor {
+        height: calc(100vh - 100px) !important;
+    }
+
+    .editor-wrapper.fullscreen #blog-preview-area {
+        height: calc(100vh - 100px) !important;
+    }
+
+    #publish-to-checkbox-group {
+        width: 100% !important;
+        min-width: auto !important;
+    }
+
+    #publish-to-checkbox-group label {
+        font-size: 14px !important;
+        margin-bottom: 6px !important;
+    }
+
+    input[type="checkbox"] {
+        width: 18px !important;
+        height: 18px !important;
+    }
+}
+
+/* 超小屏幕优化 */
+@media (max-width: 480px) {
+    .mew-form-card {
+        padding: 20px 12px;
+        margin: 16px auto 0 auto;
+    }
+
+    .mew-form-title {
+        font-size: 1.3rem !important;
+    }
+
+    .mew-form-card .form-control,
+    .mew-form-card .form-select {
+        padding: 10px 14px !important;
+        font-size: 14px !important;
+    }
+
+    .mew-form-textarea {
+        min-height: 100px !important;
+    }
+
+    .mew-form-card .btn-primary,
+    .mew-form-card .btn-outline-info,
+    .mew-form-card .btn-outline-primary {
+        padding: 10px 20px !important;
+        font-size: 14px !important;
+    }
+
+    .btn.btn-sm {
+        padding: 6px 12px !important;
+        font-size: 12px !important;
+    }
+
+    #toastui-editor {
+        height: 250px !important;
+    }
+
+    .toastui-editor-defaultUI {
+        font-size: 14px !important;
+    }
+}
+
 /* 让文件选择按钮上下居中 */
 input[type='file'].form-control {
     display: flex;

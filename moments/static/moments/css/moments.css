@@ -458,6 +458,159 @@ body {
     .moments-list {
         gap: 12px;
     }
+
+    /* 移动端朋友圈优化 */
+    .moments-outer-card {
+        padding: 20px 16px;
+        margin: 1% auto;
+        width: 95%;
+        min-height: auto;
+    }
+
+    .publish-title {
+        font-size: 1.8rem !important;
+        margin-bottom: 1.5rem !important;
+    }
+
+    .publish-form {
+        margin-bottom: 2rem !important;
+    }
+
+    .publish-textarea {
+        font-size: 16px !important;
+        min-height: 120px !important;
+        padding: 16px !important;
+        border-radius: 12px !important;
+    }
+
+    .publish-form-row {
+        flex-direction: column !important;
+        gap: 16px !important;
+    }
+
+    .image-upload-plus {
+        width: 60px !important;
+        height: 60px !important;
+        font-size: 1.5rem !important;
+    }
+
+    .publish-btn {
+        width: 100% !important;
+        font-size: 16px !important;
+        padding: 14px 24px !important;
+        min-height: 48px !important;
+        border-radius: 12px !important;
+    }
+
+    .moment-card,
+    .blog-card {
+        margin-bottom: 16px !important;
+        border-radius: 12px !important;
+        padding: 16px !important;
+    }
+
+    .blog-content {
+        padding: 16px !important;
+    }
+
+    .blog-title {
+        font-size: 1.1rem !important;
+    }
+
+    .blog-summary {
+        font-size: 0.9rem !important;
+    }
+
+    .read-more-btn {
+        padding: 12px 20px !important;
+        font-size: 14px !important;
+        min-height: 44px !important;
+    }
+
+    .author-row {
+        margin-bottom: 12px !important;
+    }
+
+    .author-avatar-circle {
+        width: 32px !important;
+        height: 32px !important;
+        font-size: 0.9rem !important;
+    }
+
+    .avatar-img {
+        width: 32px !important;
+        height: 32px !important;
+    }
+
+    .author-name {
+        font-size: 0.95rem !important;
+    }
+
+    .like-btn {
+        padding: 8px 16px !important;
+        font-size: 14px !important;
+        min-height: 40px !important;
+    }
+
+    .image-grid {
+        gap: 4px !important;
+        padding: 6px !important;
+    }
+
+    .image-card {
+        border-radius: 8px !important;
+    }
+
+    .content-long {
+        font-size: 0.95rem !important;
+        line-height: 1.5 !important;
+    }
+
+    .comments {
+        margin-top: 12px !important;
+    }
+
+    .comment {
+        font-size: 0.9rem !important;
+        padding: 8px 0 !important;
+    }
+}
+
+/* 超小屏幕优化 */
+@media (max-width: 480px) {
+    .moments-outer-card {
+        padding: 16px 12px;
+        width: 98%;
+    }
+
+    .publish-title {
+        font-size: 1.5rem !important;
+    }
+
+    .publish-textarea {
+        min-height: 100px !important;
+        padding: 12px !important;
+    }
+
+    .image-upload-plus {
+        width: 50px !important;
+        height: 50px !important;
+        font-size: 1.2rem !important;
+    }
+
+    .publish-btn {
+        padding: 12px 20px !important;
+        font-size: 14px !important;
+    }
+
+    .moment-card,
+    .blog-card {
+        padding: 12px !important;
+    }
+
+    .blog-content {
+        padding: 12px !important;
+    }
 }
 
 .author-row {
