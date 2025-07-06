@@ -56,7 +56,8 @@ def userzone(request, username):
     if category != 'all':
         moments_posts = moments_posts.filter(category=category)
         plaza_posts = plaza_posts.filter(category=category)
-        private_posts = private_posts.filter(category=category)
+        # private_posts是列表，需要用列表推导式筛选
+        private_posts = [post for post in private_posts if post.category == category]
     
     form = None
     if is_owner:

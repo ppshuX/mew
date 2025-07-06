@@ -4,8 +4,8 @@
 
 {% block extra_head %}
 <!-- 强制加载静态文件，防止缓存 -->
-<link rel="stylesheet" href="{% static 'userzone/css/userzone.css' %}?v=12">
-<script src="{% static 'userzone/js/userzone.js' %}?v=12"></script>
+<link rel="stylesheet" href="{% static 'userzone/css/userzone.css' %}?v=13">
+<script src="{% static 'userzone/js/userzone.js' %}?v=13"></script>
 {% endblock %}
 
 {% block content %}
@@ -131,8 +131,7 @@
                 <!-- 内容区 -->
                 <div class="uz-filter-content">
                     <!-- 朋友圈动态 -->
-                    <div class="uz-filter-list" id="moments-list" {% if current_type == 'moments' %}style="display:block;"
-                        {% else %}style="display:none;" {% endif %}>
+                    <div class="uz-filter-list{% if current_type == 'moments' %} active{% endif %}" id="moments-list">
                         <div class="uz-posts-grid">
                             {% for post in moments_posts %}
                             <div class="uz-post-card uz-feed-card" data-url="{% url 'moments:post_detail' post.id %}">
@@ -205,8 +204,7 @@
                     </div>
 
                     <!-- 广场动态 -->
-                    <div class="uz-filter-list" id="plaza-list" {% if current_type == 'plaza' %}style="display:block;" {%
-                        else %}style="display:none;" {% endif %}>
+                    <div class="uz-filter-list{% if current_type == 'plaza' %} active{% endif %}" id="plaza-list">
                         <div class="uz-posts-grid">
                             {% for post in plaza_posts %}
                             <div class="uz-post-card uz-feed-card" data-url="{% url 'plaza:detail' post.id %}">
@@ -278,8 +276,7 @@
 
                     <!-- 私密动态 -->
                     {% if is_owner %}
-                    <div class="uz-filter-list" id="private-list" {% if current_type == 'private' %}style="display:block;"
-                        {% else %}style="display:none;" {% endif %}>
+                    <div class="uz-filter-list{% if current_type == 'private' %} active{% endif %}" id="private-list">
                         <div class="uz-posts-grid">
                             {% for post in private_posts %}
                             <div class="uz-post-card uz-feed-card"
