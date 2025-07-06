@@ -1,4 +1,3 @@
-
 from PIL import Image
 
 def compress_image(image_path, quality=80):
@@ -7,5 +6,4 @@ def compress_image(image_path, quality=80):
         if img.format in ['JPEG', 'JPG', 'PNG']:
             img.save(image_path, quality=quality, optimize=True)
     except Exception:
-        pass  # 压缩失败时静默跳过 
-
+        pass  # 压缩失败时静默跳过

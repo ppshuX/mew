@@ -1,4 +1,3 @@
-
 import os
 from utils.image_compress import compress_image
 
@@ -17,5 +16,4 @@ def compress_all_images(root=MEDIA_ROOT, quality=80):
 
 if __name__ == '__main__':
     compress_all_images()
-    print('所有图片已批量压缩完成！') 
-
+    print('所有图片已批量压缩完成！')
