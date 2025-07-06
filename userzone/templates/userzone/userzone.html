@@ -102,19 +102,20 @@
 
     <!-- 右栏 -->
     <div class="uz-right">
-
         <div class="card uz-card">
             <div class="card-body">
-                <!-- 筛选按钮区 -->
+                <!-- 筛选按钮区始终显示 -->
                 <div class="uz-filter-btn-outer d-flex justify-content-center mb-3">
                     <div class="uz-filter-btn-group">
                         <button class="uz-filter-btn {% if current_type == 'moments' %}active{% endif %}"
-                            data-type="moments">朋友圈动态</button>
+                            data-type="moments">朋友圈</button>
                         <button class="uz-filter-btn {% if current_type == 'plaza' %}active{% endif %}"
-                            data-type="plaza">广场动态</button>
+                            data-type="plaza">广场</button>
                         {% if is_owner %}
                         <button class="uz-filter-btn {% if current_type == 'private' %}active{% endif %}"
-                            data-type="private">私密动态</button>
+                            data-type="private">私密</button>
+                        <button class="uz-edit-post-btn ms-2"
+                            onclick="window.location.href='/blog/create/'">编辑博客</button>
                         {% endif %}
                     </div>
                     <div class="uz-category-filter ms-3">
@@ -126,7 +127,6 @@
                             {% endfor %}
                         </select>
                     </div>
-                    <button class="uz-edit-post-btn ms-4" onclick="window.location.href='/blog/create/'">编辑博客</button>
                 </div>
                 <!-- 内容区 -->
                 <div class="uz-filter-content">

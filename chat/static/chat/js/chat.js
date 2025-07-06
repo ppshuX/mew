@@ -17,12 +17,9 @@ $(function () {
 
     // 用户点击跳转
     $('.chat-user-item').on('click', function () {
-        if (isMobile()) {
-            $('#chat-container').addClass('mobile-chat-active');
-        }
-        var userId = $(this).data('user-id');
-        if (userId) {
-            window.location.href = '?user=' + userId;
+        var username = $(this).data('username');
+        if (username) {
+            window.location.href = '/chat/' + username + '/';
         }
     });
 

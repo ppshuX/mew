@@ -279,6 +279,10 @@
     margin-bottom: 16px !important;
 }
 
+.d-flex.mb-2>.btn:not(:last-child) {
+    margin-bottom: 10px !important;
+}
+
 .row.mb-4>[class^="col-"] {
     margin-bottom: 16px;
 }
@@ -622,54 +626,70 @@
 
 /* 移动端博客编辑优化 */
 @media (max-width: 600px) {
+    .mew-form-bg {
+        padding: 0 !important;
+    }
+
     .mew-form-card {
-        padding: 24px 16px;
-        margin: 24px auto 0 auto;
-        border-radius: 16px;
+        padding: 10px 2vw !important;
+        margin: 8px auto 0 auto !important;
+        border-radius: 10px !important;
+        box-shadow: 0 2px 8px 0 rgba(80, 120, 200, 0.08);
+        width: 100vw !important;
+        max-width: 100vw !important;
     }
 
     .mew-form-title {
-        font-size: 1.5rem !important;
-        margin-bottom: 1.5rem !important;
+        font-size: 1.2rem !important;
+        margin-bottom: 1rem !important;
+        text-align: center;
     }
 
     .mew-form-label {
-        font-size: 16px !important;
-        margin-bottom: 8px !important;
+        font-size: 15px !important;
+        margin-bottom: 6px !important;
     }
 
     .mew-form-card .form-control,
     .mew-form-card .form-select {
-        font-size: 16px !important;
-        padding: 12px 16px !important;
-        border-radius: 12px !important;
-        min-height: 44px !important;
+        font-size: 15px !important;
+        padding: 10px 10px !important;
+        border-radius: 8px !important;
+        min-height: 38px !important;
+        width: 100% !important;
+        box-sizing: border-box;
     }
 
     .mew-form-textarea {
-        min-height: 120px !important;
-        font-size: 16px !important;
+        min-height: 80px !important;
+        font-size: 15px !important;
+        width: 100% !important;
     }
 
     .mew-form-card .btn-primary,
     .mew-form-card .btn-outline-info,
     .mew-form-card .btn-outline-primary {
-        font-size: 16px !important;
-        padding: 12px 24px !important;
-        min-height: 44px !important;
-        border-radius: 12px !important;
+        font-size: 15px !important;
+        padding: 10px 0 !important;
+        min-height: 38px !important;
+        border-radius: 8px !important;
+        width: 100% !important;
+        margin-bottom: 8px !important;
     }
 
     .btn.btn-sm {
-        font-size: 14px !important;
-        padding: 8px 16px !important;
-        min-height: 40px !important;
+        font-size: 13px !important;
+        padding: 8px 0 !important;
+        min-height: 36px !important;
+        width: 100% !important;
+        margin-bottom: 6px !important;
     }
 
     .mew-form-btn-row {
         flex-direction: column !important;
-        gap: 12px !important;
+        gap: 8px !important;
         padding: 0 !important;
+        width: 100% !important;
     }
 
     .mew-form-btn-row .btn {
@@ -679,103 +699,140 @@
 
     .row.mb-4 {
         flex-direction: column !important;
+        gap: 0 !important;
+        margin-bottom: 10px !important;
     }
 
-    .row.mb-4 > [class^="col-"] {
+    .row.mb-4>[class^="col-"] {
         width: 100% !important;
-        margin-bottom: 1rem !important;
+        margin-bottom: 8px !important;
     }
 
     .d-flex.mb-2 {
-        flex-wrap: wrap !important;
-        gap: 8px !important;
+        margin-bottom: 18px !important;
+        margin-top: 8px !important;
     }
 
     .d-flex.mb-2 .btn {
-        flex: 1 !important;
+        flex: 1 1 48% !important;
         min-width: 0 !important;
+        margin-bottom: 0 !important;
+    }
+
+    #editor-wrapper,
+    #toastui-editor {
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: 100vw !important;
     }
 
     #toastui-editor {
-        height: 300px !important;
+        height: 220px !important;
     }
 
     .toastui-editor-defaultUI {
-        font-size: 16px !important;
+        font-size: 14px !important;
     }
 
     .toastui-editor-toolbar-icons {
-        font-size: 16px !important;
-        padding: 8px !important;
+        font-size: 14px !important;
+        padding: 6px !important;
     }
 
     .toastui-editor-md-vertical-style .toastui-editor-md-preview {
-        font-size: 16px !important;
+        font-size: 14px !important;
     }
 
     .editor-wrapper.fullscreen #toastui-editor {
-        height: calc(100vh - 100px) !important;
+        height: calc(100vh - 80px) !important;
     }
 
     .editor-wrapper.fullscreen #blog-preview-area {
-        height: calc(100vh - 100px) !important;
+        height: calc(100vh - 80px) !important;
     }
 
     #publish-to-checkbox-group {
         width: 100% !important;
         min-width: auto !important;
+        padding: 10px 6px 6px 6px !important;
     }
 
     #publish-to-checkbox-group label {
-        font-size: 14px !important;
-        margin-bottom: 6px !important;
+        font-size: 13px !important;
+        margin-bottom: 4px !important;
     }
 
     input[type="checkbox"] {
-        width: 18px !important;
-        height: 18px !important;
+        width: 16px !important;
+        height: 16px !important;
+    }
+
+    #cover-preview {
+        max-width: 100% !important;
+        height: auto !important;
+        margin-top: 6px !important;
+    }
+
+    .mew-draft-btn {
+        padding: 4px 12px !important;
+        font-size: 0.95rem !important;
+        border-radius: 9px !important;
+        min-width: unset !important;
+        max-width: 50vw !important;
+        height: 32px !important;
+        line-height: 1.2 !important;
+        margin-left: auto !important;
+        box-shadow: 0 1px 4px 0 rgba(80, 120, 200, 0.08) !important;
+    }
+
+    .mew-form-title-row {
+        flex-direction: row-reverse !important;
+    }
+
+    .mew-draft-btn {
+        margin-left: 0 !important;
+        margin-right: auto !important;
     }
 }
 
-/* 超小屏幕优化 */
 @media (max-width: 480px) {
     .mew-form-card {
-        padding: 20px 12px;
-        margin: 16px auto 0 auto;
+        padding: 6px 2vw !important;
+        margin: 4px auto 0 auto !important;
     }
 
     .mew-form-title {
-        font-size: 1.3rem !important;
+        font-size: 1.05rem !important;
     }
 
     .mew-form-card .form-control,
     .mew-form-card .form-select {
-        padding: 10px 14px !important;
-        font-size: 14px !important;
+        padding: 8px 6px !important;
+        font-size: 13px !important;
     }
 
     .mew-form-textarea {
-        min-height: 100px !important;
+        min-height: 60px !important;
     }
 
     .mew-form-card .btn-primary,
     .mew-form-card .btn-outline-info,
     .mew-form-card .btn-outline-primary {
-        padding: 10px 20px !important;
-        font-size: 14px !important;
+        padding: 8px 0 !important;
+        font-size: 13px !important;
     }
 
     .btn.btn-sm {
-        padding: 6px 12px !important;
-        font-size: 12px !important;
+        padding: 6px 0 !important;
+        font-size: 11px !important;
     }
 
     #toastui-editor {
-        height: 250px !important;
+        height: 160px !important;
     }
 
     .toastui-editor-defaultUI {
-        font-size: 14px !important;
+        font-size: 12px !important;
     }
 }
 
@@ -857,4 +914,184 @@ input[type='file'].form-control::file-selector-button:hover {
 
 .editor-wrapper.fullscreen .exit-fullscreen-btn {
     display: flex !important;
+}
+
+@media (max-width: 700px) {
+    .mew-form-card {
+        padding: 10px 2px;
+        margin: 10px auto 0 auto;
+        border-radius: 10px;
+        max-width: 100vw;
+    }
+
+    .mew-form-title {
+        font-size: 1.1rem !important;
+        margin-bottom: 0.7rem !important;
+    }
+
+    .mew-form-label {
+        font-size: 14px !important;
+        margin-bottom: 4px !important;
+    }
+
+    .mew-form-card .form-control,
+    .mew-form-card .form-select {
+        font-size: 14px !important;
+        padding: 8px 8px !important;
+        border-radius: 8px !important;
+        min-height: 32px !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+
+    .mew-form-textarea {
+        min-height: 60px !important;
+        font-size: 14px !important;
+        width: 100% !important;
+    }
+
+    .mew-form-card .btn-primary,
+    .mew-form-card .btn-outline-info,
+    .mew-form-card .btn-outline-primary {
+        font-size: 14px !important;
+        padding: 8px 10px !important;
+        min-height: 32px !important;
+        border-radius: 8px !important;
+        width: 100% !important;
+        margin-bottom: 6px !important;
+    }
+
+    .btn.btn-sm {
+        font-size: 12px !important;
+        padding: 4px 8px !important;
+        min-height: 28px !important;
+    }
+
+    .mew-form-btn-row {
+        flex-direction: column !important;
+        gap: 6px !important;
+        padding: 0 !important;
+        width: 100% !important;
+    }
+
+    .mew-form-btn-row .btn {
+        width: 100% !important;
+        margin: 0 !important;
+    }
+
+    .row.mb-4 {
+        flex-direction: column !important;
+        width: 100% !important;
+    }
+
+    .row.mb-4>[class^="col-"] {
+        width: 100% !important;
+        margin-bottom: 0.3rem !important;
+    }
+
+    .d-flex.mb-2 {
+        flex-wrap: wrap !important;
+        gap: 4px !important;
+        width: 100% !important;
+    }
+
+    .d-flex.mb-2 .btn {
+        flex: 1 !important;
+        min-width: 0 !important;
+    }
+
+    #toastui-editor {
+        height: 160px !important;
+        width: 100% !important;
+    }
+
+    .toastui-editor-defaultUI {
+        font-size: 14px !important;
+    }
+
+    .toastui-editor-toolbar-icons {
+        font-size: 14px !important;
+        padding: 4px !important;
+    }
+
+    .toastui-editor-md-vertical-style .toastui-editor-md-preview {
+        font-size: 14px !important;
+    }
+
+    .editor-wrapper.fullscreen #toastui-editor {
+        height: calc(100vh - 60px) !important;
+    }
+
+    .editor-wrapper.fullscreen #blog-preview-area {
+        height: calc(100vh - 60px) !important;
+    }
+
+    #publish-to-checkbox-group {
+        width: 100% !important;
+        min-width: auto !important;
+    }
+
+    #publish-to-checkbox-group label {
+        font-size: 12px !important;
+        margin-bottom: 2px !important;
+    }
+
+    input[type="checkbox"] {
+        width: 14px !important;
+        height: 14px !important;
+    }
+}
+
+.mew-draft-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 16px;
+    padding: 12px 38px;
+    font-size: 1.18rem;
+    font-weight: 600;
+    height: 48px;
+    min-width: 120px;
+    background: linear-gradient(90deg, #e6edff 0%, #f3eaff 100%);
+    color: #6a4fb6;
+    border: none;
+    box-shadow: 0 2px 8px 0 rgba(80, 120, 200, 0.08);
+    margin-left: auto;
+    transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+}
+
+.mew-draft-btn:hover,
+.mew-draft-btn:focus {
+    background: linear-gradient(90deg, #d2e2ff 0%, #e6dfff 100%);
+    color: #4a3a8a;
+    box-shadow: 0 4px 16px 0 rgba(80, 120, 200, 0.13);
+    text-decoration: none;
+}
+
+@media (max-width: 600px) {
+    .mew-draft-btn {
+        padding: 7px 18px !important;
+        font-size: 1rem !important;
+        border-radius: 12px !important;
+        min-width: 80px !important;
+        height: 36px !important;
+    }
+}
+
+.mew-form-title-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0;
+}
+
+@media (max-width: 600px) {
+    .mew-form-title-row {
+        flex-direction: row-reverse !important;
+    }
+
+    .mew-draft-btn {
+        margin-left: 0 !important;
+        margin-right: auto !important;
+    }
 }

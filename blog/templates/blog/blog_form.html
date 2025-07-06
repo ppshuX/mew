@@ -11,14 +11,9 @@
 <script src="{% static 'vendor/toastui-editor/toastui-editor-all.min.js' %}"></script>
 <div class="mew-form-bg">
     <div class="mew-form-card" style="max-width:900px;margin:0 auto;position:relative;">
-        <a href="{% url 'draft_list' %}" class="btn btn-outline-secondary"
-            style="position:absolute;top:24px;right:160px;z-index:2;
-            background:linear-gradient(90deg,#e6edff 0%,#f3eaff 100%);color:#4a4a6a;
-            border:none;border-radius:22px;padding:8px 32px;font-weight:500;box-shadow:0 2px 8px 0 rgba(80,120,200,0.08);transition:background 0.2s,color 0.2s;"
-            onmouseover="this.style.background='linear-gradient(90deg,#d2e2ff 0%,#e6dfff 100%)';this.style.color='#2d2d4d';"
-            onmouseout="this.style.background='linear-gradient(90deg,#e6edff 0%,#f3eaff 100%)';this.style.color='#4a4a6a';">进入草稿箱</a>
-        <div class="mew-form-title">
-            博客编辑
+        <div class="d-flex align-items-center justify-content-between mew-form-title-row" style="margin-bottom:18px;">
+            <div class="mew-form-title" style="margin-bottom:0;">博客编辑</div>
+            <a href="{% url 'draft_list' %}" class="btn btn-outline-secondary mew-draft-btn ms-auto">进入草稿箱</a>
         </div>
         <!-- 顶部区域 -->
         <form id="blog-form" method="post" enctype="multipart/form-data">

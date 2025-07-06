@@ -377,70 +377,46 @@ body {
     .moments-list {
         column-count: 1;
     }
-}
 
-.moment-card {
-    display: inline-block;
-    width: 100%;
-    margin-bottom: 20px;
-    vertical-align: top;
-    height: auto !important;
-    min-height: 220px;
-}
+    .publish-form-row {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 12px !important;
+    }
 
-.author-row {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 6px;
-}
+    .publish-form-row>div,
+    .publish-form-row>select {
+        width: 100% !important;
+        margin: 0 !important;
+    }
 
-/* 统一广场作者首字母圆形头像样式 */
-.author-avatar-circle,
-.avatar-circle {
-    width: 28px;
-    height: 28px;
-    background: linear-gradient(135deg, #a86ae3 60%, #ffb6d5 100%);
-    color: #fff;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    font-size: 0.92rem;
-    box-shadow: 0 2px 8px rgba(168, 106, 227, 0.10);
-    margin-right: 5px;
-}
+    .publish-form-row label[for="image-upload-input"] {
+        margin-top: 16px !important;
+        margin-bottom: 16px !important;
+    }
 
-.avatar-img {
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    object-fit: cover;
-    vertical-align: middle;
-    margin-right: 5px;
-}
+    .publish-form-row select {
+        margin-top: 16px !important;
+        width: 100% !important;
+        max-width: 100% !important;
+    }
 
-/* 头像和名字之间竖线，颜色更淡雅 */
-.author-divider {
-    display: inline-block;
-    width: 1px;
-    height: 15px;
-    background: #ede7f6;
-    margin: 0 5px;
-    vertical-align: middle;
-}
+    .publish-form-row .image-upload-plus {
+        margin: 16px 0 16px 0 !important;
+    }
 
-.author-name {
-    font-weight: bold;
-    font-size: 1.05rem;
-    color: #7a3ee5;
-}
+    .publish-form-row .form-control {
+        width: 100% !important;
+    }
 
-.timestamp {
-    font-size: 0.85rem;
-    color: #888;
-    margin-left: auto;
+    .publish-form-row .publish-textarea {
+        min-width: 0 !important;
+        width: 100% !important;
+    }
+
+    .publish-form-row .publish-checkbox-label {
+        margin-bottom: 8px !important;
+    }
 }
 
 @media (max-width: 480px) {
@@ -734,24 +710,10 @@ body {
 }
 
 .image-upload-plus {
-    width: 90px;
-    height: 90px;
+    margin: 16px 0 16px 0 !important;
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 1.5px dashed #a86ae3;
-    border-radius: 10px;
-    font-size: 2.5rem;
-    color: #a86ae3;
-    background: #fafbfc;
-    cursor: pointer;
-    transition: border-color 0.2s, color 0.2s;
-    margin-bottom: 10px;
-}
-
-.image-upload-plus:hover {
-    border-color: #764ba2;
-    color: #764ba2;
 }
 
 .image-upload-preview {

@@ -1,0 +1,78 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mew 聊天</title>
+    <link rel="stylesheet" href="{% static 'chat/css/chat_mobile.css' %}">
+</head>
+
+<body>
+    <div class="wxchat-mobile">
+        <!-- 顶部栏 -->
+        <div class="wxchat-header">
+            <button class="wxchat-back" onclick="window.location.href='/chat/'">←</button>
+            {# 顶部栏头像 #}
+            {% if selected_user.user_profile.avatar and selected_user.user_profile.avatar.url != '/media/avatars/default.jpg' %}
+            <img class="wxchat-avatar" src="{{ selected_user.user_profile.avatar.url }}" alt="头像">
+            {% else %}
+            <div class="wxchat-avatar-default">
+                <span class="wxchat-avatar-initial">{{ selected_user.username|first|upper }}</span>
+            </div>
+            {% endif %}
+            <span class="wxchat-nickname">
+                {{ selected_user.user_profile.nickname|default:selected_user.username }}
+            </span>
+        </div>
+        <!-- 消息区 -->
+        <div class="wxchat-messages" id="wxchat-messages">
+            {% for msg in messages %}
+            {% if msg.sender == request.user %}
+            <!-- 自己的消息，右侧：头像在最右，气泡在左 -->
+            <div class="wxchat-msg me">
+                <div class="wxchat-msg-avatar-box">
+                    <a href="{% url 'userzone:detail' username=msg.sender.username %}" title="个人空间">
+                        {% if msg.sender.user_profile.avatar and msg.sender.user_profile.avatar.url != '/media/avatars/default.jpg' %}
+                        <img class="wxchat-msg-avatar" src="{{ msg.sender.user_profile.avatar.url }}" alt="头像">
+                        {% else %}
+                        <div class="wxchat-msg-avatar-default">
+                            <span class="wxchat-msg-avatar-initial">{{ msg.sender.username|first|upper }}</span>
+                        </div>
+                        {% endif %}
+                    </a>
+                </div>
+                <div class="wxchat-bubble">{{ msg.content }}</div>
+            </div>
+            {% else %}
+            <!-- 对方的消息，左侧：头像在最左，气泡在右 -->
+            <div class="wxchat-msg you">
+                <div class="wxchat-msg-avatar-box">
+                    <a href="{% url 'userzone:detail' username=msg.sender.username %}" title="个人空间">
+                        {% if msg.sender.user_profile.avatar and msg.sender.user_profile.avatar.url != '/media/avatars/default.jpg' %}
+                        <img class="wxchat-msg-avatar" src="{{ msg.sender.user_profile.avatar.url }}" alt="头像">
+                        {% else %}
+                        <div class="wxchat-msg-avatar-default">
+                            <span class="wxchat-msg-avatar-initial">{{ msg.sender.username|first|upper }}</span>
+                        </div>
+                        {% endif %}
+                    </a>
+                </div>
+                <div class="wxchat-bubble">{{ msg.content }}</div>
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+        <!-- 输入栏 -->
+        <form class="wxchat-inputbar" method="post" autocomplete="off">
+            {% csrf_token %}
+            <input type="hidden" name="receiver_id" value="{{ selected_user.id }}">
+            <input type="text" name="content" class="wxchat-input" placeholder="请输入消息..." required autocomplete="off">
+            <button type="submit" class="wxchat-send">发送</button>
+        </form>
+    </div>
+    <script src="{% static 'chat/js/chat_mobile.js' %}"></script>
+</body>
+
+</html>
