@@ -143,6 +143,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     const btns = document.querySelectorAll('.uz-filter-btn');
+    const categoryFilter = document.getElementById('category-filter');
     const lists = {
         moments: document.getElementById('moments-list'),
         plaza: document.getElementById('plaza-list'),
@@ -172,22 +173,25 @@ document.addEventListener('DOMContentLoaded', function () {
     // 切换按钮点击事件
     btns.forEach(btn => {
         btn.addEventListener('click', function () {
-            btns.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
             const type = btn.getAttribute('data-type');
-            Object.keys(lists).forEach(key => {
-                if (lists[key]) {
-                    if (key === type) {
-                        lists[key].style.display = 'block';
-                        lists[key].style.opacity = '1';
-                    } else {
-                        lists[key].style.display = 'none';
-                        lists[key].style.opacity = '0';
-                    }
-                }
-            });
+            const category = categoryFilter ? categoryFilter.value : 'all';
+            const url = new URL(window.location);
+            url.searchParams.set('type', type);
+            url.searchParams.set('category', category);
+            window.location.href = url.toString();
         });
     });
+
+    if (categoryFilter) {
+        categoryFilter.addEventListener('change', function () {
+            const type = document.querySelector('.uz-filter-btn.active').getAttribute('data-type');
+            const category = this.value;
+            const url = new URL(window.location);
+            url.searchParams.set('type', type);
+            url.searchParams.set('category', category);
+            window.location.href = url.toString();
+        });
+    }
 
     // 关注/取关按钮AJAX
     const followForm = document.getElementById('follow-form');
