@@ -403,9 +403,11 @@
     background: #fff;
     color: #a86ae3;
     border: 1.5px solid #e0e0e0;
+    text-decoration: none;
 }
 
 .user-profile-btn-message:hover {
     background: #f3eaff;
     color: #a86ae3;
+    text-decoration: none;
 }

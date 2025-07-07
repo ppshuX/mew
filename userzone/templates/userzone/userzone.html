@@ -89,12 +89,8 @@
                 </div>
                 <!-- 个人详情按钮 -->
                 <div class="d-flex justify-content-center mt-2 mb-3">
-                    {% if is_owner %}
                     <a href="{% url 'user_profile_detail' user_profile.user.username %}"
                         class="uz-btn uz-btn-center">进入个人详情页</a>
-                    {% else %}
-                    <a href="/profile/{{ user_profile.user.username }}/" class="uz-btn uz-btn-center">进入个人详情页</a>
-                    {% endif %}
                 </div>
             </div>
         </div>
