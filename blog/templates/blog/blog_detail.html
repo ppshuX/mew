@@ -6,164 +6,163 @@
 {% block body_bg %}background-color: #f5f6f7;{% endblock %}
 
 {% block content %}
-<div class="blog-detail-header-flex" style="display:flex;align-items:center;justify-content:center;margin-bottom:0;">
-    <div style="flex:1;max-width:900px;">
-        <div class="blog-detail-container" style="border-radius:18px;margin-top:0;position:relative;">
-            <button class="back-home-btn" onclick="window.location.href='{% url 'blog_list' %}'" title="返回博客专栏">
-                <i class="fas fa-home"></i>
-            </button>
-            <div style="width:16px;"></div>
-            <div class="blog-detail-card">
-                <!-- 博客标题区域 -->
-                <div class="blog-header">
-                    <h1 class="blog-title">{{ post.title }}</h1>
-                    <div class="blog-meta">
-                        <div class="author-info">
-                            <a href="{% url 'userzone:detail' username=post.author.username %}"
-                                style="display:contents;">
-                                {% if post.author.user_profile.avatar and post.author.user_profile.avatar.url != '/media/avatars/default.jpg' %}
-                                <img class="author-avatar" src="{{ post.author.user_profile.avatar.url }}" alt="头像">
+<div class="blog-detail-outer" style="position:relative;max-width:900px;margin:0 auto;">
+    <div class="blog-detail-container" style="border-radius:18px;margin-top:0;position:relative;margin-bottom:48px;">
+        <button class="back-home-btn" onclick="window.location.href='{% url 'blog_list' %}'" title="返回博客专栏">
+            <i class="fas fa-home"></i>
+        </button>
+        <div style="width:16px;"></div>
+        <div class="blog-detail-card">
+            <!-- 博客标题区域 -->
+            <div class="blog-header">
+                <h1 class="blog-title">{{ post.title }}</h1>
+                <div class="blog-meta">
+                    <div class="author-info">
+                        <a href="{% url 'userzone:detail' username=post.author.username %}" style="display:contents;">
+                            {% if post.author.user_profile.avatar and post.author.user_profile.avatar.url != '/media/avatars/default.jpg' %}
+                            <img class="author-avatar" src="{{ post.author.user_profile.avatar.url }}" alt="头像">
+                            {% else %}
+                            <span class="author-avatar-circle">{{ post.author.username|first|upper }}</span>
+                            {% endif %}
+                        </a>
+                        <span class="author-name">{{ post.author.username }}</span>
+                    </div>
+                    <div class="blog-info">
+                        <span class="publish-date">{{ post.created_at|date:"Y年m月d日 H:i" }}</span>
+                        {% if post.blog_tags %}
+                        <span class="blog-tags">标签：{{ post.blog_tags }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- 博客摘要 -->
+            {% if post.blog_summary %}
+            <div class="blog-summary-section">
+                <p class="blog-summary-text">{{ post.blog_summary }}</p>
+            </div>
+            {% endif %}
+
+            <!-- 博客内容 -->
+            <div class="blog-content-section">
+                <div class="blog-content-text">
+                    {{ content_html|safe }}
+                </div>
+            </div>
+
+            <!-- 点赞栏 -->
+            <div class="detail-like-bar-wrapper" style="margin: 32px 0 0 0;">
+                <div class="detail-like-bar">
+                    <span style="font-size:1.05rem;color:#a86ae3;font-weight:600;margin-right:4px;">喜爱数：</span>
+                    <span class="detail-like-count" id="like-count-{{ post.id }}">{{ like_count }}</span>
+                    <button id="like-btn-{{ post.id }}" class="detail-like-btn{% if is_liked %} liked{% endif %}"
+                        data-post-id="{{ post.id }}" data-liked="{{ is_liked|yesno:'true,false' }}" type="button">
+                        <span class="like-icon" id="like-icon-{{ post.id }}">
+                            {% if is_liked %}❤️{% else %}🤍{% endif %}
+                        </span>
+                    </button>
+                </div>
+            </div>
+            <!-- 博客图片 -->
+            {% if post.images.all %}
+            <div class="blog-images-section">
+                <h3 class="section-title">配图</h3>
+                <div class="blog-images-grid">
+                    {% for img in post.images.all %}
+                    <div class="blog-image-item">
+                        <img src="{{ img.image.url }}" alt="配图" class="blog-image">
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- 操作按钮 -->
+            {% if post.author == request.user %}
+            <div class="blog-actions" style="text-align:center;margin-bottom:30px;">
+                <a href="{% url 'edit_blog' post.id %}" class="edit-btn">编辑博客</a>
+                <form method="post" action="{% url 'blog_delete' post.id %}" style="display:inline;"
+                    onsubmit="return confirm('确定要删除这篇博客吗？');">
+                    {% csrf_token %}
+                    <button type="submit" class="detail-comment-delete-btn trash-btn" title="删除博客"
+                        style="background:#fff;border:1.5px solid #e57373;color:#e57373;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;cursor:pointer;margin-left:18px;transition:background 0.2s, color 0.2s;vertical-align:middle;">
+                        <span class="trash-icon">🗑️</span>
+                    </button>
+                </form>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    <!-- 评论区包裹层，按钮悬浮在卡片右上角外部，且按钮在包裹层外部始终可见 -->
+    <div style="position: relative;">
+        <button id="toggle-comments-btn" class="expand-comments-btn show-comments-rect" title="收起评论区"
+            data-expanded="true" style="position: absolute; right: -8px; top: -32px; z-index: 10;">
+            <span>收起评论区</span>
+        </button>
+        <div id="comments-footer-wrapper">
+            <div class="detail-comments-footer" id="comments-footer"
+                style="position:static;box-shadow:none;max-width:900px;margin:96px auto 48px auto;display:block;background:#fff;box-shadow:none;border-radius:18px;">
+                <div class="detail-comments-footer-inner" id="comments-inner"
+                    style="position:static;max-height:none;height:auto;overflow:visible;padding:0;">
+                    <div class="detail-comments-title">全部评论：</div>
+                    {% for c in comments %}
+                    <div class="detail-comment-box" {% if forloop.counter0 >= 2 %}style="display:none;"{% endif %}>
+                        <div class="detail-comment-content">
+                            <strong>
+                                {% if c.obj.author.user_profile.nickname %}
+                                {{ c.obj.author.user_profile.nickname }}
                                 {% else %}
-                                <span class="author-avatar-circle">{{ post.author.username|first|upper }}</span>
+                                {{ c.obj.author.username }}
                                 {% endif %}
-                            </a>
-                            <span class="author-name">{{ post.author.username }}</span>
+                            </strong>:
+                            <span>{{ c.obj.content|linebreaksbr }}</span>
+                            <span class="detail-comment-time">{{ c.obj.created_at|naturaltime }}</span>
                         </div>
-                        <div class="blog-info">
-                            <span class="publish-date">{{ post.created_at|date:"Y年m月d日 H:i" }}</span>
-                            {% if post.blog_tags %}
-                            <span class="blog-tags">标签：{{ post.blog_tags }}</span>
+                        <div class="comment-actions">
+                            <button class="comment-like-btn {% if c.liked_by_user %}liked{% endif %}"
+                                data-comment-id="{{ c.obj.id }}" data-liked="{{ c.liked_by_user|yesno:'true,false' }}"
+                                title="{{ c.liked_by_user|yesno:'取消点赞,点赞' }}">
+                                <span id="comment-like-icon-{{ c.obj.id }}">
+                                    {% if c.liked_by_user %}👍🏻{% else %}👍{% endif %}</span>
+                                <span id="comment-like-text-{{ c.obj.id }}">
+                                    {% if c.liked_by_user %}取消点赞{% else %}点赞{% endif %}</span>
+                                <span id="comment-like-count-{{ c.obj.id }}">{{ c.like_count }}</span>
+                            </button>
+                            {% if c.obj.author == user or user.is_superuser %}
+                            <form method="post" action="{% url 'delete_blog_comment' c.obj.id %}"
+                                style="display:inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="detail-comment-delete-btn trash-btn" title="删除评论"
+                                    style="margin-left:12px;font-size:1.3rem;vertical-align:middle;">
+                                    <span class="trash-icon">🗑️</span>
+                                </button>
+                            </form>
                             {% endif %}
                         </div>
                     </div>
-                </div>
+                    {% endfor %}
 
-                <!-- 博客摘要 -->
-                {% if post.blog_summary %}
-                <div class="blog-summary-section">
-                    <p class="blog-summary-text">{{ post.blog_summary }}</p>
-                </div>
-                {% endif %}
-
-                <!-- 博客内容 -->
-                <div class="blog-content-section">
-                    <div class="blog-content-text">
-                        {{ content_html|safe }}
+                    {% if comments|length > 2 %}
+                    <div style="text-align:center;margin:18px 0 0 0;">
+                        <button id="show-more-comments-btn" class="show-more-comments-btn"
+                            style="margin-right:12px;">展示剩余评论</button>
+                        <button id="hide-more-comments-btn" class="show-more-comments-btn"
+                            style="display:none;">收起剩余评论</button>
                     </div>
-                </div>
-
-                <!-- 点赞栏 -->
-                <div class="detail-like-bar-wrapper" style="margin: 32px 0 0 0;">
-                    <div class="detail-like-bar">
-                        <span style="font-size:1.05rem;color:#a86ae3;font-weight:600;margin-right:4px;">喜爱数：</span>
-                        <span class="detail-like-count" id="like-count-{{ post.id }}">{{ like_count }}</span>
-                        <button id="like-btn-{{ post.id }}" class="detail-like-btn{% if is_liked %} liked{% endif %}"
-                            data-post-id="{{ post.id }}" data-liked="{{ is_liked|yesno:'true,false' }}" type="button">
-                            <span class="like-icon" id="like-icon-{{ post.id }}">
-                                {% if is_liked %}❤️{% else %}🤍{% endif %}
-                            </span>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- 博客图片 -->
-                {% if post.images.all %}
-                <div class="blog-images-section">
-                    <h3 class="section-title">配图</h3>
-                    <div class="blog-images-grid">
-                        {% for img in post.images.all %}
-                        <div class="blog-image-item">
-                            <img src="{{ img.image.url }}" alt="配图" class="blog-image">
-                        </div>
-                        {% endfor %}
-                    </div>
-                </div>
-                {% endif %}
-
-                <!-- 操作按钮 -->
-                {% if post.author == request.user %}
-                <div class="blog-actions" style="text-align:center;margin-bottom:30px;">
-                    <a href="{% url 'edit_blog' post.id %}" class="edit-btn">编辑博客</a>
-                    <form method="post" action="{% url 'blog_delete' post.id %}" style="display:inline;"
-                        onsubmit="return confirm('确定要删除这篇博客吗？');">
-                        {% csrf_token %}
-                        <button type="submit" class="detail-comment-delete-btn trash-btn" title="删除博客"
-                            style="background:#fff;border:1.5px solid #e57373;color:#e57373;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;cursor:pointer;margin-left:18px;transition:background 0.2s, color 0.2s;vertical-align:middle;">
-                            <span class="trash-icon">🗑️</span>
-                        </button>
-                    </form>
-                </div>
-                {% endif %}
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- 评论区 -->
-<div style="max-width:900px;margin:48px auto 0 auto;">
-    <button id="toggle-comments-btn" class="expand-comments-btn show-comments-rect"
-        style="position:absolute;right:-80px;top:32px;z-index:10;" title="收起评论区"><span>收起评论区</span></button>
-    <div style="height:12px;"></div>
-    <div class="detail-comments-footer" id="comments-footer"
-        style="position:static;box-shadow:none;max-width:900px;margin:0 auto 48px auto;display:block;background:#fff;box-shadow:none;border-radius:18px;">
-        <div class="detail-comments-footer-inner" id="comments-inner"
-            style="position:static;max-height:none;height:auto;overflow:visible;padding:0;">
-            <div class="detail-comments-title">全部评论：</div>
-
-            {% for c in comments %}
-            <div class="detail-comment-box" {% if forloop.counter0 >= 2 %}style="display:none;"{% endif %}>
-                <div class="detail-comment-content">
-                    <strong>
-                        {% if c.obj.author.user_profile.nickname %}
-                        {{ c.obj.author.user_profile.nickname }}
-                        {% else %}
-                        {{ c.obj.author.username }}
-                        {% endif %}
-                    </strong>:
-                    <span>{{ c.obj.content|linebreaksbr }}</span>
-                    <span class="detail-comment-time">{{ c.obj.created_at|naturaltime }}</span>
-                </div>
-                <div class="comment-actions">
-                    <button class="comment-like-btn {% if c.liked_by_user %}liked{% endif %}"
-                        data-comment-id="{{ c.obj.id }}" data-liked="{{ c.liked_by_user|yesno:'true,false' }}"
-                        title="{{ c.liked_by_user|yesno:'取消点赞,点赞' }}">
-                        <span id="comment-like-icon-{{ c.obj.id }}">
-                            {% if c.liked_by_user %}👍🏻{% else %}👍{% endif %}</span>
-                        <span id="comment-like-text-{{ c.obj.id }}">
-                            {% if c.liked_by_user %}取消点赞{% else %}点赞{% endif %}</span>
-                        <span id="comment-like-count-{{ c.obj.id }}">{{ c.like_count }}</span>
-                    </button>
-                    {% if c.obj.author == user or user.is_superuser %}
-                    <form method="post" action="{% url 'delete_blog_comment' c.obj.id %}" style="display:inline;">
-                        {% csrf_token %}
-                        <button type="submit" class="detail-comment-delete-btn trash-btn" title="删除评论"
-                            style="margin-left:12px;font-size:1.3rem;vertical-align:middle;">
-                            <span class="trash-icon">🗑️</span>
-                        </button>
-                    </form>
                     {% endif %}
+
+                    {% if comments|length == 0 %}
+                    <div class="no-comments">还没有评论</div>
+                    {% endif %}
+
+                    <form method="post" action="{% url 'add_blog_comment' post.id %}" class="detail-comment-form"
+                        id="blog-comment-form" autocomplete="off">
+                        {% csrf_token %}
+                        <input type="text" name="comment" placeholder="写评论..." required id="blog-comment-input">
+                        <button type="submit">发表评论</button>
+                    </form>
                 </div>
             </div>
-            {% endfor %}
-
-            {% if comments|length > 2 %}
-            <div style="text-align:center;margin:18px 0 0 0;">
-                <button id="show-more-comments-btn" class="show-more-comments-btn"
-                    style="margin-right:12px;">展示剩余评论</button>
-                <button id="hide-more-comments-btn" class="show-more-comments-btn" style="display:none;">收起剩余评论</button>
-            </div>
-            {% endif %}
-
-            {% if comments|length == 0 %}
-            <div class="no-comments">还没有评论</div>
-            {% endif %}
-
-            <form method="post" action="{% url 'add_blog_comment' post.id %}" class="detail-comment-form"
-                id="blog-comment-form" autocomplete="off">
-                {% csrf_token %}
-                <input type="text" name="comment" placeholder="写评论..." required id="blog-comment-input">
-                <button type="submit">发表评论</button>
-            </form>
         </div>
     </div>
 </div>
@@ -524,6 +523,36 @@
     .back-home-btn:hover {
         background: #ede7f6;
         color: #7c4dff;
+    }
+
+    .collapse-comment-btn-wrapper {
+        max-width: 900px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 0;
+        position: relative;
+        z-index: 10;
+        overflow: visible;
+    }
+
+    .collapse-comment-btn {
+        background: #fff;
+        border: 1.5px solid #a86ae3;
+        color: #a86ae3;
+        border-radius: 20px;
+        padding: 6px 18px;
+        font-size: 1rem;
+        box-shadow: 0 2px 8px rgba(168, 106, 227, 0.10);
+        cursor: pointer;
+        transition: all 0.2s;
+        margin-top: -20px;
+    }
+
+    .collapse-comment-btn:hover {
+        background: #a86ae3;
+        color: #fff;
     }
 </style>
 <link rel="stylesheet" href="{% static 'blog/css/blog_detail.css' %}">

@@ -2,17 +2,18 @@
 window.addEventListener('DOMContentLoaded', function () {
     // 评论区展开/收起竖排按钮
     var toggleCommentsBtn = document.getElementById('toggle-comments-btn');
+    var commentsFooterWrapper = document.getElementById('comments-footer-wrapper');
     var commentsFooter = document.getElementById('comments-footer');
     var commentsInner = document.getElementById('comments-inner');
-    if (toggleCommentsBtn && commentsFooter && commentsInner) {
-        var commentsVisible = true;
-        commentsFooter.style.display = 'block';
+    if (toggleCommentsBtn && commentsFooterWrapper && commentsFooter && commentsInner) {
+        var commentsVisible = true; // 默认展开
+        commentsFooterWrapper.style.display = '';
         toggleCommentsBtn.innerHTML = '<span>收起评论区</span>';
         toggleCommentsBtn.title = '收起评论区';
         toggleCommentsBtn.onclick = function () {
             commentsVisible = !commentsVisible;
             if (commentsVisible) {
-                commentsFooter.style.display = 'block';
+                commentsFooterWrapper.style.display = '';
                 commentsInner.classList.remove('fadeout');
                 commentsInner.classList.add('fadein');
                 toggleCommentsBtn.innerHTML = '<span>收起评论区</span>';
@@ -21,7 +22,7 @@ window.addEventListener('DOMContentLoaded', function () {
                 commentsInner.classList.remove('fadein');
                 commentsInner.classList.add('fadeout');
                 setTimeout(function () {
-                    commentsFooter.style.display = 'none';
+                    commentsFooterWrapper.style.display = 'none';
                 }, 400);
                 toggleCommentsBtn.innerHTML = '<span>展开评论区</span>';
                 toggleCommentsBtn.title = '展开评论区';
