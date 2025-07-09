@@ -158,3 +158,5 @@ EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 EMAIL_USE_SSL = True
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+CAPTCHA_FONT_PATH = '/usr/share/fonts/truetype/dejavu/DejaVuSerif.ttf'

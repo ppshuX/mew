@@ -7,13 +7,30 @@ from captcha.fields import CaptchaField
 from captcha.conf import settings as captcha_settings
 
 class CustomRegisterForm(UserCreationForm):
-    captcha = CaptchaField(label="验证码")
-    email = forms.EmailField(label="邮箱", required=True)
+    captcha = CaptchaField(label="验证码", error_messages={
+        'invalid': '验证码错误，请重新输入',
+        'required': '请输入验证码',
+    })
+    email = forms.EmailField(label="邮箱", required=True, error_messages={
+        'required': '请输入邮箱',
+        'invalid': '请输入有效的邮箱地址',
+    })
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['username'].error_messages = {
+            'required': '请输入用户名',
+            'invalid': '用户名格式不正确',
+        }
+        self.fields['password1'].error_messages = {
+            'required': '请输入密码',
+        }
+        self.fields['password2'].error_messages = {
+            'required': '请再次输入密码',
+            'password_mismatch': '两次输入的密码不一致',
+        }
     class Meta:
         model = User
         fields = ['username', 'email', 'password1', 'password2', 'captcha']
-
-    # 自定义密码要求
     def clean_password1(self):
         pwd = self.cleaned_data.get('password1')
         if len(pwd) < 7:
@@ -21,7 +38,12 @@ class CustomRegisterForm(UserCreationForm):
         if pwd.isdigit() or pwd.isalpha():
             raise ValidationError("密码需包含字母和数字的组合")
         return pwd
-
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        from django.contrib.auth.models import User
+        if User.objects.filter(email=email).exists():
+            raise ValidationError("该邮箱已被注册，请更换邮箱。")
+        return email
     def clean(self):
         cleaned_data = super().clean()
         password1 = cleaned_data.get("password1")
@@ -29,13 +51,6 @@ class CustomRegisterForm(UserCreationForm):
         if password1 and password2 and password1 != password2:
             raise ValidationError("两次输入的密码不一致")
         return cleaned_data
-
-    def clean_email(self):
-        email = self.cleaned_data['email']
-        from django.contrib.auth.models import User
-        if User.objects.filter(email=email).exists():
-            raise ValidationError("该邮箱已被注册，请更换邮箱。")
-        return email
 
 class LoginForm(forms.Form):
     username = forms.CharField(label="用户名")
