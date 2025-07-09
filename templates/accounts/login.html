@@ -10,6 +10,13 @@
 
     <form method="post">
         {% csrf_token %}
+        {% if form.non_field_errors %}
+        <div class="alert alert-danger">
+            {% for error in form.non_field_errors %}
+            {{ error }}
+            {% endfor %}
+        </div>
+        {% endif %}
         <div class="form-group mb-3">
             <label for="id_username">用户名</label>
             <input type="text" name="username" class="form-control" id="id_username" placeholder="请输入用户名" required>
@@ -24,6 +31,15 @@
             <div class="text-danger small mt-1">{{ form.password.errors|striptags }}</div>
             {% endif %}
         </div>
+        {% if show_captcha %}
+        <div class="form-group mb-3">
+            <label class="form-label" for="id_captcha">验证码</label>
+            {{ form.captcha }}
+            {% if form.captcha.errors %}
+            <div class="text-danger small mt-1">{{ form.captcha.errors|striptags }}</div>
+            {% endif %}
+        </div>
+        {% endif %}
         <div style="text-align: center; margin: 5px 5px;">
             <button style="width: 250px;" type="submit" class="btn btn-success">登录</button>
         </div>
@@ -42,6 +58,9 @@
                 QQ一键登录
             </a>
         </div>
+    </div>
+    <div style="width: 100%; display: flex; justify-content: flex-end; align-items: center; margin-top: 10px;">
+        <a href="{% url 'password_reset' %}" style="color: #007bff; font-size: 1rem;">忘记密码?</a>
     </div>
 </div>
 {% endblock %}

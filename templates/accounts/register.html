@@ -35,6 +35,20 @@
             <div class="text-danger small mt-1">{{ form.password2.errors|striptags }}</div>
             {% endif %}
         </div>
+        <div class="form-group mb-3">
+            <label class="form-label" for="id_email">邮箱</label>
+            <input type="email" name="email" class="form-control" id="id_email" placeholder="请输入邮箱" required>
+            {% if form.email.errors %}
+            <div class="text-danger small mt-1">{{ form.email.errors|striptags }}</div>
+            {% endif %}
+        </div>
+        <div class="form-group mb-3">
+            <label class="form-label" for="id_captcha">验证码</label>
+            {{ form.captcha }}
+            {% if form.captcha.errors %}
+            <div class="text-danger small mt-1">{{ form.captcha.errors|striptags }}</div>
+            {% endif %}
+        </div>
         <div style="text-align: center; margin: 5px 5px;">
             <button style="width: 250px;" type="submit" class="btn btn-success">注册</button>
         </div>

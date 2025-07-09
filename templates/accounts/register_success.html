@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block title %}注册成功{% endblock %}
+{% block content %}
+<div class="container" style="max-width: 420px; margin-top: 80px; background: white; padding: 40px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);">
+    <h3 class="text-center mb-4 text-success">🎉 注册成功！</h3>
+    <div class="alert alert-info text-center">
+        请前往您的邮箱查收激活邮件，并点击邮件中的激活链接完成账号激活。<br>
+        <span class="text-danger">未激活账号无法登录！</span>
+    </div>
+    <div class="text-center mt-4">
+        <a href="/accounts/login/" class="btn btn-primary">去登录</a>
+    </div>
+</div>
+{% endblock %} 

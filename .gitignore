@@ -20,3 +20,4 @@ staticfiles/
 Thumbs.db
 
 !media/avatars/default.jpg
+.env

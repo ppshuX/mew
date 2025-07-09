@@ -15,6 +15,17 @@ from PIL import Image
 from django.core.files.uploadedfile import InMemoryUploadedFile
 import io
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth import authenticate
+from .forms import LoginForm
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_bytes
+from django.core.mail import send_mail
+from django.conf import settings
+from django.template.loader import render_to_string
+from django.contrib.sites.shortcuts import get_current_site
+from django.contrib.auth.models import User
+from django.utils.http import urlsafe_base64_decode
 
 # Create your views here.
 @login_required
@@ -113,8 +124,23 @@ def register(request):
     if request.method == 'POST':
         form = CustomRegisterForm(request.POST)
         if form.is_valid():
-            form.save()
-            return redirect('login')
+            user = form.save(commit=False)
+            user.email = form.cleaned_data['email']
+            user.is_active = False
+            user.save()
+            # 发送激活邮件
+            current_site = get_current_site(request)
+            subject = 'Mew账号激活邮件'
+            token = default_token_generator.make_token(user)
+            uid = urlsafe_base64_encode(force_bytes(user.pk))
+            activation_link = f"http://{current_site.domain}/accounts/activate/{uid}/{token}/"
+            message = render_to_string('accounts/activation_email.html', {
+                'user': user,
+                'activation_link': activation_link,
+            })
+            send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [user.email], fail_silently=False)
+            # messages.success(request, '注册成功！请前往邮箱激活账号。')
+            return render(request, 'accounts/register_success.html')
     else:
         form = CustomRegisterForm()
     return render(request, 'accounts/register.html', {'form': form})
@@ -182,3 +208,41 @@ def test_upload(request):
             MomentsImage.objects.create(post=post, image=img)
         return render(request, 'moments/test_upload.html', {'msg': '上传完成'})
     return render(request, 'moments/test_upload.html')
+
+def login_view(request):
+    # 获取失败次数
+    fail_count = request.session.get('login_fail_count', 0)
+    show_captcha = fail_count >= 2
+    if request.method == 'POST':
+        form = LoginForm(request.POST, show_captcha=show_captcha)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+            user = authenticate(request, username=username, password=password)
+            if user is not None:
+                login(request, user)
+                request.session['login_fail_count'] = 0  # 登录成功清零
+                return redirect('moments:list')
+            else:
+                request.session['login_fail_count'] = fail_count + 1
+                form.add_error(None, '用户名或密码错误')
+        else:
+            request.session['login_fail_count'] = fail_count + 1
+    else:
+        form = LoginForm(show_captcha=show_captcha)
+    return render(request, 'accounts/login.html', {'form': form, 'show_captcha': show_captcha})
+
+def activate_account(request, uidb64, token):
+    try:
+        uid = urlsafe_base64_decode(uidb64).decode()
+        user = User.objects.get(pk=uid)
+    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+    if user is not None and default_token_generator.check_token(user, token):
+        user.is_active = True
+        user.save()
+        messages.success(request, '账号激活成功，请登录！')
+        return redirect('login')
+    else:
+        messages.error(request, '激活链接无效或已过期。')
+        return redirect('register')
