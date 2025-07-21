@@ -78,6 +78,12 @@ window.addEventListener('DOMContentLoaded', function () {
     var input = document.getElementById('blog-comment-input');
     if (form && input && commentsInner) {
         form.addEventListener('submit', function (e) {
+            // 检查用户是否登录
+            if (!document.body.classList.contains('user-logged-in')) {
+                window.location.href = '/accounts/login/';
+                e.preventDefault();
+                return;
+            }
             e.preventDefault();
             var content = input.value.trim();
             if (!content) return;
@@ -133,6 +139,11 @@ window.addEventListener('DOMContentLoaded', function () {
         box.querySelectorAll('.comment-like-btn').forEach(function (btn) {
             btn.addEventListener('click', function (e) {
                 e.preventDefault();
+                // 检查用户是否登录
+                if (!document.body.classList.contains('user-logged-in')) {
+                    window.location.href = '/accounts/login/';
+                    return;
+                }
                 const commentId = this.dataset.commentId;
                 const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
                 const textSpan = document.getElementById('comment-like-text-' + commentId);
@@ -201,6 +212,11 @@ window.addEventListener('DOMContentLoaded', function () {
     if (likeBtn) {
         likeBtn.addEventListener('click', function (e) {
             e.preventDefault();
+            // 检查用户是否登录
+            if (!document.body.classList.contains('user-logged-in')) {
+                window.location.href = '/accounts/login/';
+                return;
+            }
             var postId = this.dataset.postId;
             var csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
             var likeCountSpan = document.getElementById('like-count-' + postId);
@@ -227,6 +243,64 @@ window.addEventListener('DOMContentLoaded', function () {
                     }
                 })
                 .catch(error => console.error('点赞失败:', error));
+        });
+    }
+
+    // 评论提交事件
+    var commentForm = document.getElementById('comment-form');
+    if (commentForm) {
+        commentForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+            // 检查用户是否登录
+            if (!document.body.classList.contains('user-logged-in')) {
+                window.location.href = '/accounts/login/';
+                return;
+            }
+            var content = input.value.trim();
+            if (!content) return;
+            var csrfToken = form.querySelector('input[name="csrfmiddlewaretoken"]').value;
+            var url = form.getAttribute('action') || window.location.pathname.replace(/\/$/, '') + '/add_comment/';
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': csrfToken,
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'comment=' + encodeURIComponent(content)
+            })
+                .then(async res => {
+                    let text = await res.text();
+                    try {
+                        let data = JSON.parse(text);
+                        return data;
+                    } catch (e) {
+                        alert('服务器返回内容：' + text);
+                        throw e;
+                    }
+                })
+                .then(data => {
+                    if (data.success) {
+                        var temp = document.createElement('div');
+                        temp.innerHTML = data.html;
+                        var newComment = temp.firstElementChild;
+                        if (newComment) {
+                            var first = commentsInner.querySelector('.detail-comment-box');
+                            if (first) commentsInner.insertBefore(newComment, first);
+                            else commentsInner.insertBefore(newComment, form);
+                            bindCommentActions(newComment);
+                            // 只刷新新插入评论的删除表单token
+                            var globalToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
+                            var delForm = newComment.querySelector('form[action*="delete"]');
+                            if (delForm) {
+                                var inputToken = delForm.querySelector('input[name="csrfmiddlewaretoken"]');
+                                if (inputToken) inputToken.value = globalToken;
+                            }
+                        }
+                    }
+                    input.value = '';
+                })
+                .catch(() => alert('评论失败'));
         });
     }
 }); 

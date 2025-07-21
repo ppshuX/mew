@@ -4,6 +4,11 @@ window.addEventListener('DOMContentLoaded', function () {
     if (likeBtn) {
         likeBtn.addEventListener('click', function (e) {
             e.preventDefault();
+            // 检查用户是否登录
+            if (!document.body.classList.contains('user-logged-in')) {
+                window.location.href = '/accounts/login/';
+                return;
+            }
             const postId = this.dataset.postId;
             const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
             const likeCountSpan = document.querySelector('.like-count, .detail-like-count');
@@ -182,6 +187,11 @@ window.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('.comment-like-btn').forEach(function (btn) {
         btn.addEventListener('click', function (e) {
             e.preventDefault();
+            // 检查用户是否登录
+            if (!document.body.classList.contains('user-logged-in')) {
+                window.location.href = '/accounts/login/';
+                return;
+            }
             const commentId = this.dataset.commentId;
             const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
             const textSpan = document.getElementById('comment-like-text-' + commentId);
@@ -243,30 +253,43 @@ window.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-    // 删除动态后自动跳转到列表页
-    const deleteForm = document.getElementById('delete-post-form');
-    if (deleteForm) {
-        deleteForm.addEventListener('submit', function (e) {
+    // 评论提交事件
+    var commentForm = document.getElementById('comment-form') || document.getElementById('blog-comment-form');
+    if (commentForm) {
+        commentForm.addEventListener('submit', function (e) {
+            // 检查用户是否登录
+            if (!document.body.classList.contains('user-logged-in')) {
+                window.location.href = '/accounts/login/';
+                e.preventDefault();
+                return;
+            }
             e.preventDefault();
-            if (confirm('确定要删除这条动态吗？')) {
-                fetch(this.action, {
-                    method: 'POST',
-                    body: new FormData(this),
-                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
-                }).then(async res => {
-                    // 优先处理JsonResponse
-                    try {
-                        const data = await res.json();
-                        if (data.redirect_url) {
-                            window.location.href = data.redirect_url;
-                            return;
-                        }
-                    } catch (e) { }
-                    // 兼容后端redirect
-                    if (res.redirected) {
-                        window.location.href = res.url;
-                    } else {
-                        window.location.href = '/moments/';
+            // 删除动态后自动跳转到列表页
+            const deleteForm = document.getElementById('delete-post-form');
+            if (deleteForm) {
+                deleteForm.addEventListener('submit', function (e) {
+                    e.preventDefault();
+                    if (confirm('确定要删除这条动态吗？')) {
+                        fetch(this.action, {
+                            method: 'POST',
+                            body: new FormData(this),
+                            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                        }).then(async res => {
+                            // 优先处理JsonResponse
+                            try {
+                                const data = await res.json();
+                                if (data.redirect_url) {
+                                    window.location.href = data.redirect_url;
+                                    return;
+                                }
+                            } catch (e) { }
+                            // 兼容后端redirect
+                            if (res.redirected) {
+                                window.location.href = res.url;
+                            } else {
+                                window.location.href = '/moments/';
+                            }
+                        });
                     }
                 });
             }

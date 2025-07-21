@@ -4,6 +4,11 @@ window.addEventListener('DOMContentLoaded', function () {
     if (likeBtn) {
         likeBtn.addEventListener('click', function (e) {
             e.preventDefault();
+            // 检查用户是否登录
+            if (!document.body.classList.contains('user-logged-in')) {
+                window.location.href = '/accounts/login/';
+                return;
+            }
             const postId = this.dataset.postId;
             const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
             const likeCountSpan = document.querySelector('.like-count, .detail-like-count');
@@ -182,6 +187,11 @@ window.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('.comment-like-btn').forEach(function (btn) {
         btn.addEventListener('click', function (e) {
             e.preventDefault();
+            // 检查用户是否登录
+            if (!document.body.classList.contains('user-logged-in')) {
+                window.location.href = '/accounts/login/';
+                return;
+            }
             const commentId = this.dataset.commentId;
             const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
             const textSpan = document.getElementById('comment-like-text-' + commentId);
@@ -258,6 +268,21 @@ window.addEventListener('DOMContentLoaded', function () {
                     }
                 });
             }
+        });
+    }
+
+    // 评论提交事件
+    var commentForm = document.getElementById('comment-form') || document.getElementById('blog-comment-form');
+    if (commentForm) {
+        commentForm.addEventListener('submit', function (e) {
+            // 检查用户是否登录
+            if (!document.body.classList.contains('user-logged-in')) {
+                window.location.href = '/accounts/login/';
+                e.preventDefault();
+                return;
+            }
+            e.preventDefault();
+            // ... existing code ...
         });
     }
 }); 

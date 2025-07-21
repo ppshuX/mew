@@ -3,6 +3,11 @@ window.addEventListener('DOMContentLoaded', function () {
     const buttons = document.querySelectorAll('.like-btn');
     buttons.forEach(button => {
         button.addEventListener('click', function (e) {
+            // 检查用户是否登录
+            if (!document.body.classList.contains('user-logged-in')) {
+                window.location.href = '/accounts/login/';
+                return;
+            }
             const postId = this.dataset.postId;
             const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
             fetch(`/plaza/${postId}/like/`, {
